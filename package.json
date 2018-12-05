@@ -7,7 +7,7 @@
     "start": "webpack",
     "deploy": "yarn firebase deploy"
   },
-  "author": "Ben Ellis <2benellis@gmail.com>",
+  "author": "Ben Ellis <benellislds@gmail.com>",
   "license": "ISC",
   "devDependencies": {
     "awesome-typescript-loader": "^5.2.1",
