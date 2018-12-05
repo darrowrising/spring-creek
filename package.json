@@ -1,0 +1,26 @@
+{
+  "name": "springCreek",
+  "version": "1.0.0",
+  "description": "Ward program and announcement manager",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack",
+    "deploy": "yarn firebase deploy"
+  },
+  "author": "Ben Ellis <2benellis@gmail.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "awesome-typescript-loader": "^5.2.1",
+    "firebase-tools": "^6.1.2",
+    "source-map-loader": "^0.2.4",
+    "typescript": "^3.2.1",
+    "webpack": "^4.26.1",
+    "webpack-cli": "^3.1.2"
+  },
+  "dependencies": {
+    "@types/react": "^16.7.11",
+    "@types/react-dom": "^16.0.11",
+    "react": "^16.6.3",
+    "react-dom": "^16.6.3"
+  }
+}
