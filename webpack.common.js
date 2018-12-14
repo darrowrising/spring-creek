@@ -10,7 +10,7 @@ const devMode = env !== 'production';
 
 module.exports = {
     entry: [
-        '@babel/polyfill', './src/js/App.js'
+        '@babel/polyfill', './src/js/containers/App.js'
     ],
     output: {
         path: path.resolve('public'),
@@ -38,6 +38,16 @@ module.exports = {
                 exclude: /node_modules/
             },
             {
+                test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+                use: 'url-loader?limit=10000&mimetype=application/font-woff&name=static/fonts/[name].[ext]',
+                exclude: /node_modules/
+            },
+            {
+                test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+                use: 'url-loader?name=static/fonts/[name].[ext]',
+                exclude: /node_modules/
+            },
+            {
                 test: /\.(less|css)$/,
                 use: [
                     devMode ? 'style-loader' : MiniCssExtractPlugin.loader,
@@ -54,7 +64,7 @@ module.exports = {
             filename: 'static/main.min.css'
         }),
         new StyleLintPlugin({
-            context: './src',
+            context: 'src',
             files: ['**/*.less', 'less/**/*.less'],
             syntax: 'less'
         }),

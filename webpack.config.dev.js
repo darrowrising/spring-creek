@@ -14,11 +14,6 @@ module.exports = merge(common, {
     ],
     mode: 'development',
     plugins: [
-        new webpack.HotModuleReplacementPlugin(),
-        // new HtmlWebpackPlugin({
-        //     template: path.resolve('src/index.html'),
-        //     fileName: 'static/index.hbs',
-        //     favicon: path.resolve('src/images/springcreek_favicon.jpg')
-        // })
+        new webpack.HotModuleReplacementPlugin()
     ]
 });
