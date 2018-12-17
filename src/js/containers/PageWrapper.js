@@ -1,13 +1,16 @@
 /* TODO: Remove disabled */
 /* eslint-disable  */
 import React from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
 //import {} from 'prop-types';
-import Home from './home/Home';
+import Header from '../components/header/Header';
+
 
 function PageWrapper(props) {
     return (
-        <div>Word Homes!</div>
+        <div id="pageWrapper">
+            <Header />
+
+        </div>
     );
 }
 
