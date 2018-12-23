@@ -71,7 +71,7 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: path.resolve('src/index.hbs'),
             fileName: 'static/index.html',
-            favicon: path.resolve('src/images/springcreek_favicon.jpg'),
+            favicon: path.resolve('src/images/springcreek_favicon.png'),
             reactFileName: devMode ? env : `${env}.min`
         })
     ],

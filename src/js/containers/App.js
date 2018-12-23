@@ -8,7 +8,7 @@ import createHistory from 'history/createBrowserHistory';
 // import { Login } from './authentication/Login';
 
 import { configureStore } from '../store';
-import PageWrapper from './PageWrapper';
+import PageWrapper from './pageWrapper/PageWrapper';
 
 import '../../less/base.less';
 

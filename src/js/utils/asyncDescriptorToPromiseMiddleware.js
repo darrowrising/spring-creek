@@ -1,6 +1,9 @@
+import fireDB from './fireDB';
+
 export default function createGetPromiseFromAsyncDescriptorMiddleware(client) {
     return ({ getState, dispatch }) => next => (action) => {
         const {
+            firebase,
             getPromise,
             loadActionType,
             successActionType,
@@ -49,9 +52,19 @@ export default function createGetPromiseFromAsyncDescriptorMiddleware(client) {
         // XXX The LOAD action is dispatched before the async behavior is triggered
         // i.e. before the promise is created
         if (loadActionType) {
+            console.log('asyncDescriptorParams:', asyncDescriptorParams);
             dispatch(createAction(loadActionType, asyncDescriptorParams));
         }
 
+        if (firebase) {
+            return fireDB.ref(firebase).once('value', (snap) => {
+                const val = snap.val();
+
+                if (val) {
+                    dispatchSuccessAction(val);
+                }
+            }, error => dispatchErrorAction(error));
+        }
 
         return new Promise((resolve, reject) => {
             getPromise(client)
