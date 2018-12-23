@@ -1,0 +1,17 @@
+{
+  "extends": "stylelint-config-standard",
+  "plugins": [
+    "stylelint-order"
+  ],
+  "rules": {
+    "indentation": 4,
+    "number-leading-zero": null,
+    "order/properties-alphabetical-order": true,
+    "property-no-unknown": [ true, {
+      "ignoreProperties": [
+        "composes"
+      ]
+    }],
+    "unit-whitelist": ["em", "s", "%", "px", "deg", "rem", "vw", "vh"]
+  }
+}

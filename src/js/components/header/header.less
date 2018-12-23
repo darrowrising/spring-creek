@@ -1,0 +1,24 @@
+@import '~variables';
+
+.header-container {
+    background-color: @color-blue-1;
+    color: @color-white-2;
+    font-size: 80%;
+    padding: 5px 30px;
+    transition: all 0.5s ease;
+
+    .logo {
+        display: inline-block;
+        font-family: @font-brand;
+        margin: 0;
+    }
+
+    .logo-link {
+        color: @color-white-2;
+        text-decoration: none;
+    }
+
+    @media screen and (max-width: 600px) {
+        padding: 5px 10px;
+    }
+}
