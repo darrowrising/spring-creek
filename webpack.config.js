@@ -9,9 +9,5 @@ module.exports = merge(common, {
     mode: 'production',
     plugins: [
         new OptimizeCSSAssetsPlugin()
-    ],
-    externals: {
-        react: 'React',
-        'react-dom': 'ReactDom'
-    }
+    ]
 });

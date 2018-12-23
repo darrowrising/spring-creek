@@ -29,7 +29,7 @@ export const programEntities = (state = initialState, action) => {
         case ActionTypes.GET_PROGRAM_FAILURE: {
             let errorName = messaging.errors.unknown;
 
-            if (result.includes('permission_denied')) {
+            if (result?.includes('permission_denied')) {
                 errorName = messaging.errors.firebasePermission;
             }
 
@@ -40,7 +40,7 @@ export const programEntities = (state = initialState, action) => {
                 },
                 loading: false
             };
-            console.log('actionState:', actionState);
+
             return Object.assign({}, state, actionState);
         }
         default:

@@ -11,7 +11,7 @@ const initialState = {
 
 export const programViewStates = (state = initialState, action) => {
     const { result, type } = action;
-
+    console.log('action:', action);
     switch (type) {
         case ActionTypes.GET_PROGRAM_REQUEST: {
             return {};
