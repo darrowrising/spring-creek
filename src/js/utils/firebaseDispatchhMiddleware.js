@@ -57,13 +57,23 @@ export default function firebaseDispatchMiddleware(client) {
         }
 
         if (firebase) {
-            return fireDB.ref(firebase).once('value', (snap) => {
-                const val = snap.val();
+            const type = firebase?.type;
+            const docId = firebase?.docId;
+            const ref = fireDB.ref(docId);
 
-                if (val) {
-                    dispatchSuccessAction(val);
-                }
-            }, error => dispatchErrorAction(error));
+            switch (type) {
+                case 'push':
+                    return ref.push(firebase?.data, () => {
+                        dispatchSuccessAction('success');
+                    });
+                default:
+                    return fireDB.ref(firebase).once('value', (snap) => {
+                        const val = snap.exists() ? snap.val() : 'No Data';
+
+                        dispatchSuccessAction(val);
+                    }, error => dispatchErrorAction(error));
+            }
+
         }
     };
 }

@@ -41,7 +41,7 @@ class Program extends Component {
         const { speakers, fast_sunday, conference } = program;
         const numberOfSpeakers = speakers?.length;
         const onlyOneSpeaker = numberOfSpeakers === 1;
-        let template = <Leaders className="speaker" title="Speaker" value="TBD" />;
+        let template = <Leaders className="speaker" title="Speaker" value="TBA" />;
 
         if (fast_sunday || conference || onlyOneSpeaker) {
             template = <div className="testimony-meeting center bold">{speakers[0]}</div>;
@@ -61,7 +61,7 @@ class Program extends Component {
         const { program } = this.props;
         const { speakers } = program;
         const numberOfSpeakers = speakers?.length;
-        let template = <Leaders className="speaker" title="Speaker" value="TBD" />;
+        let template = <Leaders className="speaker" title="Speaker" value="TBA" />;
 
         if (numberOfSpeakers === 4) {
             template = [

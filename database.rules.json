@@ -5,6 +5,10 @@
     "program": {
       ".read": true,
       ".write": true
+    },
+    "announcements": {
+      ".read": true,
+      ".write": true
     }
   }
 }
