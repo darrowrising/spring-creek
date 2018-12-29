@@ -1,0 +1,31 @@
+@import '~variables';
+
+.homepage-container {
+    color: @color-black-2;
+
+    .link-blocks {
+        display: flex;
+        margin-top: 40px;
+    }
+
+    .block {
+        border-radius: 4px;
+        color: @color-white-1;
+        height: 150px;
+        line-height: 150px;
+        transition: opacity 0.3s ease;
+        width: 50%;
+
+        &:hover {
+            opacity: 0.8;
+        }
+    }
+
+    .program {
+        background-color: @color-blue-2;
+    }
+
+    .announcements {
+        background-color: @color-blue-3;
+    }
+}

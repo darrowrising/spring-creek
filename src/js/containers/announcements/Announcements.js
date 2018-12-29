@@ -53,7 +53,7 @@ class Announcements extends Component {
                     autoFocus
                     canEscapeKeyClose
                     canOutsideClickClose
-                    className="announcement-modal"
+                    className="announcement-modal col-xs-12 col-sm-12 col-md-8"
                 >
                     <AnnouncementForm saveBtnClicked={this.handleModalClose} />
                 </Dialog>

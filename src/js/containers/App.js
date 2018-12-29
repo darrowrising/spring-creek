@@ -9,12 +9,15 @@ import createHistory from 'history/createBrowserHistory';
 
 import { configureStore } from '../store';
 import PageWrapper from './pageWrapper/PageWrapper';
+import { GAInitialize } from '../components/analytics/Analytics';
 
 import '../../less/base.less';
 
 const history = createHistory();
 const middleware = routerMiddleware(history); // Build the middleware for intercepting and dispatching navigation actions
 const store = configureStore(history, middleware); // Create a store connected with Redux
+
+GAInitialize();
 
 render((
     <Provider store={store}>

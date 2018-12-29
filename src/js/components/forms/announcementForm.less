@@ -3,8 +3,46 @@
 .announcement-form-container {
     padding: 15px;
 
+    .error-message {
+        padding: 0;
+    }
+
+    .detail-wrapper {
+        padding: 0 20px;
+    }
+
+    .select-header {
+        margin-bottom: 0.3rem;
+    }
+
+    .user-info-section {
+        padding-top: 20px;
+    }
+
+    .message-error {
+        border: 1px solid @color-red-1;
+    }
+
+    // Callout Ovverrides
+    .bp3-callout {
+        margin-bottom: 10px;
+    }
+
+    // Day Picker Overrides
+    .DayPicker {
+        display: flex !important;
+        justify-content: center;
+    }
+
+    .bp3-timepicker-arrow-row {
+        left: -30px;
+        position: relative;
+    }
+
+    // Editor Ovverrides
     .rdw-editor-main {
         background-color: @color-white-1;
+        height: 184px;
         padding: 20px;
 
         .public-DraftStyleDefault-block {

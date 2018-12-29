@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 import { func } from 'prop-types';
 import {
-    FormGroup, InputGroup, Button, ButtonGroup, HTMLSelect, Callout
+    FormGroup, InputGroup, Button, ButtonGroup, HTMLSelect, Callout, Label
 } from '@blueprintjs/core';
 import { Editor } from 'react-draft-wysiwyg';
 import { DatePicker } from "@blueprintjs/datetime";
@@ -50,14 +50,19 @@ class AnnouncementForm extends Component {
         const fieldErrors = {};
 
         keys.forEach(field => {
-            const isEmpty = state[field] === '';
+            let isEmpty = state[field] === '';
+
+            if (field === 'message') {
+                const content = draftToHtml(convertToRaw(state.message.getCurrentContent()));
+                isEmpty = /<p><\/p>/.test(content);
+            }
 
             if (isEmpty) {
                 fieldErrors[field] = msg.requiredField
             }
         });
 
-        if (fieldErrors !== {}) {
+        if (Object.keys(fieldErrors).length > 0) {
             return {
                 error: true,
                 messageHeader: msg.mainHeader,
@@ -84,13 +89,12 @@ class AnnouncementForm extends Component {
             setStorage('name', { firstName: state.firstName, lastName: state.lastName });
             saveBtnClicked(true);
             setAnnoucement(state);
-            return true;
         } else {
             this.setState({validate});
         }
     }
 
-    handleClear = () => this.setState(AnnouncementForm.defaultState);
+    handleClear = () => this.setState({validate: false, ...AnnouncementForm.defaultState});
 
     render() {
         const {
@@ -102,52 +106,65 @@ class AnnouncementForm extends Component {
         const errors = validate?.fieldErrors;
 
         return (
-            <div className="announcement-form-container">
-                { validate?.error && <Callout intent="danger" title={validate.messageHeader}>{validate.message}</Callout> }
-                <DatePicker
-                    maxDate={new Date(maxDate)}
-                    minDate={new Date(minDate)}
-                    value={date}
-                    onChange={(newDate) => this.handleChange('date', newDate)}
-                    timePickerProps={{
-                        useAmPm: true,
-                        showArrowButtons: true
-                    }}
-                />
-                <div className="event-date">{dateTime}</div>
-                <HTMLSelect options={groups} value={group} onChange={(event) => this.handleChange('group', event.currentTarget.value)} />
-                <FormGroup
-                    labelInfo="(required)"
-                    label="Announcement Title"
-                    labelFor="title-input"
-                    intent={errors?.title ? 'danger' : 'none'}
-                    helperText={errors?.title}
-                >
-                    <InputGroup
-                        placeholder="Title"
-                        value={title}
-                        intent={errors?.title ? 'danger' : 'none'}
-                        onChange={() => this.handleChange('title', event.target.value)}
-                    />
-                </FormGroup>
-                <FormGroup
-                    labelInfo="(required)"
-                    label="Announcement"
-                    labelFor="message"
-                >
-                    <Editor
-                        className={errors?.message ? 'message-error' : ''}
-                        editorState={message}
-                        onEditorStateChange={(content) => this.handleChange('message', content)}
-                        toolbar={{
-                            options: ['inline', 'blockType', 'fontSize', 'fontFamily', 'list', 'textAlign', 'colorPicker', 'link', 'emoji', 'remove', 'history'],
-                            fontFamily: {
-                                options: ['Arial', 'Georgia', 'Impact', 'Tahoma', 'Times New Roman', 'Verdana', 'Pattaya']
-                            }
+            <div className="announcement-form-container container-fluid">
+                { validate?.error && <Callout className="row" intent="danger" title={validate.messageHeader}><div className="col-xs-12 error-message">{validate.message}</div></Callout> }
+                <h4>When does this occur:</h4>
+                <div className="row">
+                    <DatePicker
+                        className="col-md-4"
+                        maxDate={new Date(maxDate)}
+                        minDate={new Date(minDate)}
+                        value={date}
+                        onChange={(newDate) => this.handleChange('date', newDate)}
+                        timePickerProps={{
+                            useAmPm: true,
+                            showArrowButtons: true
                         }}
                     />
-                </FormGroup>
-                <div className="row">
+                    <div className="detail-wrapper col-md-8">
+                        <div className="row">
+                            <FormGroup
+                                labelInfo="(required)"
+                                label="Announcement Title"
+                                labelFor="title-input"
+                                intent={errors?.title ? 'danger' : 'none'}
+                                helperText={errors?.title}
+                                className="col-md-8"
+                            >
+                                <InputGroup
+                                    placeholder="Title"
+                                    value={title}
+                                    intent={errors?.title ? 'danger' : 'none'}
+                                    onChange={() => this.handleChange('title', event.target.value)}
+                                />
+                            </FormGroup>
+                            <div className="col-md-4">
+                                <h4 className="select-header">Who is this for:</h4>
+                                <HTMLSelect
+                                    options={groups}
+                                    value={group}
+                                    fill
+                                    onChange={(event) => this.handleChange('group', event.currentTarget.value)}
+                                />
+                            </div>
+                        </div>
+                        <h4 className="editor-header">Message:</h4>
+                        <div className={errors?.message ? 'editor message-error' : 'editor'}>
+                            <Editor
+                                className={errors?.message ? 'editor message-error' : 'editor'}
+                                editorState={message}
+                                onEditorStateChange={(content) => this.handleChange('message', content)}
+                                toolbar={{
+                                    options: ['inline', 'blockType', 'fontSize', 'fontFamily', 'list', 'textAlign', 'colorPicker', 'link', 'emoji', 'remove', 'history'],
+                                    fontFamily: {
+                                        options: ['Arial', 'Georgia', 'Impact', 'Tahoma', 'Times New Roman', 'Verdana', 'Pattaya']
+                                    }
+                                }}
+                            />
+                        </div>
+                    </div>
+                </div>
+                <div className="row user-info-section">
                     <FormGroup
                         labelInfo="(required)"
                         label="Your First Name"
