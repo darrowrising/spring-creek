@@ -100,6 +100,7 @@ class AnnouncementForm extends Component {
         const {
             date, title, group, firstName, lastName, message, validate
         } = this.state;
+        const { saveBtnClicked } = this.props;
         const maxDate = moment().add(1, 'Y').format(dateFormat.smallDate);
         const minDate = moment().subtract(1, 'M').format(dateFormat.smallDate);
         const dateTime = moment(date).format(dateFormat.dateTime);
@@ -108,10 +109,10 @@ class AnnouncementForm extends Component {
         return (
             <div className="announcement-form-container container-fluid">
                 { validate?.error && <Callout className="row" intent="danger" title={validate.messageHeader}><div className="col-xs-12 error-message">{validate.message}</div></Callout> }
-                <h4>When does this occur:</h4>
+                <label>When does it occur or end</label>
                 <div className="row">
                     <DatePicker
-                        className="col-md-4"
+                        className="col-sm-4 col-xs-12"
                         maxDate={new Date(maxDate)}
                         minDate={new Date(minDate)}
                         value={date}
@@ -121,7 +122,7 @@ class AnnouncementForm extends Component {
                             showArrowButtons: true
                         }}
                     />
-                    <div className="detail-wrapper col-md-8">
+                    <div className="detail-wrapper col-sm-8 col-xs-12">
                         <div className="row">
                             <FormGroup
                                 labelInfo="(required)"
@@ -129,7 +130,7 @@ class AnnouncementForm extends Component {
                                 labelFor="title-input"
                                 intent={errors?.title ? 'danger' : 'none'}
                                 helperText={errors?.title}
-                                className="col-md-8"
+                                className="col-sm-8 col-xs-12"
                             >
                                 <InputGroup
                                     placeholder="Title"
@@ -138,7 +139,7 @@ class AnnouncementForm extends Component {
                                     onChange={() => this.handleChange('title', event.target.value)}
                                 />
                             </FormGroup>
-                            <div className="col-md-4">
+                            <div className="col-sm-4 col-xs-12">
                                 <h4 className="select-header">Who is this for:</h4>
                                 <HTMLSelect
                                     options={groups}
@@ -171,7 +172,7 @@ class AnnouncementForm extends Component {
                         labelFor="firstName-input"
                         intent={errors?.firstName ? 'danger' : 'none'}
                         helperText={errors?.firstName}
-                        className="col-lg-6"
+                        className="col-sm-6 col-xs-12"
                     >
                         <InputGroup
                             placeholder="First Name"
@@ -186,7 +187,7 @@ class AnnouncementForm extends Component {
                         labelFor="lastName-input"
                         intent={errors?.lastName ? 'danger' : 'none'}
                         helperText={errors?.lastName}
-                        className="col-lg-6"
+                        className="col-sm-6 col-xs-12"
                     >
                         <InputGroup
                             placeholder="Last Name"
@@ -207,6 +208,11 @@ class AnnouncementForm extends Component {
                         onClick={this.handleClear}
                     />
                 </ButtonGroup>
+                <Button
+                    text="Close"
+                    className="right"
+                    onClick={saveBtnClicked}
+                />
             </div>
         );
     }

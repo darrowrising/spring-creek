@@ -1,34 +1,39 @@
-/* TODO: Remove disabled */
-/* eslint-disable  */
-import React from 'react';
+import React, { Component } from 'react';
 import { Switch, Route } from 'react-router-dom';
-//import {} from 'prop-types';
+
+import { GAPageView } from '../../components/analytics/Analytics';
 import Header from '../../components/header/Header';
 import Home from '../home/Home';
 import Program from '../program/Program';
 import Announcements from '../announcements/Announcements';
+import Moderate from '../moderate/Moderate';
 
 import './pageWrapper.less';
 
-function PageWrapper(props) {
-    return (
-        <div id="pageWrapper">
-            <Header />
-            <Switch>
-                <Route path="/" exact component={Home} />
-                <Route path="/program" component={Program} />
-                <Route path="/announcements" component={Announcements} />
-            </Switch>
-        </div>
-    );
+export default class PageWrapper extends Component {
+    shouldComponentUpdate(next) {
+        const { location } = next;
+        let pathName = location.pathname;
+
+        if (pathName === '/') pathName = 'home';
+
+        GAPageView(pathName);
+
+        return true;
+    }
+
+    render() {
+        return (
+            <div id="pageWrapper">
+                <Header />
+                <Switch>
+                    <Route path="/" exact component={Home} />
+                    <Route path="/program" component={Program} />
+                    <Route path="/announcements" component={Announcements} />
+                    <Route path="/moderate" component={Moderate} />
+                    <Route path="*" component={Home} />
+                </Switch>
+            </div>
+        );
+    }
 }
-
-//PageWrapper.propTypes = {
-
-//};
-
-//PageWrapper.defaultProps = {
-
-//};
-
-export default PageWrapper;

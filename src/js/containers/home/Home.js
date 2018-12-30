@@ -1,12 +1,22 @@
-/* TODO: Remove disabled */
-/* eslint-disable  */
 import React from 'react';
 import { Link } from 'react-router-dom';
-//import {} from 'prop-types';
+
+import { GAEvent } from '../../components/analytics/Analytics';
 
 import './home.less';
 
-function Home(props) {
+function handleClick(event) {
+    const { currentTarget } = event;
+    const label = currentTarget.getAttribute('href').replace('/', '');
+
+    GAEvent({
+        category: 'User',
+        action: 'Home Page Menu Clicked',
+        label
+    });
+}
+
+function Home() {
     return (
         <div className="homepage-container page center">
             <div className="content-width">
@@ -17,10 +27,10 @@ function Home(props) {
                     </p>
                 </div>
                 <div className="link-blocks">
-                    <Link className="block program" to="/program">
+                    <Link className="block program" to="/program" onClick={handleClick}>
                         Sacrament Program
                     </Link>
-                    <Link className="block announcements" to="/announcements">
+                    <Link className="block announcements" to="/announcements" onClick={handleClick}>
                         Announcements
                     </Link>
                 </div>
@@ -28,13 +38,5 @@ function Home(props) {
         </div>
     );
 }
-
-//Home.propTypes = {
-
-//};
-
-//Home.defaultProps = {
-
-//};
 
 export default Home;
