@@ -2,3 +2,33 @@
 @import '~@blueprintjs/core/lib/css/blueprint.css';
 @import '~@blueprintjs/datetime/lib/css/blueprint-datetime.css';
 @import '~react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+
+/* Blueprint overrides */
+input,
+select,
+textarea {
+    font-size: 16px !important;
+    min-height: 40px !important;
+}
+
+.bp3-timepicker-input-row {
+    min-height: 40px !important;
+}
+
+.bp3-datepicker-month-select {
+    select {
+        width: 110px;
+    }
+}
+
+.bp3-datepicker-year-select {
+    select {
+        width: 70px;
+    }
+}
+
+.bp3-html-select {
+    .bp3-icon {
+        top: 12px !important;
+    }
+}

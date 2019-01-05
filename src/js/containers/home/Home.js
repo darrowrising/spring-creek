@@ -21,9 +21,9 @@ function Home() {
         <div className="homepage-container page center">
             <div className="content-width">
                 <div className="main-message">
-                    <h2>Welcome to the new Spring Creek Ward website.</h2>
-                    <p>This will be a location for ward information and communication.
-                        This is a work in progress so please keep coming back to learn more of the changes.
+                    <h2>Welcome to the new Spring Creek Ward website</h2>
+                    <p>This will be a location to post and view ward information.
+                        This is a work in progress so please keep checking the site.
                     </p>
                 </div>
                 <div className="link-blocks">
@@ -32,6 +32,9 @@ function Home() {
                     </Link>
                     <Link className="block announcements" to="/announcements" onClick={handleClick}>
                         Announcements
+                    </Link>
+                    <Link className="block" to="/primary" onClick={handleClick}>
+                        Primary Classes
                     </Link>
                 </div>
             </div>

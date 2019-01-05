@@ -49,6 +49,17 @@ export default function firebaseDispatchMiddleware(client) {
             }
         }
 
+        function addKeyToObjectValue(obj) {
+            const keys = Object.keys(obj);
+
+            return keys.map((key) => {
+                const data = obj[key];
+                data.id = key;
+
+                return data;
+            });
+        }
+
         // Dispatch the load action immediately
         // XXX The LOAD action is dispatched before the async behavior is triggered
         // i.e. before the promise is created
@@ -60,12 +71,40 @@ export default function firebaseDispatchMiddleware(client) {
             const type = firebase?.type;
             const docId = firebase?.docId;
             const ref = fireDB.ref(docId);
+            const child = firebase?.key;
+            const data = firebase?.data;
 
             switch (type) {
                 case 'push':
-                    return ref.push(firebase?.data, () => {
+                    return ref.push(firebase?.data, (snap) => {
+                        const val = snap;
+
                         dispatchSuccessAction('success');
                     });
+                case 'query':
+                    const val = firebase?.equalTo;
+
+                    return ref.orderByChild(child).equalTo(val).once('value', (snap) => {
+                        const valObject = snap.val();
+                        const val = addKeyToObjectValue(valObject);
+
+                        dispatchSuccessAction(val);
+                    });
+                case 'remove':
+                    return ref.remove().then(function() {
+                            const id = docId.split('/').pop();
+                            dispatchSuccessAction(id);
+                        })
+                        .catch(function(error) {
+                            dispatchErrorAction(error);
+                        });
+                case 'update':
+                    return ref.update(data).then(function() {
+                            dispatchSuccessAction(data);
+                        })
+                        .catch(function(error) {
+                            dispatchErrorAction(error);
+                        });
                 default:
                     return fireDB.ref(firebase).once('value', (snap) => {
                         const val = snap.exists() ? snap.val() : 'No Data';

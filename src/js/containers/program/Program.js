@@ -62,7 +62,7 @@ class Program extends Component {
         const { speakers } = program;
         const numberOfSpeakers = speakers?.length;
         let template = <Leaders className="speaker" title="Speaker" value="TBA" />;
-
+        console.log('numberOfSpeakers:', numberOfSpeakers);
         if (numberOfSpeakers === 4) {
             template = [
                 <Leaders key={shortId.generate()} className="speaker" title="Speaker" value={speakers[2]} />,
@@ -94,7 +94,7 @@ class Program extends Component {
                 <Leaders title="Chorister" value={program.chorister} />
                 <Leaders title="Organist" value={program.organist} />
 
-                <h3 className="center">Announcements</h3>
+                <h3 className="center">Welcome</h3>
 
                 <Leaders
                     title="Opening Hymn"
@@ -116,12 +116,12 @@ class Program extends Component {
 
                 { this.handleFirstSpeakers() }
                 {
-                    program.intermediant_hymn && (
+                    program.intermediate_hymn && (
                         <Leaders
-                            className="intermediant-hymn"
-                            title="Intermediant Hymn"
-                            value={program.intermediant_hymn}
-                            subValue={program.intermediant_hymn_title}
+                            className="intermediate-hymn"
+                            title="Intermediate Hymn"
+                            value={program.intermediate_hymn}
+                            subValue={program.intermediate_hymn_title}
                         />
                     )
                 }

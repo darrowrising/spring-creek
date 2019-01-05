@@ -39,7 +39,7 @@ class Announcements extends Component {
     handleGAClick = (label) => {
         GAEvent({
             category: 'User',
-            action: 'Button Clicked',
+            action: 'Click | Add Announcement',
             label
         });
     }

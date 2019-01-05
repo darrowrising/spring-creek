@@ -34,8 +34,8 @@ class AnnouncementForm extends Component {
         message: EditorState.createEmpty(),
         group: 'Ward',
         title: '',
-        firstName: getStorage('name').firstName,
-        lastName: getStorage('name').lastName
+        firstName: getStorage('name')?.firstName || '',
+        lastName: getStorage('name')?.lastName || ''
     }
 
     constructor(props) {
@@ -85,6 +85,7 @@ class AnnouncementForm extends Component {
             state.message = draftToHtml(convertToRaw(state.message.getCurrentContent()));
             state.createdDate = moment().format(dateFormat.longDate);
             state.date = moment(state.date).toString();
+            state.moderate = true;
 
             setStorage('name', { firstName: state.firstName, lastName: state.lastName });
             saveBtnClicked(true);
@@ -101,15 +102,15 @@ class AnnouncementForm extends Component {
             date, title, group, firstName, lastName, message, validate
         } = this.state;
         const { saveBtnClicked } = this.props;
-        const maxDate = moment().add(1, 'Y').format(dateFormat.smallDate);
-        const minDate = moment().subtract(1, 'M').format(dateFormat.smallDate);
+        const maxDate = moment().add(1, 'Y').format();
+        const minDate = moment().subtract(1, 'M').format();
         const dateTime = moment(date).format(dateFormat.dateTime);
         const errors = validate?.fieldErrors;
 
         return (
             <div className="announcement-form-container container-fluid">
                 { validate?.error && <Callout className="row" intent="danger" title={validate.messageHeader}><div className="col-xs-12 error-message">{validate.message}</div></Callout> }
-                <label>When does it occur or end</label>
+                <label>When does the event occur or end:</label>
                 <div className="row">
                     <DatePicker
                         className="col-sm-4 col-xs-12"
@@ -126,11 +127,11 @@ class AnnouncementForm extends Component {
                         <div className="row">
                             <FormGroup
                                 labelInfo="(required)"
-                                label="Announcement Title"
+                                label="Announcement Title:"
                                 labelFor="title-input"
                                 intent={errors?.title ? 'danger' : 'none'}
                                 helperText={errors?.title}
-                                className="col-sm-8 col-xs-12"
+                                className="col-sm-7 col-xs-12"
                             >
                                 <InputGroup
                                     placeholder="Title"
@@ -139,8 +140,8 @@ class AnnouncementForm extends Component {
                                     onChange={() => this.handleChange('title', event.target.value)}
                                 />
                             </FormGroup>
-                            <div className="col-sm-4 col-xs-12">
-                                <h4 className="select-header">Who is this for:</h4>
+                            <div className="col-sm-5 col-xs-12">
+                                <label className="select-header">Who is this event for:</label>
                                 <HTMLSelect
                                     options={groups}
                                     value={group}
@@ -149,14 +150,14 @@ class AnnouncementForm extends Component {
                                 />
                             </div>
                         </div>
-                        <h4 className="editor-header">Message:</h4>
+                        <label className="editor-header">Message:</label>
                         <div className={errors?.message ? 'editor message-error' : 'editor'}>
                             <Editor
                                 className={errors?.message ? 'editor message-error' : 'editor'}
                                 editorState={message}
                                 onEditorStateChange={(content) => this.handleChange('message', content)}
                                 toolbar={{
-                                    options: ['inline', 'blockType', 'fontSize', 'fontFamily', 'list', 'textAlign', 'colorPicker', 'link', 'emoji', 'remove', 'history'],
+                                    options: ['inline', 'fontFamily', 'list', 'textAlign', 'colorPicker', 'link', 'remove', 'history'],
                                     fontFamily: {
                                         options: ['Arial', 'Georgia', 'Impact', 'Tahoma', 'Times New Roman', 'Verdana', 'Pattaya']
                                     }
@@ -168,7 +169,7 @@ class AnnouncementForm extends Component {
                 <div className="row user-info-section">
                     <FormGroup
                         labelInfo="(required)"
-                        label="Your First Name"
+                        label="Your First Name:"
                         labelFor="firstName-input"
                         intent={errors?.firstName ? 'danger' : 'none'}
                         helperText={errors?.firstName}
@@ -183,7 +184,7 @@ class AnnouncementForm extends Component {
                     </FormGroup>
                     <FormGroup
                         labelInfo="(required)"
-                        label="Your Last Name"
+                        label="Your Last Name:"
                         labelFor="lastName-input"
                         intent={errors?.lastName ? 'danger' : 'none'}
                         helperText={errors?.lastName}
@@ -196,21 +197,25 @@ class AnnouncementForm extends Component {
                             onChange={() => this.handleChange('lastName', event.target.value)}
                         />
                     </FormGroup>
+                    { /* <div className="">Your name is needed for the approval process.</div> */ }
                 </div>
                 <ButtonGroup>
                     <Button
                         text="Save"
                         intent="success"
+                        large
                         onClick={this.handleSave}
                     />
                     <Button
                         text="Clear"
+                        large
                         onClick={this.handleClear}
                     />
                 </ButtonGroup>
                 <Button
                     text="Close"
                     className="right"
+                    large
                     onClick={saveBtnClicked}
                 />
             </div>

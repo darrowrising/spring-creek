@@ -6,7 +6,7 @@ export function setAnnoucementData(data) {
         successActionType: ActionTypes.SET_ANNOUCEMENT_SUCCESS,
         failureActionType: ActionTypes.SET_ANNOUCEMENT_FAILURE,
         firebase: {
-            docId: '/announcements/moderate',
+            docId: '/announcements',
             type: 'push',
             data
         }

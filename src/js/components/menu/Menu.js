@@ -25,6 +25,7 @@ function MenuComponent(props) {
             <MenuItem text="Home" onClick={() => onClick(history, '/')} />
             <MenuItem text="Sacrament Program" onClick={() => onClick(history, '/program')} />
             <MenuItem text="Announcements" onClick={() => onClick(history, '/announcements')} />
+            <MenuItem text="Primary Classes" onClick={() => onClick(history, '/primary')} />
         </Menu>
     );
 }
