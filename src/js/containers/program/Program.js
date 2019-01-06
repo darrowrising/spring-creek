@@ -62,7 +62,7 @@ class Program extends Component {
         const { speakers } = program;
         const numberOfSpeakers = speakers?.length;
         let template = <Leaders className="speaker" title="Speaker" value="TBA" />;
-        console.log('numberOfSpeakers:', numberOfSpeakers);
+
         if (numberOfSpeakers === 4) {
             template = [
                 <Leaders key={shortId.generate()} className="speaker" title="Speaker" value={speakers[2]} />,

@@ -1,0 +1,119 @@
+@import '~variables';
+
+.announcement-container {
+    border: 1px solid @color-grey-3;
+    border-radius: 6px;
+    color: @color-black-2;
+    margin-top: 20px;
+    max-width: 450px;
+    overflow: hidden;
+
+    .content-wrapper {
+        padding: 0;
+    }
+
+    .event-date {
+        padding-right: 0;
+        text-align: right;
+
+        div {
+            display: inline-block;
+            font-size: 85%;
+            font-weight: bold;
+            padding-right: 10px;
+
+            &:last-child {
+                padding-right: 0;
+            }
+        }
+    }
+
+    .content {
+        padding: 0 10px;
+        width: 100%;
+
+        & > div { // stylelint-disable-line
+            &:first-child {
+                align-items: center;
+                border-bottom: 1px solid @color-grey-3;
+                margin: 0 20px;
+                padding: 10px;
+            }
+        }
+    }
+
+    .group {
+        font-size: 10px;
+        padding: 5px;
+        text-align: left;
+        text-indent: 10px;
+    }
+
+    .title {
+        font-size: 100%;
+        margin: 0;
+        text-align: left;
+        text-indent: -17px;
+    }
+
+    .message {
+        padding: 15px 20px 20px 30px;
+
+        p {
+            margin: 0;
+
+            span {
+                font-size: 14px !important;
+            }
+        }
+    }
+
+    .moderate-created-details {
+        background-color: @color-grey-3;
+        font-size: 12px;
+        margin: 0 -10px;
+        padding: 10px;
+    }
+
+    .moderate-buttons {
+        padding-top: 10px;
+    }
+
+    .relief-society {
+        background-color: lighten(@color-green-1, 20%);
+        color: @color-white-1;
+    }
+
+    .ward {
+        background-color: lighten(@color-pink-1, 5%);
+    }
+
+    .primary {
+        background-color: @color-blue-3;
+        color: @color-white-1;
+    }
+}
+
+@media only screen and (max-width: @mq-mobile-width) {
+    .announcement-container {
+        .content {
+            padding: 0;
+
+            & > div {
+                &:first-child {
+                    border-bottom: 1px solid @color-grey-3;
+                    margin: 0 10px;
+                    padding: 5px;
+                }
+            }
+        }
+
+        .title {
+            text-indent: -11px;
+        }
+
+        .event-date {
+            font-size: 13px;
+        }
+    }
+}

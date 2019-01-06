@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { shape } from 'prop-types';
 import { Switch, Route } from 'react-router-dom';
 
 import { GAPageView } from '../../components/analytics/Analytics';
@@ -8,10 +9,30 @@ import Program from '../program/Program';
 import Announcements from '../announcements/Announcements';
 import Primary from '../primary/Primary';
 import Moderate from '../moderate/Moderate';
+import { handleURLParams } from '../../utils/qrCodes';
 
 import './pageWrapper.less';
 
 export default class PageWrapper extends Component {
+    static propTypes = {
+        location: shape(),
+        history: shape()
+    }
+
+    static defaultProps = {
+        location: {},
+        history: {}
+    }
+
+    componentDidMount() {
+        const { location, history } = this.props;
+        const isQR = handleURLParams(location.search);
+
+        if (isQR) {
+            history.push(location.pathname);
+        }
+    }
+
     shouldComponentUpdate(next) {
         const { location } = next;
         let pathName = location.pathname;

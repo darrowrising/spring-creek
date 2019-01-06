@@ -3,8 +3,8 @@ import ReactGA from 'react-ga';
 
 export function GAInitialize() {
     // const gaTrackingId = isProduction() ? 'UA-131499754-1' : 'UA-112788685-4';
-    // const gaTrackingId = 'UA-131499754-1';
-    const gaTrackingId = 'UA-131499754-2';
+    const gaTrackingId = 'UA-131499754-1';
+    // const gaTrackingId = 'UA-131499754-2';
 
     ReactGA.initialize(gaTrackingId, {
         debug: false,

@@ -85,7 +85,7 @@ export default function firebaseDispatchMiddleware(client) {
                     const val = firebase?.equalTo;
 
                     return ref.orderByChild(child).equalTo(val).once('value', (snap) => {
-                        const valObject = snap.val();
+                        const valObject = snap.val() || {};
                         const val = addKeyToObjectValue(valObject);
 
                         dispatchSuccessAction(val);

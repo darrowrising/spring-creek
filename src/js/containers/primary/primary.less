@@ -1,1 +1,32 @@
-// something
+@import '~variables';
+
+.primary-container {
+    margin: 0 auto;
+    max-width: 1400px;
+    padding-top: 40px;
+
+    .teachers,
+    .room {
+        margin: 0;
+    }
+
+    .class {
+        padding-right: 20px;
+    }
+
+    .teachers {
+        font-size: 16px;
+    }
+
+    .room {
+        border-bottom: 1px solid @color-grey-3;
+        color: @color-grey-1;
+        font-size: 12px;
+        padding: 5px 0;
+    }
+
+    .students {
+        font-size: 14px;
+        padding: 10px 0 20px;
+    }
+}

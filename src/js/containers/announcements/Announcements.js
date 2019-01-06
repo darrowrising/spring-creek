@@ -1,24 +1,30 @@
 /* TODO: Remove disabled */
 /* eslint-disable  */
 import React, { Component } from 'react';
-//import {} from 'prop-types';
+import { arrayOf, shape } from 'prop-types';
 import { Button, Dialog, Toast, Toaster } from '@blueprintjs/core';
 import { connect } from 'react-redux';
+import shortId from 'shortid';
 
 import AnnouncementForm from '../../components/forms/AnnouncementsForm';
-import { toastAnnoucement } from './announcementsEntities';
+import AnnouncementItem from '../../components/announcementItem/AnnouncementItem';
+import { toastAnnoucement, getAnnoucements } from './announcementsEntities';
 import { GAEvent } from '../../components/analytics/Analytics';
+import { getAnnouncementList } from './announcementsActions';
 
 import './announcements.less';
 
 class Announcements extends Component {
-    //static propTypes = {
-    //
-    //};
+    static propTypes = {
+        list: arrayOf(
+            shape()
+        )
+    };
 
-    //static defaultProps = {
-    //
-    //}
+    static defaultProps = {
+        list: []
+    }
+
     constructor(props) {
         super(props);
         this.state = {
@@ -27,6 +33,11 @@ class Announcements extends Component {
         this.refHandlers = {
             toaster: (ref) => this.toaster = ref
         }
+    }
+
+    componentDidMount() {
+        const { getList } = this.props;
+        getList();
     }
 
     shouldComponentUpdate(nextProps) {
@@ -56,12 +67,22 @@ class Announcements extends Component {
 
     render() {
         const { modalOpen } = this.state;
-        const { toast } = this.props;
+        const { toast, list } = this.props;
         const AddBtnText = "Add an Announcement";
 
         return (
-            <div className="announcement-container page center">
+            <div className="announcement-page page center container-fluid">
                 <Button icon="add" intent="primary" text={AddBtnText} onClick={this.handleModalOpen} />
+                <div className="announcements row around-sm">
+                    {
+                        list.map(item => (
+                            <AnnouncementItem
+                                key={shortId.generate()}
+                                data={item}
+                            />
+                        ))
+                    }
+                </div>
                 <Dialog
                     title={AddBtnText}
                     isOpen={modalOpen}
@@ -80,10 +101,12 @@ class Announcements extends Component {
 }
 
 const mapStateToProps = state => ({
-    toast: toastAnnoucement(state)
+    toast: toastAnnoucement(state),
+    list: getAnnoucements(state)
 });
 
 const mapDispatchToProps = {
+    getList: getAnnouncementList
 };
 
 export default connect(
