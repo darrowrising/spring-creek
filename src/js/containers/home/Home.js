@@ -18,7 +18,7 @@ function handleClick(event) {
 
 function Home() {
     return (
-        <div className="homepage-container page center">
+        <div className="homepage-container page center container">
             <div className="content-width">
                 <div className="main-message">
                     <h2>Welcome to the new Spring Creek Ward website</h2>
@@ -26,14 +26,14 @@ function Home() {
                         This is a work in progress so please keep checking the site.
                     </p>
                 </div>
-                <div className="link-blocks">
-                    <Link className="block program" to="/program" onClick={handleClick}>
+                <div className="link-blocks row">
+                    <Link className="block program col-xs-12 col-sm" to="/program" onClick={handleClick}>
                         Sacrament Program
                     </Link>
-                    <Link className="block announcements" to="/announcements" onClick={handleClick}>
+                    <Link className="block announcements col-xs-12 col-sm" to="/announcements" onClick={handleClick}>
                         Announcements
                     </Link>
-                    <Link className="block" to="/primary" onClick={handleClick}>
+                    <Link className="block primary col-xs-12 col-sm" to="/primary" onClick={handleClick}>
                         Primary Classes
                     </Link>
                 </div>
