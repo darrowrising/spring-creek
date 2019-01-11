@@ -5,7 +5,8 @@
   "scripts": {
     "start": "NODE_ENV=development node -r @babel/register server/index.js",
     "build": "webpack -p",
-    "deploy": "yarn build && yarn firebase deploy",
+    "deploy": "yarn build && yarn firebase deploy --only hosting:test",
+    "deploy:prod": "yarn buld && yarn firebase deploy --only hosting:production",
     "theme": "gulp build-css build-assets --gulpfile ./semantic/gulpfile.js"
   },
   "author": "Ben Ellis <benellislds@gmail.com>",

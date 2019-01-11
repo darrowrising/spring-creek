@@ -1,8 +1,10 @@
 import { createSelector } from 'reselect';
+import moment from 'moment';
 
 import { getEntities } from '../../reducers/selectors';
 import ActionTypes from '../../configs/constants';
 import messaging from '../../configs/messaging';
+import { fbRef } from '../../utils/fireDB';
 
 const initialState = {};
 
@@ -18,10 +20,26 @@ export const announcementEntities = (state = initialState, action) => {
             return Object.assign({}, state, actionState);
         }
         case ActionTypes.GET_ANNOUCEMENT_LIST_SUCCESS: {
-            const actionState = {
-                data: result
-            };
+            const data = result.filter((item) => {
+                const now = moment();
+                const eventDate = moment(item.date);
+                const diff = eventDate.diff(now, 'days') < -1;
 
+                if (diff) {
+                    const options = {
+                        type: 'remove',
+                        docId: `/announcements/${item.id}`,
+                    };
+
+                    fbRef(options);
+                }
+
+                return !diff;
+            });
+            const actionState = {
+                data
+            };
+            console.log('data, result:', data, result);
             return Object.assign({}, state, actionState);
         }
         default:
