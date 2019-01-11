@@ -39,7 +39,7 @@ export const announcementEntities = (state = initialState, action) => {
             const actionState = {
                 data
             };
-            console.log('data, result:', data, result);
+
             return Object.assign({}, state, actionState);
         }
         default:
