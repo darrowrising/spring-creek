@@ -3,7 +3,7 @@ import 'firebase/database';
 import env from './envHandler';
 import fireConfig from '../configs/firebase';
 
-firebase.initializeApp(fireConfig[env().firebase]);
+firebase.initializeApp(fireConfig[env()?.firebase]);
 
 const fireDB = firebase.database();
 

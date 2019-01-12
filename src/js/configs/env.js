@@ -3,7 +3,7 @@ export default [{
     firebase: 'prod',
     analytics: 'UA-131499754-1',
     host: 'springcreeklds.firebaseapp.com',
-    domain: 'springcreekward.com'
+    domain: 'www.springcreekward.com'
 }, {
     environment: 'dev',
     firebase: 'test',

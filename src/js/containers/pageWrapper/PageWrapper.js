@@ -9,6 +9,7 @@ import Program from '../program/Program';
 import Announcements from '../announcements/Announcements';
 import Primary from '../primary/Primary';
 import Moderate from '../moderate/Moderate';
+import SundaySchool from '../sundaySchool/SundaySchool';
 import { handleURLParams } from '../../utils/qrCodes';
 
 import './pageWrapper.less';
@@ -53,6 +54,7 @@ export default class PageWrapper extends Component {
                     <Route path="/program" component={Program} />
                     <Route path="/announcements" component={Announcements} />
                     <Route path="/primary" component={Primary} />
+                    <Route path="/sundayschool" component={SundaySchool} />
                     <Route path="/moderate" component={Moderate} />
                     <Route path="*" component={Home} />
                 </Switch>
