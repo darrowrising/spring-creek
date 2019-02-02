@@ -81,7 +81,8 @@ class Program extends Component {
 
     render() {
         const { program } = this.props;
-
+        const { musical_number } = program;
+        console.log('program:', musical_number, program);
         return (
             <div className="program-container page center">
                 <div className="center">
@@ -126,7 +127,7 @@ class Program extends Component {
                     )
                 }
                 {
-                    program.musical_number && (
+                    musical_number && (
                         <div className="center musical-number-wrapper">
                             {
                                 program.musical_number.map(text => <div key={shortId.generate()} className="musical-number">{text}</div>)

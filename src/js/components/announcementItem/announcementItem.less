@@ -4,9 +4,10 @@
     border: 1px solid @color-grey-3;
     border-radius: 6px;
     color: @color-black-2;
-    margin-top: 20px;
+    margin: 20px 2% 0 0;
     max-width: 450px;
     overflow: hidden;
+    text-align: left;
 
     .content-wrapper {
         padding: 0;
@@ -61,6 +62,7 @@
 
         p {
             margin: 0;
+            min-height: 10px;
 
             span {
                 font-size: 14px !important;
@@ -85,7 +87,38 @@
     }
 
     .ward {
-        background-color: lighten(@color-pink-1, 5%);
+        background-color: @color-green-1;
+        color: @color-white-1;
+    }
+
+    .scouts {
+        background-color: @color-complement;
+        color: @color-white-1;
+    }
+
+    .stake {
+        background-color: lighten(@color-complement, 20%);
+        color: @color-white-1;
+    }
+
+    .neighborhood {
+        background-color: @color-red-1;
+        color: @color-white-1;
+    }
+
+    .young-men {
+        background-color: lighten(@color-blue-1, 10%);
+        color: @color-white-1;
+    }
+
+    .young-women {
+        background-color: lighten(@color-red-1, 20%);
+        color: @color-white-1;
+    }
+
+    .elders-quorum {
+        background-color: @color-blue-2;
+        color: @color-white-1;
     }
 
     .primary {

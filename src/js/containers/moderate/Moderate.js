@@ -43,24 +43,25 @@ class Moderate extends Component {
         getList();
     }
 
-    handleModalTemplate = () => {
-        const state = {...this.state};
-        const { data } = this.props.moderate;
-
-        if (state.editDialog) {
-            const info = data.find(item => item.id === state.id);
-            return <AnnouncementForm {...info } saveBtnClicked={() => this.handleModalClose('Announcement Created')} />
-        } else if (state.approvedDialog) {
-            return <EventApproval approved={this.handleApprovalFinal} onClose={this.handleModalClose} />
-        }
-    }
-
     handleGAClick = (label, actionType) => {
         GAEvent({
             category: 'Moderate',
             action: `Click | ${actionType}`,
             label
         });
+    }
+
+    handleModalTemplate = () => {
+        const state = {...this.state};
+        const { data } = this.props.moderate;
+
+        if (state.editDialog) {
+            const eventData = data.find(item => item.id === state.dataId);
+
+            return <AnnouncementForm data={eventData} saveBtnClicked={() => this.handleModalClose('Announcement Edited')} />
+        } else if (state.approvedDialog) {
+            return <EventApproval approved={this.handleApprovalFinal} onClose={this.handleModalClose} />
+        }
     }
 
     handleAnnouncementDelete = (id) => {
@@ -98,8 +99,8 @@ class Moderate extends Component {
         this.setState({approvedDialog: false, modalOpen: false});
     }
 
-    handleAnnouncementEdit = () => {
-
+    handleAnnouncementEdit = (event) => {
+        this.setState({editDialog: true, dataId: event.id, modalOpen: true});
     }
 
     handleModalClose = (action, label) => {
@@ -121,6 +122,7 @@ class Moderate extends Component {
 
         return (
             <div className="moderate-container page container-fluid">
+                <h1 className="page-header">Moderation Page</h1>
                 {
                     data.map(item => (
                         <AnnouncementItem

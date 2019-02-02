@@ -1,13 +1,13 @@
 /* TODO: Remove eslint-disable */
 /* eslint-disable */
 import React, { Component } from 'react';
-import { func } from 'prop-types';
+import { func, shape, bool } from 'prop-types';
 import {
     FormGroup, InputGroup, Button, ButtonGroup, HTMLSelect, Callout, Label
 } from '@blueprintjs/core';
 import { Editor } from 'react-draft-wysiwyg';
 import { DatePicker } from "@blueprintjs/datetime";
-import { EditorState, convertToRaw } from 'draft-js';
+import { EditorState, convertToRaw, convertFromHTML, ContentState } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import moment from 'moment';
 import { connect } from 'react-redux';
@@ -22,17 +22,19 @@ import './announcementForm.less';
 
 class AnnouncementForm extends Component {
     static propTypes = {
-        saveBtnClicked: func
+        saveBtnClicked: func,
+        data: shape()
     };
 
     static defaultProps = {
-        saveBtnClicked: null
+        saveBtnClicked: null,
+        data: null
     }
 
     static defaultState = {
         date: new Date(),
         message: EditorState.createEmpty(),
-        group: 'Ward',
+        group: '-Select-',
         title: '',
         firstName: getStorage('name')?.firstName || '',
         lastName: getStorage('name')?.lastName || ''
@@ -40,7 +42,18 @@ class AnnouncementForm extends Component {
 
     constructor(props) {
         super(props);
-        this.state = AnnouncementForm.defaultState
+        if (props.data) {
+            const blocksFromHTML = convertFromHTML(props.data.message);
+            const html = ContentState.createFromBlockArray(
+              blocksFromHTML.contentBlocks,
+              blocksFromHTML.entityMap
+            );
+            props.data.date = new Date(moment(props.data.date).format());
+            props.data.message = EditorState.createWithContent(html);
+            props.data.firstName = getStorage('name')?.firstName || '';
+            props.data.lastName = getStorage('name')?.lastName || '';
+        }
+        this.state = props.data || AnnouncementForm.defaultState;
     }
 
     validator = () => {
@@ -51,10 +64,15 @@ class AnnouncementForm extends Component {
 
         keys.forEach(field => {
             let isEmpty = state[field] === '';
-
+            console.log('field:', field);
             if (field === 'message') {
                 const content = draftToHtml(convertToRaw(state.message.getCurrentContent()));
-                isEmpty = /<p><\/p>/.test(content);
+                console.log('content:', content);
+                isEmpty = (/^(<p><\/p>)/).test(content) && content.split('<p>').length >= 2;
+            }
+
+            if (field === 'group') {
+                isEmpty = /Select/.test(state[field]);
             }
 
             if (isEmpty) {
@@ -101,14 +119,15 @@ class AnnouncementForm extends Component {
         const {
             date, title, group, firstName, lastName, message, validate
         } = this.state;
-        const { saveBtnClicked } = this.props;
+        const { saveBtnClicked, event } = this.props;
         const maxDate = moment().add(1, 'Y').format();
         const minDate = moment().subtract(1, 'M').format();
-        const dateTime = moment(date).format(dateFormat.dateTime);
+        const isEdit = event?.title.length > 0;
         const errors = validate?.fieldErrors;
 
         return (
             <div className="announcement-form-container container-fluid">
+                { !validate?.error && <Callout className="row form-info-message" intent="primary">All announcements and events created or edited will be sent to the Bishopric for moderation before it will be posted.</Callout> }
                 { validate?.error && <Callout className="row" intent="danger" title={validate.messageHeader}><div className="col-xs-12 error-message">{validate.message}</div></Callout> }
                 <label>When does the event occur or end:</label>
                 <div className="row">
@@ -137,7 +156,7 @@ class AnnouncementForm extends Component {
                                     placeholder="Title"
                                     value={title}
                                     intent={errors?.title ? 'danger' : 'none'}
-                                    onChange={() => this.handleChange('title', event.target.value)}
+                                    onChange={(event) => this.handleChange('title', event?.target?.value)}
                                 />
                             </FormGroup>
                             <div className="col-sm-5 col-xs-12">
@@ -146,7 +165,8 @@ class AnnouncementForm extends Component {
                                     options={groups}
                                     value={group}
                                     fill
-                                    onChange={(event) => this.handleChange('group', event.currentTarget.value)}
+                                    className={errors?.group ? 'message-error' : ''}
+                                    onChange={(event) => this.handleChange('group', event?.currentTarget?.value)}
                                 />
                             </div>
                         </div>
@@ -169,7 +189,7 @@ class AnnouncementForm extends Component {
                 <div className="row user-info-section">
                     <FormGroup
                         labelInfo="(required)"
-                        label="Your First Name:"
+                        label={isEdit ? 'Edited by: Your First Name' : 'Your First Name'}
                         labelFor="firstName-input"
                         intent={errors?.firstName ? 'danger' : 'none'}
                         helperText={errors?.firstName}
@@ -179,12 +199,12 @@ class AnnouncementForm extends Component {
                             placeholder="First Name"
                             value={firstName}
                             intent={errors?.firstName ? 'danger' : 'none'}
-                            onChange={() => this.handleChange('firstName', event.target.value)}
+                            onChange={(event) => this.handleChange('firstName', event?.target?.value)}
                         />
                     </FormGroup>
                     <FormGroup
                         labelInfo="(required)"
-                        label="Your Last Name:"
+                        label="Your Last Name"
                         labelFor="lastName-input"
                         intent={errors?.lastName ? 'danger' : 'none'}
                         helperText={errors?.lastName}
@@ -194,10 +214,10 @@ class AnnouncementForm extends Component {
                             placeholder="Last Name"
                             value={lastName}
                             intent={errors?.lastName ? 'danger' : 'none'}
-                            onChange={() => this.handleChange('lastName', event.target.value)}
+                            onChange={(event) => this.handleChange('lastName', event?.target?.value)}
                         />
                     </FormGroup>
-                    { /* <div className="">Your name is needed for the approval process.</div> */ }
+                    <p className="col-xs-12 user-info-message">First and last name is used for the moderators to help them know who posted the announcement.</p>
                 </div>
                 <ButtonGroup>
                     <Button
@@ -206,14 +226,16 @@ class AnnouncementForm extends Component {
                         large
                         onClick={this.handleSave}
                     />
-                    <Button
-                        text="Clear"
-                        large
-                        onClick={this.handleClear}
-                    />
+                    { !isEdit && (
+                        <Button
+                            text="Clear"
+                            large
+                            onClick={this.handleClear}
+                        />
+                    )}
                 </ButtonGroup>
                 <Button
-                    text="Close"
+                    text={isEdit ? 'Cancel' : 'Close'}
                     className="right"
                     large
                     onClick={saveBtnClicked}

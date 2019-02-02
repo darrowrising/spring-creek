@@ -33,12 +33,6 @@ function Home() {
                     <Link className="block announcements col-xs-12 col-sm" to="/announcements" onClick={handleClick}>
                         Announcements
                     </Link>
-                    <Link className="block primary col-xs-12 col-sm" to="/primary" onClick={handleClick}>
-                        Primary Classes
-                    </Link>
-                    <Link className="block sunday-school col-xs-12 col-sm" to="/sundayschool" onClick={handleClick}>
-                        Sunday School Classes
-                    </Link>
                 </div>
             </div>
         </div>

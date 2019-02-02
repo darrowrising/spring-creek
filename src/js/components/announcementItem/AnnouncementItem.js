@@ -23,7 +23,7 @@ function AnnouncementItem(props) {
     const htmlParse = new Parser();
 
     return (
-        <div className="announcement-container col-sm-5 col-xs-12">
+        <div className="announcement-container col-lg-3 col-md-4 col-sm-5 col-xs-12">
             <div className="row">
                 <div className="col-xs-12 content-wrapper">
                     <div className={`group ${handleGroupClassName(data.group)}`.trim()}>{data.group}</div>

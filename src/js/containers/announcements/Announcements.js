@@ -2,7 +2,7 @@
 /* eslint-disable  */
 import React, { Component } from 'react';
 import { arrayOf, shape } from 'prop-types';
-import { Button, Dialog, Toast, Toaster } from '@blueprintjs/core';
+import { Dialog, Toast, Toaster, Icon } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import shortId from 'shortid';
 
@@ -68,12 +68,16 @@ class Announcements extends Component {
     render() {
         const { modalOpen } = this.state;
         const { toast, list } = this.props;
-        const AddBtnText = "Add an Announcement";
+        const AddBtnText = "Add an Announcement or Event";
 
         return (
             <div className="announcement-page page center container-fluid">
-                <Button icon="add" intent="primary" text={AddBtnText} onClick={this.handleModalOpen} />
-                <div className="announcements row around-sm">
+                <h1 className="page-header">Announcements and Events</h1>
+                <div className="announcements row">
+                    <div className="announcement-container add-event-wrapper" onClick={this.handleModalOpen}>
+                        <Icon icon="plus" />
+                        <div className="add-message">{AddBtnText}</div>
+                    </div>
                     {
                         list.map(item => (
                             <AnnouncementItem
