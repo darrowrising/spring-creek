@@ -74,11 +74,13 @@ export const announcementEntities = (state = initialState, action) => {
             data = Object.keys(data)
                 .map(month => data[month])
                 .map((month) => {
+                    console.log(month);
                     const events = month.events
                         .sort((b, a) => {
                             const before = b.startDate || b.endDate || b.date;
                             const after = a.startDate || a.endDate || a.date;
-                            return moment(before).format(dateFormats.day) - moment(after).format(dateFormats.day);
+                            return moment(before).valueOf() - moment(after).valueOf();
+                            // return moment(before).format(dateFormats.day) - moment(after).format(dateFormats.day);
                         });
                     return {
                         month: month.month,
