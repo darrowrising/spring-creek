@@ -1,13 +1,15 @@
-const Express = require('express');
+import Express from 'express';
+import colors from 'colors';
+import moment from 'moment';
 
 const app = Express();
-const message = 'HEALTH CHECK: All systems running!\n';
-const timestamp = new Date().getTime();
+const message = 'HEALTH CHECK: All systems running!';
+const timestamp = moment().format('MMM DD, YYY hh:mm A');
 
-console.info(`${message}: ${timestamp}`);
+console.info(`${colors.green(message)} | ${colors.yellow(timestamp)}`);
 
 app.get('/health', (req, res) => {
-    res.send(message);
+    res.send(`${message} at ${timestamp}`);
 });
 
-module.exports = app;
+export default app;

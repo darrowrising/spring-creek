@@ -11,6 +11,8 @@ import AnnouncementItem from '../../components/announcementItem/AnnouncementItem
 import { toastAnnoucement, getAnnoucements } from './announcementsEntities';
 import { GAEvent } from '../../components/analytics/Analytics';
 import { getAnnouncementList } from './announcementsActions';
+import Calander from 'react-calendar';
+import MonthHeader from '../../components/monthHeader/MonthHeader';
 
 import './announcements.less';
 
@@ -69,23 +71,37 @@ class Announcements extends Component {
         const { modalOpen } = this.state;
         const { toast, list } = this.props;
         const AddBtnText = "Add an Announcement or Event";
+        // const currentMonth = moment().format(dateFormats.month);
+        // const months = Object.keys(list);
 
         return (
             <div className="announcement-page page center container-fluid">
                 <h1 className="page-header">Announcements and Events</h1>
                 <div className="announcements row">
-                    <div className="announcement-container add-event-wrapper" onClick={this.handleModalOpen}>
-                        <Icon icon="plus" />
-                        <div className="add-message">{AddBtnText}</div>
+                    {/*}<div className="col-sm-4">
+                        <Calander value={new Date()} tileClassName={({ date, view }) => view === 'month' && date.getDay() === 3 ? 'dude' : null} />
+                    </div>*/}
+                    <div className="col-xs-12 col-sm-8 center">
+                        <div className="announcement-container add-event-wrapper" onClick={this.handleModalOpen}>
+                            <Icon icon="plus" />
+                            <div className="add-message">{AddBtnText}</div>
+                        </div>
+                        {
+                            list.map(month => (
+                                <div key={shortId.generate()}>
+                                    <MonthHeader month={month.month} />
+                                    {
+                                        month.events.map(item => (
+                                            <AnnouncementItem
+                                                key={shortId.generate()}
+                                                data={item}
+                                            />
+                                        ))
+                                    }
+                                </div>
+                            ))
+                        }
                     </div>
-                    {
-                        list.map(item => (
-                            <AnnouncementItem
-                                key={shortId.generate()}
-                                data={item}
-                            />
-                        ))
-                    }
                 </div>
                 <Dialog
                     title={AddBtnText}

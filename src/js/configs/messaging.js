@@ -4,11 +4,12 @@ export default {
         unknown: 'There was an unknown error.',
         announcementForm: {
             mainHeader: 'Unable to Submit Announcement',
-            mainBody: 'There was an error with a below fields. Please correct error and and save.',
+            mainBody: 'There was an error below. Please correct error(s) and try saving again.',
             requiredField: 'This field is required.'
         },
     },
     announcements: {
-        newSaved: 'Your announcement has been saved and will be reviewed.'
+        newSaved: 'Your announcement has been saved and will be reviewed.',
+        generalTitle: 'General Announcement'
     }
 };

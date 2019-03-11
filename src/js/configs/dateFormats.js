@@ -1,8 +1,12 @@
 export default {
     fbDocId: 'YYMMDD',
     longDate: 'MMMM D, YYYY',
-    date: 'MMM D, YY',
+    date: 'MMM D, YYYY',
     dateTime: 'MMMM D, YYYY h:mm a',
     smallDate: 'MM-DD-YYYY',
-    time: 'h:mm a'
+    time: 'h:mm a',
+    timeMilitary: 'kk:mm',
+    day: 'D',
+    month: 'MMMM',
+    dayOfWeek: 'ddd'
 };

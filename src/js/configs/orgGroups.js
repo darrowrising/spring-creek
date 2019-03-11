@@ -1,5 +1,5 @@
 export default [
-    '-Select-',
+    '[Select]',
     'Stake',
     'Neighborhood',
     'Young Men',

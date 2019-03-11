@@ -1,0 +1,30 @@
+@import '~variables';
+
+.month-title {
+    background-color: @color-white-1;
+    color: @color-grey-2;
+    display: inline-block;
+    font-family: @font-brand;
+    font-size: 160%;
+    left: 55px;
+    margin-top: 20px;
+    padding: 0 20px;
+    z-index: 1;
+}
+
+.month-wrapper {
+    height: 50px;
+    position: relative;
+
+    hr,
+    .month-title {
+        position: absolute;
+    }
+
+    hr {
+        border: 1px solid @color-grey-3;
+        border-bottom-width: 0;
+        top: 58%;
+        width: 100%;
+    }
+}

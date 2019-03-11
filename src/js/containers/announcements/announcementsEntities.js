@@ -5,6 +5,8 @@ import { getEntities } from '../../reducers/selectors';
 import ActionTypes from '../../configs/constants';
 import messaging from '../../configs/messaging';
 import { fbRef } from '../../utils/fireDB';
+import dateFormats from '../../configs/dateFormats';
+import { monthsArray } from '../../../../configs/dates';
 
 const initialState = {};
 
@@ -20,9 +22,12 @@ export const announcementEntities = (state = initialState, action) => {
             return Object.assign({}, state, actionState);
         }
         case ActionTypes.GET_ANNOUCEMENT_LIST_SUCCESS: {
-            const data = result.filter((item) => {
+            let data = {};
+            // const currentMonth = moment().format(dateFormats.month);
+
+            result.filter((item) => {
                 const now = moment();
-                const eventDate = moment(item.date);
+                const eventDate = moment(item.endDate || item.date);
                 const diff = eventDate.diff(now, 'days') < -1;
 
                 if (diff) {
@@ -35,10 +40,60 @@ export const announcementEntities = (state = initialState, action) => {
                 }
 
                 return !diff;
+            }).map((item) => {
+                const content = item;
+                const date = item.startDate || item.endDate || item.date;
+
+                if (!item.month) content.month = moment(date).format(dateFormats.month);
+
+                return content;
+            }).forEach((item) => {
+                const month = data[item.month];
+
+                if (item.general && !data.general) {
+                    // First General Announcement
+                    data.general = {
+                        month: `${messaging.announcements.generalTitle}s`,
+                        events: [item]
+                    };
+                } else if (item.general && data.general) {
+                    // Second or more general announcement
+                    data.general.events.push(item);
+                } else if (month) {
+                    // Adding additional events to the month.
+                    data[item.month].events.push(item);
+                } else {
+                    // First event of the month.
+                    data[item.month] = {
+                        month: item.month,
+                        events: [item]
+                    };
+                }
             });
-            const actionState = {
-                data
-            };
+
+            data = Object.keys(data)
+                .map(month => data[month])
+                .map((month) => {
+                    const events = month.events
+                        .sort((b, a) => {
+                            const before = b.startDate || b.endDate || b.date;
+                            const after = a.startDate || a.endDate || a.date;
+                            return moment(before).format(dateFormats.day) - moment(after).format(dateFormats.day);
+                        });
+                    return {
+                        month: month.month,
+                        events
+                    };
+                })
+                .sort((b, a) => {
+                    const before = monthsArray.indexOf(b.month);
+                    const after = monthsArray.indexOf(a.month);
+
+                    return before - after;
+                });
+
+            console.log('data', data, result);
+            const actionState = { data };
 
             return Object.assign({}, state, actionState);
         }

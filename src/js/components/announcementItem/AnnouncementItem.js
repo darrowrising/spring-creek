@@ -1,4 +1,5 @@
-import React from 'react';
+/* eslint-disable */
+import React, { Fragment } from 'react';
 import { func, shape } from 'prop-types';
 
 import { Button, ButtonGroup } from '@blueprintjs/core';
@@ -6,37 +7,57 @@ import { Parser } from 'html-to-react';
 import moment from 'moment';
 
 import dateFormats from '../../configs/dateFormats';
+import { groupClassName } from '../../utils/stringParse';
 
 import './announcementItem.less';
 
-function handleGroupClassName(group) {
-    if (group) {
-        return group.split(' ').join('-').toLowerCase();
-    }
-    return '';
+function handleDateDays(data) {
+    const { startDate, endDate, date } = data;
+    const getDay = (dateValue) => moment(dateValue).format(dateFormats.day);
+    const end = endDate || date;
+    return startDate ? `${getDay(startDate)}-${getDay(end)}` : getDay(end);
 }
 
 function AnnouncementItem(props) {
     const {
-        data, onDelete, onEdit, onApproval
+        data, onDelete, onEdit, onApproval, className
     } = props;
+    const { group, title } = data;
+    const day = handleDateDays(data);
+    const endDate = data.endDate || data.date;
+    const isRange = data.startDate && data.endDate;
+    const dayOfWeek = data.startDate || data.endDate || data.date;
+    const dayOfWeekContent = isRange ? 'From' : moment(dayOfWeek).format(dateFormats.dayOfWeek);
     const htmlParse = new Parser();
+    const time = data.time && !data.general && !data.allDayEvent;
 
     return (
-        <div className="announcement-container col-lg-3 col-md-4 col-sm-5 col-xs-12">
+        <div className={`announcement-container ${className}`}>
             <div className="row">
-                <div className="col-xs-12 content-wrapper">
-                    <div className={`group ${handleGroupClassName(data.group)}`.trim()}>{data.group}</div>
+                <div className="col-xs-2 col-sm-1 day-of-week-wrapper">
+                    { (dayOfWeek && !data.general) && (
+                        <Fragment>
+                            <div className="day-of-week">{dayOfWeekContent}</div>
+                            <div className="day">{day}</div>
+                        </Fragment>
+                    )}
+                </div>
+                <div className="col-xs-10 col-sm-11 content-wrapper">
+                    <div className={`group ${groupClassName(group)}`.trim()}>
+                        {data.group !== '[Select]' && group}
+                    </div>
                     <div className="content">
                         <div className="row">
-                            <h3 className="title col-sm col-xs">{data.title}</h3>
-                            <div className="col-sm col-xs event-date">
-                                <div className="event-date">{moment(data.date).format(dateFormats.date)}</div>
-                                <div className="event-time">{moment(data.date).format(dateFormats.time)}</div>
-                            </div>
+                            <h3 className="title col-sm col-xs">{title}</h3>
+                            {time && <div className="date-time">{moment(data.time).format(dateFormats.time)}</div>}
                         </div>
                         <div className="row">
-                            <div className="col-xs-12 message">{htmlParse.parse(data.message)}</div>
+                            {data.message && <div className="col-xs-12 message">{htmlParse.parse(data.message)}</div>}
+                        </div>
+                        <div className="row">
+                            <div className="col-sm col-xs event-date-wrapper">
+                                { endDate && <i className="event-date"><span>ends on</span> {moment(endDate).format(dateFormats.date)}</i>}
+                            </div>
                         </div>
                     </div>
                 </div>

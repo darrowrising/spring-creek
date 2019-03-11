@@ -28,9 +28,9 @@ app.listen(env.port, (err) => {
     }
 
     console.info(
-        colors.green('\n************************************************\n')
-        + colors.yellow(`Starting server on ${browser} [${env.env}]`)
-        + colors.green('\n************************************************\n')
+        colors.green('\n********************************************************\n')
+        + colors.yellow(`   Starting server on ${browser} [${env.env}]`)
+        + colors.green('\n********************************************************\n')
     );
 
     /* Development Environments Only */
