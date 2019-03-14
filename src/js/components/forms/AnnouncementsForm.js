@@ -113,10 +113,13 @@ class AnnouncementForm extends Component {
             if (!isEmpty && (field === 'endDate' || (state.isRange && field === 'startDate'))) {
                 const today = moment();
                 const isDatePassed = moment(state[field]).isBefore(today);
-                fieldErrors[field] = msg.dateInPast;
-                GAError = true;
-                GALabel = 'Past date selected';
-                console.info(`%c A date has been selected in the past for field ${field}`, css);
+
+                if (isDatePassed) {
+                    fieldErrors[field] = msg.dateInPast;
+                    GAError = true;
+                    GALabel = 'Past date selected';
+                    console.info(`%c A date has been selected in the past for field ${field}`, css);
+                }
             }
 
             if (GAError) {

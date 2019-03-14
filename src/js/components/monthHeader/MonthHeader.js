@@ -6,10 +6,11 @@ import './monthHeader.less';
 
 function MonthHeader(props) {
     const { month, type } = props;
+    const isGeneral = type === 'general';
 
     return (
         <header className="month-wrapper">
-            <h4 className="month-title">{type === 'general' ? `${messaging.announcements.generalTitle}s` : month}</h4>
+            <h4 className={`month-title ${isGeneral ? 'general-title' : ''}`.trim()}>{isGeneral ? `${messaging.announcements.generalTitle}s` : month}</h4>
             <hr />
         </header>
     );

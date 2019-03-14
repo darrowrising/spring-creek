@@ -89,7 +89,7 @@ class Announcements extends Component {
                         {
                             list.map(month => (
                                 <div key={shortId.generate()}>
-                                    <MonthHeader month={month.month} />
+                                    <MonthHeader type={/eneral/.test(month.month) ? 'general' : 'month'} month={month.month} />
                                     {
                                         month.events.map(item => (
                                             <AnnouncementItem
