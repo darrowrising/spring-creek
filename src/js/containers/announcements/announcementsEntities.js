@@ -74,7 +74,6 @@ export const announcementEntities = (state = initialState, action) => {
             data = Object.keys(data)
                 .map(month => data[month])
                 .map((month) => {
-                    console.log(month);
                     const events = month.events
                         .sort((b, a) => {
                             const before = b.startDate || b.endDate || b.date;
@@ -94,7 +93,6 @@ export const announcementEntities = (state = initialState, action) => {
                     return before - after;
                 });
 
-            console.log('data', data, result);
             const actionState = { data };
 
             return Object.assign({}, state, actionState);

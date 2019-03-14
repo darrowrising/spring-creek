@@ -34,15 +34,13 @@ function AnnouncementItem(props) {
     return (
         <div className={`announcement-container ${className}`}>
             <div className="row">
-                <div className="col-xs-2 col-sm-1 day-of-week-wrapper">
-                    { (dayOfWeek && !data.general) && (
-                        <Fragment>
-                            <div className="day-of-week">{dayOfWeekContent}</div>
-                            <div className="day">{day}</div>
-                        </Fragment>
-                    )}
-                </div>
-                <div className="col-xs-10 col-sm-11 content-wrapper">
+                {(dayOfWeek && !data.general) && (
+                    <div className="col-xs-2 col-sm-1 day-of-week-wrapper">
+                        <div className="day-of-week">{dayOfWeekContent}</div>
+                        <div className="day">{day}</div>
+                    </div>
+                )}
+                <div className={`content-wrapper ${(dayOfWeek && !data.general) ? 'col-xs-10 col-sm-11' : 'col-xs-12'}`}>
                     <div className={`group ${groupClassName(group)}`.trim()}>
                         {data.group !== '[Select]' && group}
                     </div>

@@ -5,7 +5,8 @@ export default {
         announcementForm: {
             mainHeader: 'Unable to Submit Announcement',
             mainBody: 'There was an error below. Please correct error(s) and try saving again.',
-            requiredField: 'This field is required.'
+            requiredField: 'This field is required.',
+            dateInPast: 'Your date needs to be in the future.'
         },
     },
     announcements: {

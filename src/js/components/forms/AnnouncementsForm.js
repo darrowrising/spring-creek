@@ -21,6 +21,7 @@ import { getStorage, setStorage } from '../../utils/storage';
 import { setAnnoucementData } from './annoucementsFormActions';
 import messaging from '../../configs/messaging';
 import MonthHeader from '../monthHeader/MonthHeader';
+import ErrorMsg from './ErrorMsg';
 
 import './announcementForm.less';
 
@@ -84,6 +85,7 @@ class AnnouncementForm extends Component {
 
         keys.forEach((field) => {
             let GAError = false;
+            let GALabel = '';
             const approvedFields = [
                 'title',
                 'endDate'
@@ -95,9 +97,7 @@ class AnnouncementForm extends Component {
                 isEmpty = (/^(<p><\/p>)/).test(content) && content.split('<p>').length >= 2;
             }
 
-            if (field === 'group') {
-                isEmpty = /Select/.test(state[field]) || !state[field];
-            }
+            if (field === 'group') isEmpty = /Select/.test(state[field]) || !state[field];
 
             if (state.isRange && field === 'startDate' && !state[field]) {
                 isEmpty = true;
@@ -106,14 +106,24 @@ class AnnouncementForm extends Component {
             if (isEmpty) {
                 fieldErrors[field] = msg.requiredField;
                 GAError = true;
+                GALabel = 'Empty';
                 console.info(`%c Validation error with field ${field}`, css);
+            }
+
+            if (!isEmpty && (field === 'endDate' || (state.isRange && field === 'startDate'))) {
+                const today = moment();
+                const isDatePassed = moment(state[field]).isBefore(today);
+                fieldErrors[field] = msg.dateInPast;
+                GAError = true;
+                GALabel = 'Past date selected';
+                console.info(`%c A date has been selected in the past for field ${field}`, css);
             }
 
             if (GAError) {
                 GAEvent({
                     category: 'Error Logged',
                     action: 'Save | Announcement Form',
-                    label: `Field ${field}`
+                    label: `Field ${field} | ${GALabel}`
                 });
             }
         });
@@ -227,14 +237,13 @@ class AnnouncementForm extends Component {
                     shortcuts={false}
                     allowSingleDayRange
                     startInputProps={{
-                        intent: errors?.startDate ? 'danger' : 'none',
-                        helperText: errors?.startDate
+                        intent: errors?.startDate ? 'danger' : 'none'
                     }}
                     endInputProps={{
-                        intent: errors?.endDate ? 'danger' : 'none',
-                        helperText: errors?.endDate
+                        intent: errors?.endDate ? 'danger' : 'none'
                     }}
                 />
+                {(errors?.endDate || errors?.startDate) && <ErrorMsg msg={errors?.endDate || errors?.startDate} />}
             </div>
         ) : (
             <div className="single-date-wrapper">
@@ -251,6 +260,7 @@ class AnnouncementForm extends Component {
                     }}
                     for="eventDate"
                 />
+                {errors?.endDate && <ErrorMsg msg={errors?.endDate} />}
             </div>
         );
         const TimeElement = isRange ? null : (
@@ -288,6 +298,7 @@ class AnnouncementForm extends Component {
                                 className={errors?.group ? 'message-error' : ''}
                                 onChange={e => this.handleChange('group', e?.currentTarget?.value)}
                             />
+                            {errors?.group && <ErrorMsg msg={errors?.group} />}
                         </div>
                         <Divider className="section-divider" />
                         <div className="switch-wrapper">
@@ -321,7 +332,10 @@ class AnnouncementForm extends Component {
                         </div>
                     </div>
                     <div className="col-xs-12 col-sm-8">
-                        <Label className="editor-header">Message <em className="required-symbol">*</em></Label>
+                        <Label className="editor-header">
+                            Message <em className="required-symbol">*</em>
+                            {errors?.message && <ErrorMsg className="error-right" msg={errors?.message} />}
+                        </Label>
                         <div className={errors?.message ? 'editor message-error' : 'editor'}>
                             <Editor
                                 className={errors?.message ? 'editor message-error' : 'editor'}
