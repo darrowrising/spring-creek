@@ -28,9 +28,9 @@ export const announcementEntities = (state = initialState, action) => {
             result.filter((item) => {
                 const now = moment();
                 const eventDate = moment(item.endDate || item.date);
-                const diff = eventDate.diff(now, 'days') < -1;
+                const oldEvent = moment(now).isAfter(moment(eventDate).add('day', 1));
 
-                if (diff) {
+                if (oldEvent) {
                     const options = {
                         type: 'remove',
                         docId: `/announcements/${item.id}`,
@@ -39,7 +39,7 @@ export const announcementEntities = (state = initialState, action) => {
                     fbRef(options);
                 }
 
-                return !diff;
+                return !oldEvent;
             }).map((item) => {
                 const content = item;
                 const date = item.startDate || item.endDate || item.date;
