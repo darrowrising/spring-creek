@@ -2,9 +2,9 @@ import ActionTypes from '../../configs/constants';
 
 export function callAssignment() {
     return {
-        loadActionType: ActionTypes.GET_BUILDING_CLEANING_REQUEST,
-        successActionType: ActionTypes.GET_BUILDING_CLEANING_SUCCESS,
-        failureActionType: ActionTypes.GET_BUILDING_CLEANING_FAILURE,
+        loadActionType: ActionTypes.GET_SPECIAL_ANNOUNCEMENT_REQUEST,
+        successActionType: ActionTypes.GET_SPECIAL_ANNOUNCEMENT_SUCCESS,
+        failureActionType: ActionTypes.GET_SPECIAL_ANNOUNCEMENT_FAILURE,
         firebase: {
             docId: '/announcements',
             type: 'query',
