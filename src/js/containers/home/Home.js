@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+import SpecialAnnouncement from '../../components/special/Special';
 import { GAEvent } from '../../components/analytics/Analytics';
 
 import './home.less';
@@ -26,6 +27,7 @@ function Home() {
                         This is a work in progress so please keep checking the site.
                     </p>
                 </div>
+                <SpecialAnnouncement />
                 <div className="link-blocks row">
                     <Link className="block program col-xs-12 col-sm" to="/program" onClick={handleClick}>
                         Sacrament Program

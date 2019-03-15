@@ -11,6 +11,7 @@ export default {
     },
     announcements: {
         newSaved: 'Your announcement has been saved and will be reviewed.',
-        generalTitle: 'General Announcement'
+        generalTitle: 'General Announcement',
+        special: 'Special Announcement'
     }
 };

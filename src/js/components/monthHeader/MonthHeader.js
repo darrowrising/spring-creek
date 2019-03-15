@@ -5,12 +5,13 @@ import messaging from '../../configs/messaging';
 import './monthHeader.less';
 
 function MonthHeader(props) {
-    const { month, type } = props;
+    const { month, type, title } = props;
     const isGeneral = type === 'general';
+    const text = title || (isGeneral ? `${messaging.announcements.generalTitle}s` : month);
 
     return (
         <header className="month-wrapper">
-            <h4 className={`month-title ${isGeneral ? 'general-title' : ''}`.trim()}>{isGeneral ? `${messaging.announcements.generalTitle}s` : month}</h4>
+            <h4 className={`month-title ${isGeneral ? 'general-title' : ''}`.trim()}>{text}</h4>
             <hr />
         </header>
     );
@@ -18,12 +19,14 @@ function MonthHeader(props) {
 
 MonthHeader.propTypes = {
     month: string,
-    type: string
+    type: string,
+    title: string
 };
 
 MonthHeader.defaultProps = {
     month: '',
-    type: ''
+    type: '',
+    title: ''
 };
 
 export default MonthHeader;
