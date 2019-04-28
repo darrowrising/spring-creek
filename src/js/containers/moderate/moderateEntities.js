@@ -20,6 +20,12 @@ export const moderateEntities = (state = initialState, action) => {
 
             return Object.assign({}, state, actionState);
         }
+        case ActionTypes.EDIT_ANNOUNCEMENT_SUCCESS: {
+            const newState = { ...state };
+            const eventIndex = newState.data.findIndex(item => item.id === result.id);
+            newState.data[eventIndex] = result;
+            return Object.assign({}, state, newState);
+        }
         case ActionTypes.GET_MODERATE_LIST_SUCCESS: {
             const actionState = {
                 loading: false,
@@ -54,14 +60,9 @@ export const moderateEntities = (state = initialState, action) => {
             return Object.assign({}, state, actionState);
         }
         case ActionTypes.APPROVE_ANNOUNCEMENT_SUCCESS: {
-            const index = state.data.findIndex(item => item.id === result.id);
-            const newData = [...state.data];
-
-            newData[index] = result.data;
-
-            const actionState = {
-                data: newData
-            };
+            const newState = { ...state };
+            const index = newState.data.findIndex(item => item.id === result.id);
+            const actionState = newState.data.splice(index);
 
             return Object.assign({}, state, actionState);
         }

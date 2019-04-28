@@ -18,7 +18,7 @@ import AnnouncementItem from '../announcementItem/AnnouncementItem';
 import dateFormats from '../../configs/dateFormats';
 import groups from '../../configs/orgGroups';
 import { getStorage, setStorage } from '../../utils/storage';
-import { setAnnoucementData } from './annoucementsFormActions';
+import { setAnnoucementData, editAnnouncementData } from './annoucementsFormActions';
 import messaging from '../../configs/messaging';
 import MonthHeader from '../monthHeader/MonthHeader';
 import ErrorMsg from './ErrorMsg';
@@ -60,15 +60,16 @@ class AnnouncementForm extends Component {
     constructor(props) {
         const newProps = props;
         super(props);
+
         if (newProps.data) {
             const blocksFromHTML = convertFromHTML(newProps.data.message);
             const html = ContentState.createFromBlockArray(
                 blocksFromHTML.contentBlocks,
                 blocksFromHTML.entityMap
             );
-            newProps.data.startDate = new Date(moment(props.data.startDate).format());
+            if (props.data.startDate) newProps.data.startDate = new Date(moment(props.data.startDate).format());
             newProps.data.endDate = new Date(moment(props.data.endDate).format());
-            newProps.data.time = new Date(moment(props.data.time).format());
+            if (props.data.time) newProps.data.time = new Date(moment(props.data.time).format());
             newProps.data.message = EditorState.createWithContent(html);
             newProps.data.firstName = getStorage('name')?.firstName || '';
             newProps.data.lastName = getStorage('name')?.lastName || '';
@@ -180,12 +181,15 @@ class AnnouncementForm extends Component {
 
     handleSave = () => {
         const state = { ...this.state };
-        const { setAnnoucement, saveBtnClicked } = this.props;
+        const { isEdit } = this.props;
+        const { setAnnoucement, saveBtnClicked, editAnnouncement } = this.props;
         const validate = this.validator();
 
         if (!validate) {
+            const name = `${state.firstName} ${state.lastName}`;
+            const date = moment().format(dateFormats.utc);
             state.message = draftToHtml(convertToRaw(state.message.getCurrentContent()));
-            state.createdDate = moment().format(dateFormats.longDate);
+            state.created = { name, date };
             state.endDate = moment(state.endDate).toString();
             state.moderate = true;
 
@@ -197,9 +201,24 @@ class AnnouncementForm extends Component {
                 state.time = moment(state.time).toString();
             }
 
+            if (isEdit) {
+                const past = state.edited || [];
+                const current = { name, date };
+                past.push(current);
+                state.edited = past;
+            }
+
             setStorage('name', { firstName: state.firstName, lastName: state.lastName });
+
+            delete state.firstName;
+            delete state.lastName;
+
             saveBtnClicked(true);
-            setAnnoucement(state);
+            if (isEdit) {
+                editAnnouncement(state);
+            } else {
+                setAnnoucement(state);
+            }
         } else {
             this.setState({ validate });
         }
@@ -219,10 +238,10 @@ class AnnouncementForm extends Component {
         const {
             allDayEvent, general, startDate, endDate, time, title, group, firstName, lastName, message, validate, isRange
         } = this.state;
-        const { saveBtnClicked, event } = this.props;
+        const { saveBtnClicked, event, isEdit } = this.props;
         const maxDate = moment().add(1, 'Y').format();
         const minDate = moment().subtract(1, 'M').format();
-        const isEdit = event?.title && event?.title.length > 0;
+        // const isEdit = event?.title && event?.title.length > 0;
         const errors = validate?.fieldErrors;
         const generalText = general ? 'yes' : 'no';
         const isRangeText = isRange ? 'on' : 'off';
@@ -407,7 +426,7 @@ class AnnouncementForm extends Component {
                 </div>
                 <ButtonGroup>
                     <Button
-                        text="Save"
+                        text={isEdit ? 'Update' : 'Save'}
                         intent="success"
                         large
                         onClick={this.handleSave}
@@ -435,7 +454,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-    setAnnoucement: setAnnoucementData
+    setAnnoucement: setAnnoucementData,
+    editAnnouncement: editAnnouncementData
 };
 
 export default connect(

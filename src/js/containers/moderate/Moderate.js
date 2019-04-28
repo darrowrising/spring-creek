@@ -7,7 +7,7 @@ import shortId from 'shortid';
 import { Dialog } from '@blueprintjs/core';
 import moment from 'moment';
 
-import { getModerateList, deleteAnnouncement, approveAnnouncement } from './moderateActions';
+import { getModerateList, deleteAnnouncement, approveAnnouncement, editAnnouncement } from './moderateActions';
 import { getModerateEntities } from './moderateEntities';
 import AnnouncementItem from '../../components/announcementItem/AnnouncementItem';
 import AnnouncementForm from '../../components/forms/AnnouncementsForm';
@@ -58,7 +58,7 @@ class Moderate extends Component {
         if (state.editDialog) {
             const eventData = data.find(item => item.id === state.dataId);
 
-            return <AnnouncementForm data={eventData} saveBtnClicked={() => this.handleModalClose('Announcement Edited')} />
+            return <AnnouncementForm data={eventData} isEdit saveBtnClicked={() => this.handleModalClose('Announcement Edited')} />
         } else if (state.approvedDialog) {
             return <EventApproval approved={this.handleApprovalFinal} onClose={this.handleModalClose} />
         }
@@ -89,7 +89,7 @@ class Moderate extends Component {
 
         event.approved = {
             name: `${firstName} ${lastName}`,
-            date: moment().format(dateFormats.dateTime)
+            date: moment().format(dateFormats.utc)
         };
         event.moderate = false;
 
@@ -131,6 +131,7 @@ class Moderate extends Component {
                             onDelete={this.handleAnnouncementDelete}
                             onEdit={this.handleAnnouncementEdit}
                             onApproval={this.handleAnnouncementApproval}
+                            isEdit
                         />
                     ))
                 }

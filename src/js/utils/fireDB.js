@@ -67,6 +67,13 @@ export function fbRef(options, success, err) {
                 .catch((error) => {
                     errorFunc(error);
                 });
+        case 'set':
+            return ref.set(data).then(() => {
+                successFunc(data);
+            })
+                .catch((error) => {
+                    errorFunc(error);
+                });
         default:
             return fireDB.ref(options).once('value', (snap) => {
                 const val = snap.exists() ? snap.val() : 'No Data';

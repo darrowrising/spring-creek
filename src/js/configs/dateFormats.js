@@ -8,5 +8,6 @@ export default {
     timeMilitary: 'kk:mm',
     day: 'D',
     month: 'MMMM',
-    dayOfWeek: 'ddd'
+    dayOfWeek: 'ddd',
+    utc: 'ddd MMM DD YYYY hh:mm:ss [GMT]Z'
 };
