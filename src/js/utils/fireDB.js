@@ -24,7 +24,7 @@ export function fbRef(options, success, err) {
     const type = options?.type;
     const docId = options?.docId;
     const ref = fireDB.ref(docId);
-    const child = options?.key;
+    // const child = options?.key;
     const data = options?.data;
     let successFunc = () => {};
     let errorFunc = () => {};
@@ -43,13 +43,21 @@ export function fbRef(options, success, err) {
                 successFunc('success');
             });
         case 'query': {
-            const val = options?.equalTo;
+            /* eslint-disable */ /* TODO: Remove this eslint disable */
+            const queries = options?.queries;
+            const promises = queries.map(query => new Promise((resolve) => {
+                ref.orderByChild(query.key).equalTo(query.equalTo).once('value', (snap) => {
+                    const valObject = snap.val() || {};
+                    const successVal = addKeyToObjectValue(valObject);
 
-            return ref.orderByChild(child).equalTo(val).once('value', (snap) => {
-                const valObject = snap.val() || {};
-                const successVal = addKeyToObjectValue(valObject);
+                    resolve(successVal);
+                });
+            }));
 
-                successFunc(successVal);
+            return Promise.all(promises).then(function(values) {
+                const result = values.filter(item => item.length >= 1).flatMap(arr => arr);
+
+                successFunc(result);
             });
         }
         case 'remove':

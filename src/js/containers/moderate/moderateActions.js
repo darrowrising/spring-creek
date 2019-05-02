@@ -8,8 +8,13 @@ export function getModerateList() {
         firebase: {
             docId: '/announcements',
             type: 'query',
-            key: 'moderate',
-            equalTo: true
+            queries: [{
+                key: 'moderate',
+                equalTo: true
+            }, {
+                key: 'editVersion/moderate',
+                equalTo: true
+            }]
         }
     };
 }
@@ -31,6 +36,19 @@ export function approveAnnouncement(data) {
         loadActionType: ActionTypes.APPROVE_ANNOUNCEMENT_REQUEST,
         successActionType: ActionTypes.APPROVE_ANNOUNCEMENT_SUCCESS,
         failureActionType: ActionTypes.APPROVE_ANNOUNCEMENT_FAILURE,
+        firebase: {
+            docId: `/announcements/${data.id}`,
+            type: 'set',
+            data
+        }
+    };
+}
+
+export function cancelRemovalRequest(data) {
+    return {
+        loadActionType: ActionTypes.CANCEL_REMOVAL_REQUEST,
+        successActionType: ActionTypes.CANCEL_REMOVAL_SUCCESS,
+        failureActionType: ActionTypes.CANCEL_REMOVAL_FAILURE,
         firebase: {
             docId: `/announcements/${data.id}`,
             type: 'update',

@@ -13,15 +13,15 @@ import draftToHtml from 'draftjs-to-html';
 import moment from 'moment';
 import { connect } from 'react-redux';
 
-import { GAEvent } from '../analytics/Analytics';
-import AnnouncementItem from '../announcementItem/AnnouncementItem';
-import dateFormats from '../../configs/dateFormats';
-import groups from '../../configs/orgGroups';
-import { getStorage, setStorage } from '../../utils/storage';
+import { GAEvent } from '../../analytics/Analytics';
+import AnnouncementItem from '../../announcementItem/AnnouncementItem';
+import dateFormats from '../../../configs/dateFormats';
+import groups from '../../../configs/orgGroups';
+import { getStorage, setStorage } from '../../../utils/storage';
 import { setAnnoucementData, editAnnouncementData } from './annoucementsFormActions';
-import messaging from '../../configs/messaging';
-import MonthHeader from '../monthHeader/MonthHeader';
-import ErrorMsg from './ErrorMsg';
+import messaging from '../../../configs/messaging';
+import MonthHeader from '../../monthHeader/MonthHeader';
+import ErrorMsg from '../../errorMsg/ErrorMsg';
 
 import './announcementForm.less';
 
@@ -62,15 +62,18 @@ class AnnouncementForm extends Component {
         super(props);
 
         if (newProps.data) {
-            const blocksFromHTML = convertFromHTML(newProps.data.message);
-            const html = ContentState.createFromBlockArray(
-                blocksFromHTML.contentBlocks,
-                blocksFromHTML.entityMap
-            );
+            if (typeof newProps.data.message === 'string') {
+                const blocksFromHTML = convertFromHTML(newProps.data.message);
+                const html = ContentState.createFromBlockArray(
+                    blocksFromHTML.contentBlocks,
+                    blocksFromHTML.entityMap
+                );
+                newProps.data.message = EditorState.createWithContent(html);
+            }
             if (props.data.startDate) newProps.data.startDate = new Date(moment(props.data.startDate).format());
-            newProps.data.endDate = new Date(moment(props.data.endDate).format());
+            newProps.data.endDate = new Date(moment(props.data.endDate, dateFormats.utc).format());
             if (props.data.time) newProps.data.time = new Date(moment(props.data.time).format());
-            newProps.data.message = EditorState.createWithContent(html);
+
             newProps.data.firstName = getStorage('name')?.firstName || '';
             newProps.data.lastName = getStorage('name')?.lastName || '';
         }
@@ -180,43 +183,66 @@ class AnnouncementForm extends Component {
     };
 
     handleSave = () => {
-        const state = { ...this.state };
-        const { isEdit } = this.props;
-        const { setAnnoucement, saveBtnClicked, editAnnouncement } = this.props;
+        const { data, isEdit, setAnnoucement, saveBtnClicked, editAnnouncement } = this.props;
+        let state = { ...this.state }; // New Changes
+        let original = { ...data }; // Original Version
         const validate = this.validator();
+        const name = `${state.firstName} ${state.lastName}`;
+        const date = moment().format(dateFormats.utc);
+        const dataReadyToShip = (data) => {
+            const ann = { ...data };
+
+            ann.message = draftToHtml(convertToRaw(ann.message.getCurrentContent()));
+            ann.endDate = moment(ann.endDate).toString();
+
+            if (ann?.startDate) {
+                ann.startDate = moment(ann.startDate).toString();
+            }
+
+            if (ann?.time) {
+                ann.time = moment(ann.time).toString();
+            }
+
+            // Only create this data for the first time.
+            if (!ann?.created) {
+                ann.created = { name, date };
+            }
+
+            // Object Cleanup
+            delete ann.firstName;
+            delete ann.lastName;
+
+            return ann;
+        }
 
         if (!validate) {
-            const name = `${state.firstName} ${state.lastName}`;
-            const date = moment().format(dateFormats.utc);
-            state.message = draftToHtml(convertToRaw(state.message.getCurrentContent()));
-            state.created = { name, date };
-            state.endDate = moment(state.endDate).toString();
-            state.moderate = true;
-
-            if (state.startDate) {
-                state.startDate = moment(state.startDate).toString();
-            }
-
-            if (state.time) {
-                state.time = moment(state.time).toString();
-            }
-
-            if (isEdit) {
-                const past = state.edited || [];
-                const current = { name, date };
-                past.push(current);
-                state.edited = past;
-            }
-
             setStorage('name', { firstName: state.firstName, lastName: state.lastName });
-
-            delete state.firstName;
-            delete state.lastName;
+            state = dataReadyToShip(state);
 
             saveBtnClicked(true);
+
             if (isEdit) {
-                editAnnouncement(state);
+                const past = state?.edited || [];
+                const current = { name, date };
+                past.push(current);
+
+                const editVersion = Object.assign({}, original, state);
+
+                editVersion.edited = past;
+                // Only want one moderate activated at a time.
+                if (!original.moderate) {
+                    editVersion.moderate = true;
+                } else {
+                    editVersion.moderate = false;
+                }
+
+                /* New Version Controls */
+                original.editVersion = editVersion;
+                original = dataReadyToShip(original);
+
+                editAnnouncement(original);
             } else {
+                state.moderate = true;
                 setAnnoucement(state);
             }
         } else {

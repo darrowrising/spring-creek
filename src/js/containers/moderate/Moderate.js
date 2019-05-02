@@ -7,11 +7,11 @@ import shortId from 'shortid';
 import { Dialog } from '@blueprintjs/core';
 import moment from 'moment';
 
-import { getModerateList, deleteAnnouncement, approveAnnouncement, editAnnouncement } from './moderateActions';
+import { getModerateList, deleteAnnouncement, approveAnnouncement, editAnnouncement, cancelRemovalRequest } from './moderateActions';
 import { getModerateEntities } from './moderateEntities';
 import AnnouncementItem from '../../components/announcementItem/AnnouncementItem';
-import AnnouncementForm from '../../components/forms/AnnouncementsForm';
-import EventApproval from '../../components/forms/EventApproval';
+import AnnouncementForm from '../../components/forms/announcementForm/AnnouncementsForm';
+import EventApproval from '../../components/forms/simpleRequest/SimpleRequest';
 import { GAEvent } from '../../components/analytics/Analytics';
 import dateFormats from '../../configs/dateFormats';
 
@@ -60,7 +60,7 @@ class Moderate extends Component {
 
             return <AnnouncementForm data={eventData} isEdit saveBtnClicked={() => this.handleModalClose('Announcement Edited')} />
         } else if (state.approvedDialog) {
-            return <EventApproval approved={this.handleApprovalFinal} onClose={this.handleModalClose} />
+            return <EventApproval action={this.handleApprovalFinal} onClose={this.handleModalClose} />
         }
     }
 
@@ -82,19 +82,38 @@ class Moderate extends Component {
         this.setState({approvedDialog: true, modalOpen: true, dialogText: 'Approved By', event});
     }
 
-    handleApprovalFinal = (firstName, lastName) => {
+    handleApprovalFinal = (approver) => {
         const { approveEvent } = this.props;
         const { event } = this.state;
-        const eventData = event;
+        let data = { ...event };
+        const name = `${approver?.firstName} ${approver?.lastName}`;
+        const date = moment().format(dateFormats.utc);
 
-        event.approved = {
-            name: `${firstName} ${lastName}`,
-            date: moment().format(dateFormats.utc)
-        };
-        event.moderate = false;
+        // Only set approved the first time not when edited
+        if (!data?.approved) {
+            data.approved = {
+                name,
+                date,
+            };
+        }
+
+        data.moderate = false;
+
+        if (data?.edited) {
+            // Adding more editor information
+            const arr = data?.edited;
+            const version = arr.pop();
+            const index = arr.length;
+
+            version.approvedBy = name;
+            version.approvedOn = date;
+
+            data.edited[index] = version;
+            // End of adding more editor information
+        }
 
         this.handleGAClick('Final approval button', 'Final Moderate Approval Button');
-        approveEvent(event);
+        approveEvent(data);
 
         this.setState({approvedDialog: false, modalOpen: false});
     }
@@ -103,16 +122,28 @@ class Moderate extends Component {
         this.setState({editDialog: true, dataId: event.id, modalOpen: true});
     }
 
-    handleModalClose = (action, label) => {
+    handleModalClose = (label) => {
         const { editDialog, deleteDialog, approvalDialog } = this.state;
+        const closeMsg = typeof label === 'string' ? label : null;
         let type;
 
         if (editDialog) type = 'edit';
         else if (deleteEvent) type = 'delete';
         else if (approvalDialog) type = 'approve';
 
-        this.handleGAClick(action || `close ${type} dialog`, label || `${type} dialog closed`);
+        this.handleGAClick(closeMsg || `close ${type} dialog`, label || `${type} dialog closed`);
         this.setState({ modalOpen: false });
+    }
+
+    handleCancelationOfRemovalRequest = (event) => {
+        const { cancelRemoval } = this.props;
+        const newEvent = {...event};
+        this.handleGAClick('Cancelation of Removal Request', 'Cancel Removal');
+
+        newEvent.remove = null;
+        newEvent.moderate = false;
+
+        cancelRemoval(newEvent);
     }
 
     render() {
@@ -124,16 +155,45 @@ class Moderate extends Component {
             <div className="moderate-container page container-fluid">
                 <h1 className="page-header">Moderation Page</h1>
                 {
-                    data.map(item => (
-                        <AnnouncementItem
-                            key={shortId.generate()}
-                            data={item}
-                            onDelete={this.handleAnnouncementDelete}
-                            onEdit={this.handleAnnouncementEdit}
-                            onApproval={this.handleAnnouncementApproval}
-                            isEdit
-                        />
-                    ))
+                    data.map(item => {
+                        const isEdit = item?.editVersion && !item?.remove;
+                        const isRemoval = item?.remove;
+                        const typeTitle = () => {
+                            if (isRemoval) return 'Remove';
+                            if (isEdit) return 'Edited';
+                            return 'New';
+                        };
+                        const event = item.editVersion || item;
+
+                        return (
+                            <div key={shortId.generate()} className={`${typeTitle().toLowerCase()}-wrapper`}>
+                                <h2 className="type-title">{`${typeTitle()} Announcement Request`}</h2>
+                                {isEdit && (
+                                    <div className="row edit-title">
+                                        <div className="col-xs-12 col-sm-6">Edited Version</div>
+                                        <div className="col-xs-12 col-sm-6">Original Version</div>
+                                    </div>
+                                )}
+                                <div className="row event-wrapper">
+                                    <AnnouncementItem
+                                        className={isEdit ? 'col-xs-12 col-sm-6' : 'col-xs-12 col-sm-8'}
+                                        data={event}
+                                        onDelete={this.handleAnnouncementDelete}
+                                        onEdit={this.handleAnnouncementEdit}
+                                        onApproval={this.handleAnnouncementApproval}
+                                        onCancel={this.handleCancelationOfRemovalRequest}
+                                        isEdit
+                                    />
+                                    {(item.editVersion && !item?.remove) && (
+                                        <AnnouncementItem
+                                            className="col-xs-6 old-version"
+                                            data={item}
+                                        />
+                                    )}
+                                </div>
+                            </div>
+                        )
+                    })
                 }
                 <Dialog
                     title={dialogText}
@@ -158,7 +218,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
     getList: getModerateList,
     deleteEvent: deleteAnnouncement,
-    approveEvent: approveAnnouncement
+    approveEvent: approveAnnouncement,
+    cancelRemoval: cancelRemovalRequest
 };
 
 export default connect(

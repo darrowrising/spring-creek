@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import shortId from 'shortid';
 import { Link } from 'react-router-dom';
 
-import AnnouncementForm from '../../components/forms/AnnouncementsForm';
+import AnnouncementForm from '../../components/forms/announcementForm/AnnouncementsForm';
 import AnnouncementItem from '../../components/announcementItem/AnnouncementItem';
 import { toastAnnoucement, getAnnoucements } from './announcementsEntities';
 import { GAEvent } from '../../components/analytics/Analytics';

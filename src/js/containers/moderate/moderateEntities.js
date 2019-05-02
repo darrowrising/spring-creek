@@ -20,12 +20,6 @@ export const moderateEntities = (state = initialState, action) => {
 
             return Object.assign({}, state, actionState);
         }
-        case ActionTypes.EDIT_ANNOUNCEMENT_SUCCESS: {
-            const newState = { ...state };
-            const eventIndex = newState.data.findIndex(item => item.id === result.id);
-            newState.data[eventIndex] = result;
-            return Object.assign({}, state, newState);
-        }
         case ActionTypes.GET_MODERATE_LIST_SUCCESS: {
             const actionState = {
                 loading: false,
@@ -52,6 +46,12 @@ export const moderateEntities = (state = initialState, action) => {
 
             return Object.assign({}, state, actionState);
         }
+        case ActionTypes.EDIT_ANNOUNCEMENT_SUCCESS: {
+            const newState = { ...state };
+            const eventIndex = newState.data.findIndex(item => item.id === result.id);
+            newState.data[eventIndex] = result;
+            return Object.assign({}, state, newState);
+        }
         case ActionTypes.DELETE_ANNOUNCEMENT_SUCCESS: {
             const actionState = {
                 data: state.data.filter(item => item.id !== result)
@@ -60,6 +60,13 @@ export const moderateEntities = (state = initialState, action) => {
             return Object.assign({}, state, actionState);
         }
         case ActionTypes.APPROVE_ANNOUNCEMENT_SUCCESS: {
+            const newState = { ...state };
+            const index = newState.data.findIndex(item => item.id === result.id);
+            const actionState = newState.data.splice(index);
+
+            return Object.assign({}, state, actionState);
+        }
+        case ActionTypes.CANCEL_REMOVAL_SUCCESS: {
             const newState = { ...state };
             const index = newState.data.findIndex(item => item.id === result.id);
             const actionState = newState.data.splice(index);

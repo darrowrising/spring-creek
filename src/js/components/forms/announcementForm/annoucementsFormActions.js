@@ -1,5 +1,5 @@
-import ActionTypes from '../../configs/constants';
-import db from '../../utils/fireDB';
+import ActionTypes from '../../../configs/constants';
+import db from '../../../utils/fireDB';
 
 export async function setAnnoucementData(data) {
     const newData = { ...data };

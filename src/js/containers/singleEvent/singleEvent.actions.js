@@ -8,8 +8,24 @@ export function callSingleEvent(id) {
         firebase: {
             docId: '/announcements',
             type: 'query',
-            key: 'uid',
-            equalTo: id
+            queries: [{
+                key: 'uid',
+                equalTo: id
+            }]
+        }
+    };
+}
+
+export function removeEvent(data) {
+    console.log('data:', data);
+    return {
+        loadActionType: ActionTypes.DELETE_ANNOUNCEMENT_REQUEST,
+        successActionType: ActionTypes.DELETE_ANNOUNCEMENT_SUCCESS,
+        failureActionType: ActionTypes.DELETE_ANNOUNCEMENT_FAILURE,
+        firebase: {
+            docId: `/announcements/${data.id}`,
+            type: 'update',
+            data
         }
     };
 }

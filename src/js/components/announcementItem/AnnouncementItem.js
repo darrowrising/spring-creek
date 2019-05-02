@@ -20,37 +20,43 @@ function handleDateDays(data) {
 
 function AnnouncementItem(props) {
     const {
-        data, onDelete, onEdit, onApproval, className, isEdit
-    } = props;
-    const { group, title } = data;
-    const day = handleDateDays(data);
-    const endDate = data.endDate || data.date;
-    const isRange = data.startDate && data.endDate;
-    const dayOfWeek = data.startDate || data.endDate || data.date;
+        data, onDelete, onEdit, onApproval, className, isEdit, onCancel
+    } = props;;
+    const event = { ...data };
+    const { group, title, remove } = event;
+    const day = handleDateDays(event);
+    const endDate = event?.endDate || event?.date;
+    const isRange = event?.startDate && event?.endDate;
+    const dayOfWeek = event?.startDate || event?.endDate || event?.date;
     const dayOfWeekContent = isRange ? 'From' : moment(dayOfWeek, dateFormats.utc).format(dateFormats.dayOfWeek);
     const htmlParse = new Parser();
-    const time = data.time && !data.general && !data.allDayEvent;
+    const time = data?.time && !event?.general && !event?.allDayEvent;
+    const lastEdited = event?.edited && !event?.remove ? (() => {
+        const edited = event?.edited?.length - 1;
+        return event.edited[edited];
+    })() : false;
+    const isRemoval = event?.remove && typeof event?.remove === 'object';
 
     return (
         <div className={`announcement-container ${className}`}>
             <div className="row">
-                {(dayOfWeek && !data.general) && (
+                {(dayOfWeek && !event?.general) && (
                     <div className="col-xs-2 col-sm-1 day-of-week-wrapper">
                         <div className="day-of-week">{dayOfWeekContent}</div>
                         <div className="day">{day}</div>
                     </div>
                 )}
-                <div className={`content-wrapper ${(dayOfWeek && !data.general) ? 'col-xs-10 col-sm-11' : 'col-xs-12'}`}>
+                <div className={`content-wrapper ${(dayOfWeek && !event?.general) ? 'col-xs-10 col-sm-11' : 'col-xs-12'}`}>
                     <div className={`group ${groupClassName(group)}`.trim()}>
-                        {data.group !== '[Select]' && group}
+                        {event?.group !== '[Select]' && group}
                     </div>
                     <div className="content">
                         <div className="row">
                             <h3 className="title col-sm col-xs">{title}</h3>
-                            {time && <div className="date-time">{moment(data.time, dateFormats.utc).format(dateFormats.time)}</div>}
+                            {time && <div className="date-time">{moment(event.time, dateFormats.utc).format(dateFormats.time)}</div>}
                         </div>
                         <div className="row">
-                            {data.message && <div className="col-xs-12 message">{htmlParse.parse(data.message)}</div>}
+                            {event?.message && <div className="col-xs-12 message">{htmlParse.parse(data.message)}</div>}
                         </div>
                         <div className="row">
                             <div className="col-sm col-xs event-date-wrapper">
@@ -60,24 +66,44 @@ function AnnouncementItem(props) {
                     </div>
                 </div>
             </div>
-            { (data.moderate && isEdit) && (
+            { isEdit && (
                 <div className="moderate-created-details">
                     <div className="row">
-                        <div className="col-xs-6 created-date">
-                            <div>Created On:</div>
-                            <div>{moment(data.created.date, dateFormats.utc).format(dateFormats.dateTime)}</div>
+                        <div className="col-xs-6 created">
+                            <h6>Created</h6>
+                            <div>by: {event?.created?.name}</div>
+                            <div>on: {moment(event?.created?.date, dateFormats.utc).format(dateFormats.dateTime)}</div>
                         </div>
-                        <div className="col-xs-6 created-by">
-                            <div>Created by:</div>
-                            <div>{data.firstName} {data.lastName}</div>
-                        </div>
+                        { lastEdited && (
+                            <div className="col-xs-6 edited">
+                                <h6>Edited</h6>
+                                <div>by: {lastEdited.name}</div>
+                                <div>on: {moment(lastEdited.date, dateFormats.utc).format(dateFormats.dateTime)}</div>
+                            </div>
+                        )}
+                        { isRemoval && (
+                            <div className="col-xs-6 edited">
+                                <h6>Remove Request</h6>
+                                <div>by: {remove?.name}</div>
+                                <div>on: {moment(remove?.date, dateFormats.utc).format(dateFormats.dateTime)}</div>
+                                <div style={{marginTop: '10px'}}>reason: {remove?.reason}</div>
+                            </div>
+                        )}
                     </div>
                     <div className="row moderate-buttons">
-                        <ButtonGroup className="col-sm-2">
-                            <Button intent="success" text="approve" onClick={() => onApproval(data)} />
-                            <Button intent="primary" text="edit" onClick={() => onEdit(data)} />
-                            <Button intent="danger" text="delete" onClick={() => onDelete(data.id)} />
-                        </ButtonGroup>
+                        {!isRemoval && (
+                            <ButtonGroup className="col-sm-2">
+                                <Button intent="success" text="approve" onClick={() => onApproval(data)} />
+                                <Button intent="primary" text="edit" onClick={() => onEdit(data)} />
+                                <Button intent="danger" text="delete" onClick={() => onDelete(data.id)} />
+                            </ButtonGroup>
+                        )}
+                        {isRemoval && (
+                            <ButtonGroup className="col-sm-2">
+                                <Button intent="danger" text="delete" onClick={() => onDelete(data.id)} />
+                                <Button intent="default" text="cancel" onClick={() => onCancel(data)} />
+                            </ButtonGroup>
+                        )}
                     </div>
                 </div>
             )}
@@ -89,14 +115,16 @@ AnnouncementItem.propTypes = {
     data: shape(),
     onDelete: func,
     onEdit: func,
-    onApproval: func
+    onApproval: func,
+    onCancel: func
 };
 
 AnnouncementItem.defaultProps = {
     data: {},
     onDelete: null,
     onEdit: null,
-    onApproval: null
+    onApproval: null,
+    onCancel: null
 };
 
 export default AnnouncementItem;

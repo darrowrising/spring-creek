@@ -3,7 +3,7 @@ import moment from 'moment';
 
 import { getEntities } from '../../reducers/selectors';
 import ActionTypes from '../../configs/constants';
-// import messaging from '../../configs/messaging';
+import messaging from '../../configs/messaging';
 // import { fbRef } from '../../utils/fireDB';
 import dateFormats from '../../configs/dateFormats';
 // import { monthsArray } from '../../../../configs/dates';
@@ -16,11 +16,34 @@ export const singleEventEntities = (state = initialState, action) => {
     switch (type) {
         case ActionTypes.GET_SINGLE_ANNOUNCEMENT_SUCCESS: {
             const data = result[0];
+            const handleDate = (date) => {
+                if (date && moment(date).isValid()) {
+                    return moment(date, dateFormats.utc).format(dateFormats.month);
+                }
 
-            data.month = data.month || moment(data.startDate || data.endDate, dateFormats.utc).format(dateFormats.month);
+                return false;
+            };
+
+            if (data) {
+                data.month = data.month || handleDate(data.date) || handleDate(data.startDate || data.endDate);
+            }
 
             const actionState = {
-                event: data
+                event: data || false
+            };
+
+            return Object.assign({}, state, actionState);
+        }
+        case ActionTypes.DELETE_ANNOUNCEMENT_SUCCESS: {
+            const actionState = {
+                toast: messaging.toaster.removeRequest
+            };
+
+            return Object.assign({}, state, actionState);
+        }
+        case ActionTypes.EDIT_ANNOUNCEMENT_SUCCESS: {
+            const actionState = {
+                toast: messaging.toaster.editRequest
             };
 
             return Object.assign({}, state, actionState);
@@ -34,4 +57,9 @@ export const singleEventEntities = (state = initialState, action) => {
 export const getEvent = createSelector(
     state => getEntities(state),
     entities => entities?.singleEvent?.event
+);
+
+export const toastEvent = createSelector(
+    state => getEntities(state),
+    entities => entities?.singleEvent?.toast
 );

@@ -13,5 +13,9 @@ export default {
         newSaved: 'Your announcement has been saved and will be reviewed.',
         generalTitle: 'General Announcement',
         special: 'Special Announcement'
+    },
+    toaster: {
+        removeRequest: 'Your request to remove this announcment is being reviewed.',
+        editRequest: 'Your request to edit this announcment is being reviewd.'
     }
 };
