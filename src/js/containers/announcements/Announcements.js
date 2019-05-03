@@ -5,7 +5,6 @@ import { arrayOf, shape } from 'prop-types';
 import { Dialog, Toast, Toaster, Icon } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import shortId from 'shortid';
-import { Link } from 'react-router-dom';
 
 import AnnouncementForm from '../../components/forms/announcementForm/AnnouncementsForm';
 import AnnouncementItem from '../../components/announcementItem/AnnouncementItem';
@@ -93,11 +92,11 @@ class Announcements extends Component {
                                     <MonthHeader type={/eneral/.test(month.month) ? 'general' : 'month'} month={month.month} />
                                     {
                                         month.events.map(item => (
-                                            <Link key={shortId.generate()} to={`announcements/${item.uid}`}>
-                                                <AnnouncementItem
-                                                    data={item}
-                                                />
-                                            </Link>
+                                            <AnnouncementItem
+                                                data={item}
+                                                key={shortId.generate()}
+                                                lpLink
+                                            />
                                         ))
                                     }
                                 </div>

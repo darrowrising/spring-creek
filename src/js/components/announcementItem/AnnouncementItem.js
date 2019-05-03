@@ -1,10 +1,11 @@
 /* eslint-disable */
 import React, { Fragment } from 'react';
-import { func, shape } from 'prop-types';
+import { func, shape, bool } from 'prop-types';
 
-import { Button, ButtonGroup } from '@blueprintjs/core';
+import { Button, ButtonGroup, Icon } from '@blueprintjs/core';
 import { Parser } from 'html-to-react';
 import moment from 'moment';
+import { Link, withRouter } from 'react-router-dom';
 
 import dateFormats from '../../configs/dateFormats';
 import { groupClassName } from '../../utils/stringParse';
@@ -20,8 +21,8 @@ function handleDateDays(data) {
 
 function AnnouncementItem(props) {
     const {
-        data, onDelete, onEdit, onApproval, className, isEdit, onCancel
-    } = props;;
+        data, onDelete, onEdit, onApproval, className, isEdit, onCancel, lpLink
+    } = props;
     const event = { ...data };
     const { group, title, remove } = event;
     const day = handleDateDays(event);
@@ -54,6 +55,11 @@ function AnnouncementItem(props) {
                         <div className="row">
                             <h3 className="title col-sm col-xs">{title}</h3>
                             {time && <div className="date-time">{moment(event.time, dateFormats.utc).format(dateFormats.time)}</div>}
+                            {lpLink && (
+                                <Link className="event-landing-page-link" to={`/announcements/${event.uid}`}>
+                                    <Icon icon="double-chevron-right" />
+                                </Link>
+                            )}
                         </div>
                         <div className="row">
                             {event?.message && <div className="col-xs-12 message">{htmlParse.parse(data.message)}</div>}
@@ -116,7 +122,8 @@ AnnouncementItem.propTypes = {
     onDelete: func,
     onEdit: func,
     onApproval: func,
-    onCancel: func
+    onCancel: func,
+    lpLink: bool
 };
 
 AnnouncementItem.defaultProps = {
@@ -124,7 +131,8 @@ AnnouncementItem.defaultProps = {
     onDelete: null,
     onEdit: null,
     onApproval: null,
-    onCancel: null
+    onCancel: null,
+    lpLink: false
 };
 
-export default AnnouncementItem;
+export default withRouter(AnnouncementItem);

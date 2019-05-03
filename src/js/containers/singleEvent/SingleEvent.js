@@ -5,7 +5,7 @@ import React, { Component, Fragment, Suspense, lazy } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import shortId from 'shortid';
-import { Button, Dialog, Toaster } from '@blueprintjs/core';
+import { Button, Dialog, Toaster, Breadcrumbs } from '@blueprintjs/core';
 import moment from 'moment';
 
 // components
@@ -139,14 +139,24 @@ class SingleEvent extends Component {
         this.setState({ modalOpen: false });
     }
 
+    handleBreadCrumbs = () => {
+        const { event } = this.props;
+
+        return [
+            { href: "/announcements", icon: "folder-close", text: "Announcements" },
+            { icon: "document", text: event?.title },
+        ];
+    }
+
     render() {
         const { modalOpen, dialogTitle } = this.state;
         const { event } = this.props;
 
         return (
-            <div className="single-event-wrapper">
+            <div className="single-event-wrapper page">
                 {event && (
                     <Fragment>
+                        <Breadcrumbs className="breadcrumbs" items={this.handleBreadCrumbs()} />
                         <div className="row">
                             <div className="col-xs-12 first-sm col-sm-5 announcement-data">
                                 <h2 className="title">{event?.title}</h2>
