@@ -1,0 +1,194 @@
+@import '~variables';
+
+.announcement-container {
+    .content-wrapper {
+        background-color: @color-white-1;
+        border: 1px solid @color-grey-3;
+        border-radius: 6px;
+        color: @color-black-2;
+        margin: 20px 0;
+        overflow: hidden;
+        padding: 0;
+        position: relative;
+        text-align: left;
+    }
+
+    .event-day {
+        margin-left: -30px;
+    }
+
+    .date-time {
+        font-size: 80%;
+        margin-right: -7px;
+    }
+
+    .day-of-week-wrapper {
+        font-size: 80%;
+        margin-top: 50px;
+        text-align: center;
+    }
+
+    .day-of-week {
+        text-transform: uppercase;
+    }
+
+    .event-date-wrapper {
+        bottom: 5px;
+        color: @color-grey-1;
+        font-size: 60%;
+        position: absolute;
+        right: 5px;
+    }
+
+    .event-date {
+        span {
+            color: @color-primary;
+        }
+    }
+
+    .content {
+        padding: 0 10px;
+        width: 100%;
+
+        & > div { // stylelint-disable-line
+            &:first-child {
+                align-items: center;
+                border-bottom: 1px solid @color-grey-3;
+                margin: 0 20px;
+                padding: 10px;
+            }
+        }
+    }
+
+    .group {
+        font-size: 10px;
+        padding: 5px;
+        text-align: left;
+        text-indent: 10px;
+    }
+
+    .title {
+        font-size: 100%;
+        margin: 0 0 0 -15px;
+        text-align: left;
+    }
+
+    .message {
+        padding: 15px 20px 20px 30px;
+
+        p {
+            margin: 0;
+            min-height: 10px;
+
+            span {
+                font-size: 14px !important;
+            }
+        }
+    }
+
+    .moderate-created-details {
+        background-color: @color-grey-3;
+        font-size: 12px;
+        margin: 0 -10px;
+        padding: 10px;
+    }
+
+    .moderate-buttons {
+        padding-top: 10px;
+    }
+}
+
+.event-landing-page-link {
+    background-color: @color-white-2;
+    overflow: hidden;
+    padding: 10px 5px;
+    position: absolute;
+    right: 0;
+    transition: all @transition-slow;
+
+    &:hover {
+        background-color: lighten(@color-blue-1, 30%);
+        color: @color-white-1;
+
+        svg {
+            animation-duration: 0.5s;
+            animation-iteration-count: 2;
+            animation-name: linkTo;
+            left: 0;
+            position: relative;
+        }
+    }
+
+    @keyframes linkTo {
+        0% { left: 0; }
+        25% { left: 3px; }
+        50% { left: 0; }
+        75% { left: -1px; }
+        100% { left: 0; }
+    }
+}
+
+.relief-society {
+    background-color: lighten(@color-green-1, 20%);
+    color: @color-white-1;
+}
+
+.ward {
+    background-color: @color-green-1;
+    color: @color-white-1;
+}
+
+.scouts {
+    background-color: @color-complement;
+    color: @color-white-1;
+}
+
+.stake {
+    background-color: lighten(@color-complement, 20%);
+    color: @color-white-1;
+}
+
+.neighborhood {
+    background-color: @color-red-1;
+    color: @color-white-1;
+}
+
+.young-men {
+    background-color: lighten(@color-blue-1, 10%);
+    color: @color-white-1;
+}
+
+.young-women {
+    background-color: lighten(@color-red-1, 20%);
+    color: @color-white-1;
+}
+
+.elders-quorum {
+    background-color: @color-blue-2;
+    color: @color-white-1;
+}
+
+.primary {
+    background-color: @color-blue-3;
+    color: @color-white-1;
+}
+
+@media only screen and (max-width: @mq-mobile-width) {
+    .announcement-container {
+        .content {
+            padding: 0;
+
+            & > div {
+                &:first-child {
+                    border-bottom: 1px solid @color-grey-3;
+                    margin: 0 10px;
+                    padding: 5px;
+                }
+            }
+        }
+
+        .title {
+            margin-left: 0;
+        }
+    }
+}

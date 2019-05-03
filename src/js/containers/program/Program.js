@@ -41,7 +41,7 @@ class Program extends Component {
         const { speakers, fast_sunday, conference } = program;
         const numberOfSpeakers = speakers?.length;
         const onlyOneSpeaker = numberOfSpeakers === 1;
-        let template = <Leaders className="speaker" title="Speaker" value="TBD" />;
+        let template = <Leaders className="speaker" title="Speaker" value="TBA" />;
 
         if (fast_sunday || conference || onlyOneSpeaker) {
             template = <div className="testimony-meeting center bold">{speakers[0]}</div>;
@@ -61,7 +61,7 @@ class Program extends Component {
         const { program } = this.props;
         const { speakers } = program;
         const numberOfSpeakers = speakers?.length;
-        let template = <Leaders className="speaker" title="Speaker" value="TBD" />;
+        let template = <Leaders className="speaker" title="Speaker" value="TBA" />;
 
         if (numberOfSpeakers === 4) {
             template = [
@@ -81,7 +81,8 @@ class Program extends Component {
 
     render() {
         const { program } = this.props;
-
+        const { musical_number } = program;
+        console.log('program:', musical_number, program);
         return (
             <div className="program-container page center">
                 <div className="center">
@@ -94,7 +95,7 @@ class Program extends Component {
                 <Leaders title="Chorister" value={program.chorister} />
                 <Leaders title="Organist" value={program.organist} />
 
-                <h3 className="center">Announcements</h3>
+                <h3 className="center">Welcome</h3>
 
                 <Leaders
                     title="Opening Hymn"
@@ -116,17 +117,17 @@ class Program extends Component {
 
                 { this.handleFirstSpeakers() }
                 {
-                    program.intermediant_hymn && (
+                    program.intermediate_hymn && (
                         <Leaders
-                            className="intermediant-hymn"
-                            title="Intermediant Hymn"
-                            value={program.intermediant_hymn}
-                            subValue={program.intermediant_hymn_title}
+                            className="intermediate-hymn"
+                            title="Intermediate Hymn"
+                            value={program.intermediate_hymn}
+                            subValue={program.intermediate_hymn_title}
                         />
                     )
                 }
                 {
-                    program.musical_number && (
+                    musical_number && (
                         <div className="center musical-number-wrapper">
                             {
                                 program.musical_number.map(text => <div key={shortId.generate()} className="musical-number">{text}</div>)

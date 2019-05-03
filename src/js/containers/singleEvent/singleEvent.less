@@ -1,0 +1,79 @@
+@import '~variables';
+
+.single-event-wrapper {
+    margin: 0 auto;
+    max-width: 960px;
+    // padding: 0 30px;
+
+    .breadcrumbs {
+        margin-top: 20px;
+
+        .bp3-breadcrumb {
+            font-size: 80%;
+        }
+
+        .bp3-breadcrumb-current {
+            color: @color-grey-1;
+        }
+    }
+
+    .announcement {
+        padding-right: 30px;
+    }
+
+    .announcement-data {
+        margin-top: 40px;
+
+        .title {
+            font-size: 120%;
+            margin-bottom: 2px;
+        }
+
+        .sub-title {
+            color: @color-blue-1;
+            font-size: 70%;
+            margin: 0;
+            text-indent: 1px;
+        }
+
+        .end-date {
+            color: @color-grey-1;
+            padding-left: 5px;
+        }
+
+        .button-group {
+            margin-top: 40px;
+
+            button {
+                width: 120px;
+
+                &:first-child {
+                    margin-right: 20px;
+                }
+            }
+        }
+    }
+
+    .info-heading {
+        background-color: @color-grey-3;
+        color: @color-grey-1;
+        font-size: 100%;
+        margin-top: 50px;
+        padding: 5px 10px;
+    }
+
+    .info-content {
+        color: @color-grey-1;
+        font-size: 80%;
+        padding: 0 0 40px 40px;
+
+        h4 {
+            color: darken(@color-grey-1, 10%);
+            margin: 20px 0 0;
+        }
+    }
+
+    .no-announcement {
+        margin: 50px auto;
+    }
+}

@@ -1,0 +1,35 @@
+@import '~variables';
+
+.announcement-page {
+    .announcements {
+        margin: 0 auto;
+        max-width: 1200px;
+    }
+}
+
+.announcement-modal {
+    padding: 0 !important;
+
+    .bp3-dialog-header {
+        text-align: center;
+    }
+}
+
+.add-event-wrapper {
+    background-color: @color-grey-3;
+    border: 1px dashed @color-grey-2;
+    cursor: pointer;
+    font-size: 80%;
+    max-width: 130px;
+    padding: 20px;
+    text-align: center;
+    transition: all @transition-medium;
+
+    .add-message {
+        padding-top: 20px;
+    }
+
+    &:hover {
+        background-color: darken(@color-grey-3, 5%);
+    }
+}

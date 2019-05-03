@@ -1,5 +1,5 @@
 /* eslint-disable */
-import fireDB from './fireDB';
+import { fbRef } from './fireDB';
 
 export default function firebaseDispatchMiddleware(client) {
     return ({ getState, dispatch }) => next => (action) => {
@@ -57,13 +57,7 @@ export default function firebaseDispatchMiddleware(client) {
         }
 
         if (firebase) {
-            return fireDB.ref(firebase).once('value', (snap) => {
-                const val = snap.val();
-
-                if (val) {
-                    dispatchSuccessAction(val);
-                }
-            }, error => dispatchErrorAction(error));
+            fbRef(firebase, dispatchSuccessAction, dispatchErrorAction);
         }
     };
 }
