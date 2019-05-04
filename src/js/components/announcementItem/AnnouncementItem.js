@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { Fragment } from 'react';
-import { func, shape, bool } from 'prop-types';
+import { func, shape, bool, string } from 'prop-types';
 
 import { Button, ButtonGroup, Icon } from '@blueprintjs/core';
 import { Parser } from 'html-to-react';
@@ -37,9 +37,10 @@ function AnnouncementItem(props) {
         return event.edited[edited];
     })() : false;
     const isRemoval = event?.remove && typeof event?.remove === 'object';
+    const eventTypeClass = event?.general ? 'general' : 'regular';
 
     return (
-        <div className={`announcement-container ${className}`}>
+        <div className={`announcement-container ${eventTypeClass} ${className}`.trim()}>
             <div className="row">
                 {(dayOfWeek && !event?.general) && (
                     <div className="col-xs-2 col-sm-1 day-of-week-wrapper">
@@ -52,7 +53,7 @@ function AnnouncementItem(props) {
                         {event?.group !== '[Select]' && group}
                     </div>
                     <div className="content">
-                        <div className="row">
+                        <div className="row content-header">
                             <h3 className="title col-sm col-xs">{title}</h3>
                             {time && <div className="date-time">{moment(event.time, dateFormats.utc).format(dateFormats.time)}</div>}
                             {lpLink && (
@@ -123,7 +124,8 @@ AnnouncementItem.propTypes = {
     onEdit: func,
     onApproval: func,
     onCancel: func,
-    lpLink: bool
+    lpLink: bool,
+    className: string
 };
 
 AnnouncementItem.defaultProps = {
@@ -132,7 +134,8 @@ AnnouncementItem.defaultProps = {
     onEdit: null,
     onApproval: null,
     onCancel: null,
-    lpLink: false
+    lpLink: false,
+    className: ''
 };
 
 export default withRouter(AnnouncementItem);

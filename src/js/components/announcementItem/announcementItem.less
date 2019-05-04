@@ -19,7 +19,7 @@
 
     .date-time {
         font-size: 80%;
-        margin-right: -7px;
+        margin-right: 15px;
     }
 
     .day-of-week-wrapper {
@@ -50,13 +50,13 @@
         padding: 0 10px;
         width: 100%;
 
-        & > div { // stylelint-disable-line
-            &:first-child {
-                align-items: center;
-                border-bottom: 1px solid @color-grey-3;
-                margin: 0 20px;
-                padding: 10px;
-            }
+        .content-header {
+            align-items: center;
+            border-bottom: 1px solid @color-grey-3;
+            margin: 0;
+            padding: 10px;
+            position: relative;
+            width: 100%;
         }
     }
 
@@ -69,8 +69,8 @@
 
     .title {
         font-size: 100%;
-        margin: 0 0 0 -15px;
-        text-align: left;
+        margin: 0;
+        // text-align: left;
     }
 
     .message {
@@ -99,11 +99,14 @@
 }
 
 .event-landing-page-link {
+    align-items: center;
     background-color: @color-white-2;
+    display: flex;
+    height: 100%;
     overflow: hidden;
     padding: 10px 5px;
     position: absolute;
-    right: 0;
+    right: -10px;
     transition: all @transition-slow;
 
     &:hover {
@@ -174,16 +177,26 @@
 }
 
 @media only screen and (max-width: @mq-mobile-width) {
+    .general {
+        padding-left: 15px;
+    }
+
     .announcement-container {
         .content {
             padding: 0;
 
-            & > div {
-                &:first-child {
-                    border-bottom: 1px solid @color-grey-3;
-                    margin: 0 10px;
-                    padding: 5px;
-                }
+            .content-header {
+                // border-bottom: 1px solid @color-grey-3;
+                // margin: 0;
+                // padding: inherit 5px;
+            }
+
+            .event-landing-page-link {
+                right: 0;
+            }
+
+            .date-time {
+                margin-right: 23px;
             }
         }
 

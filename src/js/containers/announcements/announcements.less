@@ -33,3 +33,15 @@
         background-color: darken(@color-grey-3, 5%);
     }
 }
+
+@media only screen and (max-width: @mq-mobile-width) {
+    .announcement-page {
+        &.page {
+            padding-left: 0 !important;
+        }
+
+        .add-event-wrapper {
+            margin-left: 10px;
+        }
+    }
+}
