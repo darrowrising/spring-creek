@@ -87,7 +87,7 @@ class Program extends Component {
     render() {
         const { program } = this.props;
         const { musical_number } = program;
-        console.log('program:', musical_number, program);
+
         return (
             <div className="program-container page center">
                 <div className="center">
