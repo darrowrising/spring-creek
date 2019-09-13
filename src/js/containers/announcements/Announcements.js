@@ -30,7 +30,8 @@ class Announcements extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            modalOpen: false
+            modalOpen: false,
+            announcementOpenId: 0
         }
         this.refHandlers = {
             toaster: (ref) => this.toaster = ref
@@ -67,8 +68,44 @@ class Announcements extends Component {
         this.setState({ modalOpen: false });
     }
 
+    handleOpenContentOfAnnouncement = (uid) => {
+        this.setState(state => {
+            const { announcementOpenId } = state;
+            let val = uid;
+            if (announcementOpenId === uid) {
+                val = 0;
+            }
+            console.log('val:', val);
+            return {announcementOpenId: val};
+        });
+    }
+
+    template = () => {
+        const { announcementOpenId } = this.state;
+        const { list } = this.props;
+        const temp = list.map(month => (
+            <div key={shortId.generate()}>
+                <MonthHeader type={/eneral/.test(month.month) ? 'general' : 'month'} month={month.month} />
+                {
+                    month.events.map(item => (
+                        <AnnouncementItem
+                            data={item}
+                            key={shortId.generate()}
+                            lpLink
+                            listView
+                            onClickAnnouncement={this.handleOpenContentOfAnnouncement}
+                            openContent={announcementOpenId === item.uid}
+                        />
+                    ))
+                }
+            </div>
+        ));
+
+        return temp;
+    }
+
     render() {
-        const { modalOpen } = this.state;
+        const { modalOpen, announcementOpenId } = this.state;
         const { toast, list } = this.props;
         const AddBtnText = "Add an Announcement or Event";
         // const currentMonth = moment().format(dateFormats.month);
@@ -86,22 +123,7 @@ class Announcements extends Component {
                             <Icon icon="plus" />
                             <div className="add-message">{AddBtnText}</div>
                         </div>
-                        {
-                            list.map(month => (
-                                <div key={shortId.generate()}>
-                                    <MonthHeader type={/eneral/.test(month.month) ? 'general' : 'month'} month={month.month} />
-                                    {
-                                        month.events.map(item => (
-                                            <AnnouncementItem
-                                                data={item}
-                                                key={shortId.generate()}
-                                                lpLink
-                                            />
-                                        ))
-                                    }
-                                </div>
-                            ))
-                        }
+                        {this.template()}
                     </div>
                 </div>
                 <Dialog

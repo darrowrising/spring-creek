@@ -9,7 +9,7 @@
     "announcements": {
       ".read": true,
       ".write": true,
-      ".indexOn": "moderate"
+      ".indexOn": ["moderate", "uid", "editVersion/moderate"]
     }
   }
 }

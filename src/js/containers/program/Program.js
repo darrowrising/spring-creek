@@ -74,6 +74,11 @@ class Program extends Component {
             template = <Leaders className="speaker" title="Speaker" value={speakers[1]} />;
         } else if (numberOfSpeakers === 1) {
             template = null;
+        } else if (numberOfSpeakers >= 5) {
+            template = [];
+            for (let i = 2; numberOfSpeakers > i; i += 1) {
+                template.push(<Leaders className="speaker" title="Speaker" value={speakers[i]} />);
+            }
         }
 
         return template;
@@ -82,7 +87,7 @@ class Program extends Component {
     render() {
         const { program } = this.props;
         const { musical_number } = program;
-        console.log('program:', musical_number, program);
+
         return (
             <div className="program-container page center">
                 <div className="center">
