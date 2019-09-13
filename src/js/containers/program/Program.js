@@ -74,6 +74,11 @@ class Program extends Component {
             template = <Leaders className="speaker" title="Speaker" value={speakers[1]} />;
         } else if (numberOfSpeakers === 1) {
             template = null;
+        } else if (numberOfSpeakers >= 5) {
+            template = [];
+            for (let i = 2; numberOfSpeakers > i; i += 1) {
+                template.push(<Leaders className="speaker" title="Speaker" value={speakers[i]} />);
+            }
         }
 
         return template;

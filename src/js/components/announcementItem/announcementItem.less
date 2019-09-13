@@ -32,6 +32,10 @@
         text-transform: uppercase;
     }
 
+    .end-date-container {
+        position: relative;
+    }
+
     .event-date-wrapper {
         bottom: 5px;
         color: @color-grey-1;
@@ -95,6 +99,11 @@
 
     .moderate-buttons {
         padding-top: 10px;
+    }
+
+    .content-container {
+        // height: 0;
+        transition: all @transition-slow;
     }
 }
 
@@ -173,6 +182,11 @@
 
 .primary {
     background-color: @color-blue-3;
+    color: @color-white-1;
+}
+
+.youth {
+    background-color: lighten(@color-red-1, 10%);
     color: @color-white-1;
 }
 

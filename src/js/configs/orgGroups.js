@@ -1,11 +1,12 @@
 export default [
     '[Select]',
+    'Ward',
     'Stake',
-    'Neighborhood',
     'Young Men',
     'Young Women',
+    'Youth',
     'Relief Society',
-    'Ward',
+    'Neighborhood',
     'Elders Quorum',
     'Scouts',
     'Primary'
