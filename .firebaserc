@@ -7,11 +7,15 @@
   "targets": {
     "springcreeklds": {
       "hosting": {
-        "test": [
-          "springcreek-test"
-        ],
         "production": [
           "springcreeklds"
+        ]
+      }
+    },
+    "springcreek-test": {
+      "hosting": {
+        "test": [
+          "springcreek-test"
         ]
       }
     }
