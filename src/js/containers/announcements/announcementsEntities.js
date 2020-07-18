@@ -19,7 +19,7 @@ export const announcementEntities = (state = initialState, action) => {
                 toast: messaging.announcements.newSaved
             };
 
-            return Object.assign({}, state, actionState);
+            return { ...state, ...actionState };
         }
         case ActionTypes.GET_ANNOUCEMENT_LIST_SUCCESS: {
             let data = {};
@@ -72,7 +72,7 @@ export const announcementEntities = (state = initialState, action) => {
             });
 
             data = Object.keys(data)
-                .map(month => data[month])
+                .map((month) => data[month])
                 .map((month) => {
                     const events = month.events
                         .sort((b, a) => {
@@ -95,7 +95,7 @@ export const announcementEntities = (state = initialState, action) => {
 
             const actionState = { data };
 
-            return Object.assign({}, state, actionState);
+            return { ...state, ...actionState };
         }
         default:
             return state;
@@ -103,16 +103,16 @@ export const announcementEntities = (state = initialState, action) => {
 };
 
 export const setAnnoucementEntities = createSelector(
-    state => getEntities(state),
-    entities => entities?.announcements
+    (state) => getEntities(state),
+    (entities) => entities?.announcements
 );
 
 export const toastAnnoucement = createSelector(
-    state => getEntities(state),
-    entities => entities?.announcements?.toast
+    (state) => getEntities(state),
+    (entities) => entities?.announcements?.toast
 );
 
 export const getAnnoucements = createSelector(
-    state => getEntities(state),
-    entities => entities?.announcements?.data
+    (state) => getEntities(state),
+    (entities) => entities?.announcements?.data
 );

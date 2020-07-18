@@ -16,7 +16,7 @@ export const programEntities = (state = initialState, action) => {
                 error: {}
             };
 
-            return Object.assign({}, state, actionState);
+            return { ...state, ...actionState };
         }
         case ActionTypes.GET_PROGRAM_SUCCESS: {
             const actionState = {
@@ -24,7 +24,7 @@ export const programEntities = (state = initialState, action) => {
                 error: {}
             };
 
-            return Object.assign({}, state, actionState);
+            return { ...state, ...actionState };
         }
         case ActionTypes.GET_PROGRAM_FAILURE: {
             let errorName = messaging.errors.unknown;
@@ -41,7 +41,7 @@ export const programEntities = (state = initialState, action) => {
                 loading: false
             };
 
-            return Object.assign({}, state, actionState);
+            return { ...state, ...actionState };
         }
         default:
             return state;
@@ -49,6 +49,6 @@ export const programEntities = (state = initialState, action) => {
 };
 
 export const setProgramEntities = createSelector(
-    state => getEntities(state),
-    entities => entities?.program
+    (state) => getEntities(state),
+    (entities) => entities?.program
 );

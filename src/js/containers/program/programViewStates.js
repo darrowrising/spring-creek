@@ -31,12 +31,12 @@ export const programViewStates = (state = initialState, action) => {
                 sacrament_hymn: defaultVal,
                 closing_hymn: defaultVal,
                 benediction: defaultVal,
-                speakers: program?.speakers?.filter(item => item) || []
+                speakers: program?.speakers?.filter((item) => item) || []
             };
 
             program.date = moment(init.date).format(dateFormats.longDate);
 
-            return Object.assign({}, state, init, program);
+            return { ...state, ...init, ...program };
         }
         default:
             return state;
@@ -44,6 +44,6 @@ export const programViewStates = (state = initialState, action) => {
 };
 
 export const setProgramViewState = createSelector(
-    state => getViewStates(state),
-    viewState => viewState?.program || {}
+    (state) => getViewStates(state),
+    (viewState) => viewState?.program || {}
 );
