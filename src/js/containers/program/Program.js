@@ -135,7 +135,7 @@ class Program extends Component {
                     musical_number && (
                         <div className="center musical-number-wrapper">
                             {
-                                program.musical_number.map(text => <div key={shortId.generate()} className="musical-number">{text}</div>)
+                                program.musical_number.map((text) => <div key={shortId.generate()} className="musical-number">{text}</div>)
                             }
                         </div>
                     )
@@ -155,7 +155,7 @@ class Program extends Component {
     }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     program: setProgramViewState(state)
 });
 

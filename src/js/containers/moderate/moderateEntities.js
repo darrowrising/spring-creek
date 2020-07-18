@@ -18,7 +18,7 @@ export const moderateEntities = (state = initialState, action) => {
                 error: {}
             };
 
-            return Object.assign({}, state, actionState);
+            return { ...state, ...actionState };
         }
         case ActionTypes.GET_MODERATE_LIST_SUCCESS: {
             const actionState = {
@@ -27,7 +27,7 @@ export const moderateEntities = (state = initialState, action) => {
                 data: result
             };
 
-            return Object.assign({}, state, actionState);
+            return { ...state, ...actionState };
         }
         case ActionTypes.GET_MODERATE_LIST_FAILURE: {
             let errorName = messaging.errors.unknown;
@@ -44,34 +44,34 @@ export const moderateEntities = (state = initialState, action) => {
                 loading: false
             };
 
-            return Object.assign({}, state, actionState);
+            return { ...state, ...actionState };
         }
         case ActionTypes.EDIT_ANNOUNCEMENT_SUCCESS: {
             const newState = { ...state };
-            const eventIndex = newState.data.findIndex(item => item.id === result.id);
+            const eventIndex = newState.data.findIndex((item) => item.id === result.id);
             newState.data[eventIndex] = result;
-            return Object.assign({}, state, newState);
+            return { ...state, ...newState };
         }
         case ActionTypes.DELETE_ANNOUNCEMENT_SUCCESS: {
             const actionState = {
-                data: state.data.filter(item => item.id !== result)
+                data: state.data.filter((item) => item.id !== result)
             };
 
-            return Object.assign({}, state, actionState);
+            return { ...state, ...actionState };
         }
         case ActionTypes.APPROVE_ANNOUNCEMENT_SUCCESS: {
             const newState = { ...state };
-            const index = newState.data.findIndex(item => item.id === result.id);
+            const index = newState.data.findIndex((item) => item.id === result.id);
             const actionState = newState.data.splice(index);
 
-            return Object.assign({}, state, actionState);
+            return { ...state, ...actionState };
         }
         case ActionTypes.CANCEL_REMOVAL_SUCCESS: {
             const newState = { ...state };
-            const index = newState.data.findIndex(item => item.id === result.id);
+            const index = newState.data.findIndex((item) => item.id === result.id);
             const actionState = newState.data.splice(index);
 
-            return Object.assign({}, state, actionState);
+            return { ...state, ...actionState };
         }
         default:
             return state;
@@ -79,6 +79,6 @@ export const moderateEntities = (state = initialState, action) => {
 };
 
 export const getModerateEntities = createSelector(
-    state => getEntities(state),
-    entities => entities?.moderate
+    (state) => getEntities(state),
+    (entities) => entities?.moderate
 );

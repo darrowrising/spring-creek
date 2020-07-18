@@ -12,21 +12,25 @@ function Leaders(props) {
     } = props;
 
     return (
-        <div className={`leaders-container ${className}`}>
-            <div className="leaders-wrapper">
-                <span className="leaders-title left">{title}</span>
-                <span className="dot-leaders" />
-                <span className="leaders-value right">{value}</span>
-            </div>
-            {
-                subValue
-                && (
-                    <div className="row subValue-wrapper">
-                        <span className="col-xs-12 center">{subValue}</span>
+        <>
+            { value ? (
+                <div className={`leaders-container ${className}`}>
+                    <div className="leaders-wrapper">
+                        <span className="leaders-title left">{title}</span>
+                        <span className="dot-leaders" />
+                        <span className="leaders-value right">{value}</span>
                     </div>
-                )
-            }
-        </div>
+                    {
+                        subValue
+                        && (
+                            <div className="row subValue-wrapper">
+                                <span className="col-xs-12 center">{subValue}</span>
+                            </div>
+                        )
+                    }
+                </div>
+            ) : null }
+        </>
     );
 }
 
