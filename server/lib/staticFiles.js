@@ -1,10 +1,13 @@
 const path = require('path');
 const Express = require('express');
-const env = require('./../utils/env');
+const env = require('../utils/env');
 
 const __rootPath = __dirname.replace('server', '');
 const app = new Express();
 
+app.get('/admin/*', (req, res) => {
+    res.sendFile(path.resolve('public/admin/index.html'));
+});
 app.get('/*', (req, res) => {
     res.sendFile(path.resolve('public/index.html'));
 });

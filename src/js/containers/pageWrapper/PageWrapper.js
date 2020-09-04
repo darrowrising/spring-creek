@@ -15,7 +15,7 @@ import SingleEvent from '../singleEvent/SingleEvent';
 import { handleURLParams } from '../../utils/qrCodes';
 // Styles
 import './pageWrapper.less';
-
+/* eslint-disable  react/static-property-placement */ /* TODO: Remove this eslint disable */
 export default class PageWrapper extends Component {
     static propTypes = {
         location: shape(),

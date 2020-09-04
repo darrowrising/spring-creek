@@ -8,10 +8,10 @@ const env = require('./server/utils/env');
 
 module.exports = merge(common, {
     devtool: 'inline-sourcemap',
-    entry: [
-        'webpack/hot/dev-server',
-        `webpack-hot-middleware/client?reload=true&path=http://localhost:${env().port}/__webpack_hmr`
-    ],
+    entry: {
+        hot: 'webpack/hot/dev-server',
+        middleware: `webpack-hot-middleware/client?reload=true&path=http://localhost:${env().port}/__webpack_hmr`
+    },
     mode: 'development',
     plugins: [
         new webpack.HotModuleReplacementPlugin()

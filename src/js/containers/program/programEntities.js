@@ -49,6 +49,6 @@ export const programEntities = (state = initialState, action) => {
 };
 
 export const setProgramEntities = createSelector(
-    (state) => getEntities(state),
-    (entities) => entities?.program
+    state => getEntities(state),
+    entities => entities?.program
 );

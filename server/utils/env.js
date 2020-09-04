@@ -1,4 +1,4 @@
-const config = require('./../config');
+const config = require('../config');
 
 module.exports = (envType) => {
     const env = envType || process.env.NODE_ENV || 'production';

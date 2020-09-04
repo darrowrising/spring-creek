@@ -1,5 +1,5 @@
 export default {
-    prod: {
+    production: {
         apiKey: 'AIzaSyAAW3om87xpy3G7lIiasxEpuP-HpeaN9mo',
         authDomain: 'springcreeklds.firebaseapp.com',
         databaseURL: 'https://springcreeklds.firebaseio.com',

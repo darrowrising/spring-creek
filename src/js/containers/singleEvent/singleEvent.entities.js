@@ -53,13 +53,12 @@ export const singleEventEntities = (state = initialState, action) => {
     }
 };
 
-
 export const getEvent = createSelector(
-    (state) => getEntities(state),
-    (entities) => entities?.singleEvent?.event
+    state => getEntities(state),
+    entities => entities?.singleEvent?.event
 );
 
 export const toastEvent = createSelector(
-    (state) => getEntities(state),
-    (entities) => entities?.singleEvent?.toast
+    state => getEntities(state),
+    entities => entities?.singleEvent?.toast
 );

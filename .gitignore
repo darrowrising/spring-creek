@@ -66,3 +66,4 @@ __snapshots__
 .firebase
 
 # Temp File and Directories
+/temp

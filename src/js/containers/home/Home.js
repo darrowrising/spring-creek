@@ -23,7 +23,8 @@ function Home() {
             <div className="content-width">
                 <div className="main-message">
                     <h2>Welcome to the new Spring Creek Ward website</h2>
-                    <p>This will be a location to post and view ward information.
+                    <p>
+                        This will be a location to post and view ward information.
                         This is a work in progress so please keep checking the site.
                     </p>
                 </div>

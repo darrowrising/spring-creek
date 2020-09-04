@@ -53,6 +53,6 @@ export function fbRef(options, successFunc, errorFunc) {
                 const val = snap.exists() ? snap.val() : 'No Data';
 
                 successFunc(val);
-            }, (error) => errorFunc(error));
+            }, error => errorFunc(error));
     }
 }
