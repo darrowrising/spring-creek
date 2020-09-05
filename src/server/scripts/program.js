@@ -1,41 +1,29 @@
 import moment from 'moment';
+import color from 'colors';
 
 // utils
 import { db } from '../utils/firebase.utils';
 // configs
 import hymns from '../../configs/hymns.config.json';
 
-const programDate = '200906_1200';
+const programDate = '200906_1300';
 const programConfig = {
     presiding: 'Bishop Vaughn Kinghorn',
     conducting: 'Bishop Vaughn Kinghorn',
-    chorister: 'Nora Davidson',
+    chorister: 'Lydia York',
     organist: 'Emily Hinchey',
     opening_hymn: 116,
-    invocation: '',
+    invocation: 'Laura York',
     sacrament_hymn: 191,
     program: [{
         type: 'talk',
-        title: 'Testimony',
-        topic: '',
-        name: 'Eva Davidson',
-        priority: '0'
-    }, {
-        type: 'talk',
         title: 'Speaker',
         topic: '',
-        name: 'Mark Robbins',
-        priority: '1'
+        value: 'Mark Robbins',
+        priority: 0
     }],
     closing_hymn: 141,
-    benediction: 'Sara Judkins',
-
-    conference: false,
-    date: '',
-    fast_sunday: false,
-    intermediate_hymn: '',
-    musical_number: [],
-    year: 2020
+    benediction: 'Shane Moss',
 };
 
 function updateWithHymns(program) {
@@ -47,12 +35,12 @@ function updateWithHymns(program) {
 
     return {
         ...program,
-        opening_hymn: `#${open.number}`,
-        opening_hymn_title: open.title,
-        sacrament_hymn: `#${sacrament.number}`,
-        sacrament_hymn_title: sacrament.title,
-        closing_hymn: `#${close.number}`,
-        closing_hymn_title: close.title
+        opening_hymn: open ? `#${open.number}` : '',
+        opening_hymn_title: open?.title || '',
+        sacrament_hymn: sacrament ? `#${sacrament.number}` : '',
+        sacrament_hymn_title: sacrament.title || '',
+        closing_hymn: close ? `#${close.number}` : '',
+        closing_hymn_title: close.title || ''
     };
 }
 
@@ -65,12 +53,14 @@ function updateDate(program) {
     };
 }
 
-function makeProgramData() {
-    const refPath = `/program/${programDate}`;
+async function makeProgramData() {
     let program = updateWithHymns(programConfig);
     program = updateDate(program);
 
-    db.ref(refPath).set(program);
+    await db.ref(`/program/${programDate}`).set(program);
+
+    console.log('Program', color.yellow(programDate), color.green('uploaded successfully'));
+    process.exit(0);
 }
 
 makeProgramData();

@@ -53,6 +53,7 @@ export default class PageWrapper extends Component {
                 <Header />
                 <Switch>
                     <Route path="/" exact component={Home} />
+                    <Route path="/program/:date" component={Program} />
                     <Route path="/program" component={Program} />
                     <Route path="/announcements/:event" component={SingleEvent} />
                     <Route path="/announcements" component={Announcements} />

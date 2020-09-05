@@ -9,7 +9,7 @@
     "deploy:prod": "yarn build && yarn firebase deploy --only hosting:production",
     "theme": "gulp build-css build-assets --gulpfile ./semantic/gulpfile.js",
     "make:files": "node -r @babel/register src/server/scripts/buildFiles.js",
-    "make:program": "node -r @babel/register src/server/scripts/program.js"
+    "make:program": "DB_ENV=test node -r @babel/register src/server/scripts/program.js"
   },
   "author": "Ben Ellis <benellislds@gmail.com>",
   "license": "ISC",
@@ -94,6 +94,7 @@
     "react-dom": "^16.6.3",
     "react-draft-wysiwyg": "^1.12.17",
     "react-ga": "^2.5.6",
+    "react-loading": "^2.0.3",
     "react-redux": "^6.0.0",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",

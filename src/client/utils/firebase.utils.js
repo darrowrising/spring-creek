@@ -6,33 +6,31 @@ import 'firebase/firestore';
 import 'firebase/storage';
 
 // utils
-import env from '../../../server/utils/env';
+import envHandler from '../../../server/utils/env';
 // configs
-// import envConfig from '../../generatedFiles/envConfig.json';
 import firebaseConfig from '../../js/configs/firebase';
-// const { firebaseConfig } = envConfig;
 /* *** Initialize Firebase *** */
 // admin.initializeApp({ credential: admin.credential.applicationDefault() });
-firebase.initializeApp(firebaseConfig);
+firebase.initializeApp(firebaseConfig[envHandler().dbEnv]);
 
 // database
 export const db = firebase.database();
-export const timeStamp = firebase.database.ServerValue.TIMESTAMP;
+// export const timeStamp = firebase.database.ServerValue.TIMESTAMP;
 // firestore
 export const store = firebase.firestore();
 export const FieldValue = () => firebase.firestore.FieldValue;
-export const storeTimeStamp = firebase.firestore.Timestamp.now();
+// export const storeTimeStamp = firebase.firestore.Timestamp.now();
 /* ** authorization ** */
-export const auth = firebase.auth();
-export const user = () => auth.currentUser;
+// export const auth = firebase.auth();
+// export const user = () => auth.currentUser;
 // export const updateProfile = profile => user.updateProfile(profile);
-export const createMember = (email, password) => auth.createUserWithEmailAndPassword(email, password);
-export const updatePassword = newPassword => user().updatePassword(newPassword);
-
-export const signIn = (email, password) => auth.signInWithEmailAndPassword(email, password);
-export const signOut = () => auth.signOut();
-
-export const emailLink = link => auth.isSignInWithEmailLink(link);
+// export const createMember = (email, password) => auth.createUserWithEmailAndPassword(email, password);
+// export const updatePassword = newPassword => user().updatePassword(newPassword);
+//
+// export const signIn = (email, password) => auth.signInWithEmailAndPassword(email, password);
+// export const signOut = () => auth.signOut();
+//
+// export const emailLink = link => auth.isSignInWithEmailLink(link);
 
 // storage
 export const storage = firebase.storage().ref();

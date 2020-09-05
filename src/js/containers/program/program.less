@@ -1,43 +1,60 @@
 @import '~variables';
 
+.loading {
+    align-items: center;
+    display: flex;
+    height: 400px;
+    justify-content: center;
+}
+
 .program-container {
     max-width: @width-max-medium;
 
-    h3 {
-        font-size: 100%;
-        padding: 15px 0;
-    }
+    .program-wrapper {
+        animation: 0.5s fadeIn ease;
+        opacity: 1;
 
-    .ward {
-        font-size: 70%;
-    }
+        h3 {
+            font-size: 100%;
+            padding: 15px 0;
+        }
 
-    .date {
-        padding-bottom: 20px;
-    }
+        .ward {
+            font-size: 70%;
+        }
 
-    .sacrament {
-        padding: 30px 0;
-    }
+        .date {
+            padding-bottom: 20px;
+        }
 
-    .speaker {
-        margin-bottom: 10px;
-    }
+        .sacrament {
+            padding: 30px 0;
+        }
 
-    .musical-number-wrapper {
-        margin: 20px 0;
-    }
+        .speaker {
+            margin-bottom: 10px;
+        }
 
-    .intermediate-hymn {
-        margin: 30px 0 20px;
-    }
+        .musical-number-wrapper {
+            margin: 20px 0;
+        }
 
-    .closing-hymn {
-        margin-top: 30px;
-    }
+        .intermediate-hymn {
+            margin: 30px 0 20px;
+        }
 
-    .testimony-meeting {
-        font-size: 120%;
-        padding: 40px 0;
+        .closing-hymn {
+            margin-top: 30px;
+        }
+
+        .testimony-meeting {
+            font-size: 120%;
+            padding: 40px 0;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0 };
+            to { opacity: 1 };
+        }
     }
 }
