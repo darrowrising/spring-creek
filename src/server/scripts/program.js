@@ -6,24 +6,30 @@ import { db } from '../utils/firebase.utils';
 // configs
 import hymns from '../../configs/hymns.config.json';
 
-const programDate = '200906_1300';
+const programDate = '200906_1200';
 const programConfig = {
     presiding: 'Bishop Vaughn Kinghorn',
-    conducting: 'Bishop Vaughn Kinghorn',
-    chorister: 'Lydia York',
+    conducting: 'Shay Rolfson',
+    chorister: 'Nora Davidson',
     organist: 'Emily Hinchey',
     opening_hymn: 116,
-    invocation: 'Laura York',
+    invocation: 'Craig Boyle',
     sacrament_hymn: 191,
     program: [{
+        type: 'talk',
+        title: 'Testimony',
+        topic: '',
+        value: 'Eva Davidson',
+        priority: 0
+    }, {
         type: 'talk',
         title: 'Speaker',
         topic: '',
         value: 'Mark Robbins',
-        priority: 0
+        priority: 1
     }],
     closing_hymn: 141,
-    benediction: 'Shane Moss',
+    benediction: 'Sara Judkins',
 };
 
 function updateWithHymns(program) {
@@ -45,7 +51,8 @@ function updateWithHymns(program) {
 }
 
 function updateDate(program) {
-    const date = moment.parseZone(`${programDate} -6:00`, 'YYMMDD_hhmm ZZ').format();
+    const parseDate = moment(programDate, 'YYMMDD_hhmm');
+    const date = moment.utc(parseDate).format();
 
     return {
         ...program,

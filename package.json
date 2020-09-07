@@ -9,7 +9,7 @@
     "deploy:prod": "yarn build && yarn firebase deploy --only hosting:production",
     "theme": "gulp build-css build-assets --gulpfile ./semantic/gulpfile.js",
     "make:files": "node -r @babel/register src/server/scripts/buildFiles.js",
-    "make:program": "DB_ENV=test node -r @babel/register src/server/scripts/program.js"
+    "make:program": "DB_ENV=production node -r @babel/register src/server/scripts/program.js"
   },
   "author": "Ben Ellis <benellislds@gmail.com>",
   "license": "ISC",

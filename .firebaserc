@@ -1,14 +1,16 @@
 {
   "projects": {
     "production": "springcreeklds",
-    "test": "springcreek-test",
-    "default": "springcreeklds"
+    "test": "springcreek-test"
   },
   "targets": {
     "springcreeklds": {
       "hosting": {
         "production": [
           "springcreeklds"
+        ],
+        "test": [
+          "springcreek-test"
         ]
       }
     },
