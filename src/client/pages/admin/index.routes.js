@@ -14,7 +14,7 @@ import Attendance from './Attendance/Attendance';
 // components
 // import PrivateRoute from './components/PrivateRoute/PrivateRoute';
 // configs
-import { adminMenu } from '../../configs/menu.configs';
+import { adminMenu } from '../../../configs/menu.configs';
 
 const list = {
     Attendance,
@@ -28,10 +28,10 @@ function IndexRoutes() {
             <>
                 <Switch>
                     { /* main */ }
-                    <Route path="/admin" component={ProgramMaker} />
                     { adminMenu.map(item => (
-                        <Route path={item.path} component={list[item.component]} />
+                        <Route exact path={item.path} component={list[item.component]} />
                     ))}
+                    <Route path="/admin" component={ProgramMaker} />
                     {/* <Route path="*" component={NotFoundPage} status={404} /> */}
                 </Switch>
             </>

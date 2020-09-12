@@ -10,7 +10,7 @@ import Routes from './index.routes';
 // utils
 // import { GAInitialize } from './components/analytics/Analytics';
 // configs
-import theme from '../../configs/theme.config';
+import theme from '../../../configs/theme.config';
 // styles
 import { GlobalStyle } from './index.styles';
 // import { GridStyle } from './index.vendor.styles';

@@ -12,7 +12,7 @@ const antdTheme = require('./src/server/utils/antThemeHandler');
 module.exports = {
     entry: {
         main: path.resolve('./src/js/containers/App.js'),
-        admin: path.resolve('./src/client/admin/index.js')
+        admin: path.resolve('./src/client/pages/admin/index.js')
     },
     output: {
         path: path.resolve('public'),
@@ -84,7 +84,7 @@ module.exports = {
             excludeChunks: ['admin']
         }),
         new HtmlWebpackPlugin({
-            template: path.resolve('src/client/admin/index.hbs'),
+            template: path.resolve('src/client/pages/admin/index.hbs'),
             filename: 'admin/index.html',
             favicon: path.resolve('src/images/springcreek_favicon.png'),
             excludeChunks: ['main']

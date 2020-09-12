@@ -4,15 +4,15 @@ import { Table, Row, Col } from 'antd';
 import { theme } from 'theme';
 
 // layouts
-import Layout from '../../layouts/Main/Main';
+import Layout from '../../../layouts/Main/Main';
 // components
-import Loading from '../../components/Loading/Loading';
+import Loading from '../../../components/Loading/Loading';
 // utils
 import { getData, unsubscribe } from './Attendance.utils';
 // configs
-import { attendingDates } from '../../../configs/unit.config';
+import { attendingDates } from '../../../../configs/unit.config';
 import { mainTableColumns, statTableColumns } from './Attendance.configs';
-import { dateLong, dateShortNoYear } from '../../../configs/dateFormats.configs';
+import { dateLong, dateShortNoYear } from '../../../../configs/dateFormats.configs';
 // styles
 import {
     Description,

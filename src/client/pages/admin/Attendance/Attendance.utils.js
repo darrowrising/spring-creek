@@ -1,9 +1,9 @@
 import dayjs from 'dayjs';
 
 // utils
-import { store, docs } from '../../utils/firebase.utils';
+import { store, docs } from '../../../utils/firebase.utils';
 // configs
-import { meetingTimes as currentTimes } from '../../../configs/unit.config';
+import { meetingTimes as currentTimes } from '../../../../configs/unit.config';
 
 export let unsubscribe = null; // eslint-disable-line
 
