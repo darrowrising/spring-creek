@@ -67,6 +67,7 @@ __snapshots__
 
 # Temp File and Directories
 /src/server/temp
+/src/generatedFiles
 /tmp
 functions/*.js
 functions/config
@@ -74,4 +75,3 @@ functions/services
 functions/utils
 functions/api
 functions/configs
-/generatedFiles
