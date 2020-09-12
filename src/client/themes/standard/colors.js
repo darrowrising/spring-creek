@@ -38,7 +38,7 @@ export const colors = {
     color_secondary: adjustHue(240, primary),
     color_tertiary: adjustHue(120, primary),
     color_complement: complement(primary),
-
+    color_primary_admin: adjustHue(-10, primary),
     // Utility Colors
 
     // Types

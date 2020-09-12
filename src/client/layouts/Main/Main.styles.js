@@ -21,10 +21,15 @@ export const Container = styled.div`
 
 `;
 
+export const PageWrapper = styled.div`
+    display: flex;
+`;
+
 export const Page = styled.main`
     min-height: 100vh;
     padding: 20px 32px 75px;
     width: 100%;
+
     /* mobile */
     @media only screen and (max-width: ${theme('mq_tablet_width')}) {
         margin-left: 0;
@@ -38,3 +43,5 @@ export const Row = styled.div`
     overflow: auto;
     width: 100%;
 `;
+
+export const Title = styled.h2``;

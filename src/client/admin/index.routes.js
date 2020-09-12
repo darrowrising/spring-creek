@@ -8,10 +8,19 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 // pages
 import ProgramMaker from './ProgramMaker/ProgramMaker';
 import Members from './Members/Members';
+import Attendance from './Attendance/Attendance';
 // import NotFoundPage from './pages/NotFound/NotFound';
 // import Login from './pages/Login/Login';
 // components
 // import PrivateRoute from './components/PrivateRoute/PrivateRoute';
+// configs
+import { adminMenu } from '../../configs/menu.configs';
+
+const list = {
+    Attendance,
+    Members,
+    ProgramMaker
+};
 
 function IndexRoutes() {
     return (
@@ -19,8 +28,10 @@ function IndexRoutes() {
             <>
                 <Switch>
                     { /* main */ }
-                    <Route path="/" component={ProgramMaker} />
-                    <Route path="/members" component={Members} />
+                    <Route path="/admin" component={ProgramMaker} />
+                    { adminMenu.map(item => (
+                        <Route path={item.path} component={list[item.component]} />
+                    ))}
                     {/* <Route path="*" component={NotFoundPage} status={404} /> */}
                 </Switch>
             </>

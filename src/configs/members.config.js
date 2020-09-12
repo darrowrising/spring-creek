@@ -1,8 +1,11 @@
 export default [{
     firstName: 'Vaughn',
     lastName: 'Kinghorn',
+    email: '',
+    preferredName: '',
     callings: ['Bishop'],
     organization: ['Bishopric'],
+    role: [],
     household: 'ea7c5b10-ea79-11ea-adc1-0242ac120002',
     uid: 'ea7c5b10-ea79-11ea-adc1-0242ac120002'
 }, {

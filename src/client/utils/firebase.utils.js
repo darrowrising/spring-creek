@@ -5,13 +5,11 @@ import 'firebase/database';
 import 'firebase/firestore';
 import 'firebase/storage';
 
-// utils
-import envHandler from '../../../server/utils/env';
 // configs
-import firebaseConfig from '../../js/configs/firebase';
+import { firebaseConfig } from '../../generatedFiles/envConfig.json';
 /* *** Initialize Firebase *** */
 // admin.initializeApp({ credential: admin.credential.applicationDefault() });
-firebase.initializeApp(firebaseConfig[envHandler().dbEnv]);
+firebase.initializeApp(firebaseConfig);
 
 // database
 export const db = firebase.database();
@@ -21,7 +19,7 @@ export const store = firebase.firestore();
 export const FieldValue = () => firebase.firestore.FieldValue;
 // export const storeTimeStamp = firebase.firestore.Timestamp.now();
 /* ** authorization ** */
-// export const auth = firebase.auth();
+export const auth = firebase.auth();
 // export const user = () => auth.currentUser;
 // export const updateProfile = profile => user.updateProfile(profile);
 // export const createMember = (email, password) => auth.createUserWithEmailAndPassword(email, password);

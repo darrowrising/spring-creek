@@ -8,7 +8,7 @@ import 'firebase/storage';
 // utils
 import envHandler from './environmentHandler.utils';
 // configs
-import firebaseConfig from '../../js/configs/firebase';
+import firebaseConfig from '../../configs/firebase.configs';
 
 const env = envHandler();
 

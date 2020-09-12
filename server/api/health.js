@@ -1,10 +1,10 @@
 import Express from 'express';
 import colors from 'colors';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 const app = Express();
 const message = 'HEALTH CHECK: All systems running!';
-const timestamp = moment().format('MMM DD, YYY hh:mm A');
+const timestamp = dayjs().format('MMM DD, YYY hh:mm A');
 
 console.info(`${colors.green(message)} | ${colors.yellow(timestamp)}`);
 
