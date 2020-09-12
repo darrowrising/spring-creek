@@ -1,5 +1,6 @@
 export default {
     fbDocId: 'YYMMDD',
+    fbDocId_long: 'YYMMDD_hhmm',
     longDate: 'MMMM D, YYYY',
     date: 'MMM D, YYYY',
     dateTime: 'MMMM D, YYYY h:mm a',

@@ -1,6 +1,6 @@
 export default [{
     environment: 'prod',
-    firebase: 'prod',
+    firebase: 'production',
     analytics: 'UA-131499754-1',
     host: 'springcreeklds.firebaseapp.com',
     domain: 'www.springcreekward.com'

@@ -1,7 +1,7 @@
 import firebase from 'firebase/app';
 import 'firebase/database';
 import env from './envHandler';
-import fireConfig from '../configs/firebase';
+import fireConfig from '../../configs/firebase.configs';
 
 firebase.initializeApp(fireConfig[env()?.firebase]);
 

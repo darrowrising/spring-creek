@@ -66,3 +66,11 @@ __snapshots__
 .firebase
 
 # Temp File and Directories
+/src/server/temp
+/tmp
+functions/*.js
+functions/config
+functions/services
+functions/utils
+functions/api
+functions/configs

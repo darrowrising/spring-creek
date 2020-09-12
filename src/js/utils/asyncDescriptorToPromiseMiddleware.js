@@ -1,7 +1,7 @@
 import fireDB from './fireDB';
 
 export default function createGetPromiseFromAsyncDescriptorMiddleware(client) {
-    return ({ getState, dispatch }) => (next) => (action) => {
+    return ({ getState, dispatch }) => next => (action) => {
         const {
             firebase,
             getPromise,
@@ -63,7 +63,7 @@ export default function createGetPromiseFromAsyncDescriptorMiddleware(client) {
                 if (val) {
                     dispatchSuccessAction(val);
                 }
-            }, (error) => dispatchErrorAction(error));
+            }, error => dispatchErrorAction(error));
         }
 
         return new Promise((resolve, reject) => {
@@ -86,16 +86,16 @@ export default function createGetPromiseFromAsyncDescriptorMiddleware(client) {
 
                                 return result;
                             })
-                            .then((results) => ({
+                            .then(results => ({
                                 ...responseDetails,
                                 results
                             }))
-                            .catch((error) => dispatchErrorAction(error));
+                            .catch(error => dispatchErrorAction(error));
                     },
-                    (error) => dispatchErrorAction(error)
+                    error => dispatchErrorAction(error)
                 )
                 .then(resolve, reject)
-                .catch((error) => dispatchErrorAction(error));
+                .catch(error => dispatchErrorAction(error));
         });
     };
 }

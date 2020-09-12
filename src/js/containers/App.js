@@ -2,7 +2,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { render } from 'react-dom';
 import { ConnectedRouter, routerMiddleware } from 'connected-react-router';
-import { Switch, Route } from 'react-router-dom';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
 
 // import { Login } from './authentication/Login';
@@ -22,10 +22,12 @@ GAInitialize();
 render((
     <Provider store={store}>
         <ConnectedRouter history={history}>
-            <Switch>
-                { /* <Route path="/login" component={Login} /> */ }
-                <Route path="*" component={PageWrapper} />
-            </Switch>
+            <BrowserRouter>
+                <Switch>
+                    { /* <Route path="/login" component={Login} /> */ }
+                    <Route path="*" component={PageWrapper} />
+                </Switch>
+            </BrowserRouter>
         </ConnectedRouter>
     </Provider>
 ), document.getElementById('app'));
