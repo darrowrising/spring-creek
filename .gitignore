@@ -74,3 +74,4 @@ functions/services
 functions/utils
 functions/api
 functions/configs
+generatedFiles/**
