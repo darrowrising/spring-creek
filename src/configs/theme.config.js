@@ -8,7 +8,7 @@ export default {
     /* Key = Antd theme variable
        value = Is our theme variable */
     antdOverrides: {
-        // 'primary-color': 'color_primary',
+        'primary-color': 'color_primary',
         // 'error-color': 'color_danger',
         // 'warning-color': 'color_warning',
         // 'info-color': 'color_info',

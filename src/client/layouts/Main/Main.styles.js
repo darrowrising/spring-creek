@@ -8,6 +8,7 @@ export const Container = styled.div`
     display: flex;
     flex-direction: column;
     font-size: 1.6rem;
+    height: 100%;
     ${(props) => {
         const { animation } = props;
 
@@ -23,9 +24,11 @@ export const Container = styled.div`
 
 export const PageWrapper = styled.div`
     display: flex;
+    height: 100%;
 `;
 
 export const Page = styled.main`
+    height: 100%;
     min-height: 100vh;
     padding: 20px 32px 75px;
     width: 100%;

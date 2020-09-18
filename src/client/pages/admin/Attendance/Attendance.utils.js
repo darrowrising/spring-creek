@@ -30,7 +30,7 @@ function calcStats(meetingTimes, data) {
 
     return {
         statsTableData,
-        totalHouseholds: Object.values(statsTableData).map(session => session.map(item => item.households)[0]).reduce((a, b) => { console.log(a, b); return a + b; }),
+        totalHouseholds: Object.values(statsTableData).map(session => session.map(item => item.households)[0]).reduce((a, b) => a + b),
         totalHeadcount: Object.values(statsTableData).map(session => session.map(item => item.headcount)[0]).reduce((a, b) => a + b)
     };
 }

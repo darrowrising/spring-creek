@@ -7,8 +7,6 @@ import { ThemeProvider } from 'styled-components';
 // import NotificationProvider from './providers/Notification.provider';
 // components
 import Routes from './index.routes';
-// utils
-// import { GAInitialize } from './components/analytics/Analytics';
 // configs
 import theme from '../../../configs/theme.config';
 // styles
