@@ -18,20 +18,21 @@ const programConfig = {
     invocation: 'Keri Kadri',
     sacrament_hymn: 193,
     program: [{
-        type: 'talk',
-        title: 'Testimony',
+        type: 'music',
+        title: 'Musical Number',
         topic: '',
-        value: 'Eva Davidson',
+        value: `"Redeemer", performed by Brandon (viola)
+        and Shannon (piano) Andersen`,
         priority: 0
     }, {
         type: 'talk',
         title: 'Speaker',
         topic: '',
-        value: 'Mark Robbins',
+        value: 'Lyndsey Grimm',
         priority: 1
     }],
-    closing_hymn: 141,
-    benediction: 'Sara Judkins',
+    closing_hymn: 301,
+    benediction: 'Cody Stewart',
 };
 
 function updateWithHymns(program) {
@@ -66,7 +67,7 @@ async function makeProgramData() {
     let program = updateWithHymns(programConfig);
     program = updateDate(program);
 
-    // await db.ref(`/program/${programDate}`).set(program);
+    await db.ref(`/program/${programDate}`).set(program);
 
     console.log('Program', color.yellow(programDate), color.green('uploaded successfully'));
     process.exit(0);

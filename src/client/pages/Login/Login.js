@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 import { Input, Form } from 'antd';
 
 // providers
-import { UserContext } from '../../providers/User.provider';
+import { UserContext } from '../../Providers/User.provider';
 // layout
 import Layout from '../../layouts/Clean/Clean';
 // utils
