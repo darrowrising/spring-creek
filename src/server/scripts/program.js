@@ -3,18 +3,20 @@ import color from 'colors';
 
 // utils
 import { db } from '../utils/firebase.utils';
+import { fbDocId } from '../../js/utils/date';
 // configs
 import hymns from '../../configs/hymns.config.json';
 
-const programDate = '200906_1200';
+const programDate = fbDocId;
+// const programDate = '200920_1200';
 const programConfig = {
     presiding: 'Bishop Vaughn Kinghorn',
-    conducting: 'Shay Rolfson',
+    conducting: 'Peyton Smith',
     chorister: 'Nora Davidson',
     organist: 'Emily Hinchey',
-    opening_hymn: 116,
-    invocation: 'Craig Boyle',
-    sacrament_hymn: 191,
+    opening_hymn: 84,
+    invocation: 'Keri Kadri',
+    sacrament_hymn: 193,
     program: [{
         type: 'talk',
         title: 'Testimony',
@@ -64,7 +66,7 @@ async function makeProgramData() {
     let program = updateWithHymns(programConfig);
     program = updateDate(program);
 
-    await db.ref(`/program/${programDate}`).set(program);
+    // await db.ref(`/program/${programDate}`).set(program);
 
     console.log('Program', color.yellow(programDate), color.green('uploaded successfully'));
     process.exit(0);
