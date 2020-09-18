@@ -103,14 +103,6 @@ function Program({ history }) {
 
                         <h3 className="center">Ward and Stake Business</h3>
 
-                        <Leaders
-                            title="Sacrament Hymn"
-                            value={state?.sacrament_hymn || 'TBA'}
-                            subValue={state.sacrament_hymn_title}
-                        />
-
-                        <h3 className="center bold sacrament">Administration of the Sacrament</h3>
-
                         {
                             program.sort((a, b) => a.priority - b.priority).map(item => (
                                 <Leaders
@@ -128,6 +120,14 @@ function Program({ history }) {
                         />
 
                         <Leaders title="Benediction" value={state?.benediction || 'TBA'} />
+
+                        <Leaders
+                            title="Sacrament Hymn"
+                            value={state?.sacrament_hymn || 'TBA'}
+                            subValue={state.sacrament_hymn_title}
+                        />
+
+                        <h3 className="center bold sacrament">Administration of the Sacrament</h3>
                     </div>
                 )}
         </div>
