@@ -8,13 +8,14 @@ function Leaders(props) {
         title,
         value,
         subValue,
-        className
+        className,
+        ...rest
     } = props;
 
     return (
         <>
             { value ? (
-                <div className={`leaders-container ${className}`}>
+                <div {...rest} className={`leaders-container ${className}`}>
                     <div className="leaders-wrapper">
                         <span className="leaders-title left">{title}</span>
                         <span className="dot-leaders" />
