@@ -3,6 +3,7 @@ import moment from 'moment';
 import Loading from 'react-loading';
 import { NavLink } from 'react-router-dom';
 import { shape } from 'prop-types';
+import { Divider } from '@blueprintjs/core';
 
 // components
 import Leaders from '../../components/leaders/Leaders';
@@ -119,12 +120,15 @@ function Program({ history }) {
                             className="closing-hymn"
                         />
 
-                        <Leaders title="Benediction" value={state?.benediction || 'TBA'} />
+                        <Leaders title="Benediction" value={state?.benediction || 'TBA'} style={{ marginBottom: '40px' }} />
+
+                        <Divider />
 
                         <Leaders
                             title="Sacrament Hymn"
                             value={state?.sacrament_hymn || 'TBA'}
                             subValue={state.sacrament_hymn_title}
+                            style={{ marginTop: '40px' }}
                         />
 
                         <h3 className="center bold sacrament">Administration of the Sacrament</h3>
