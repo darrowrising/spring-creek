@@ -4,17 +4,19 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 // provider
 // import MenuProvider from './providers/Menu.provider';
 // analytics
-// import Analytics from './components/Analytics';
+import Analytics from '../../components/Analytics/Analytics';
 // pages
 import ProgramMaker from './ProgramMaker/ProgramMaker';
 import Members from './Members/Members';
 import Attendance from './Attendance/Attendance';
+import Login from '../Login/Login';
+import SignUp from '../SignUp/SignUp';
 // import NotFoundPage from './pages/NotFound/NotFound';
 // import Login from './pages/Login/Login';
 // components
 // import PrivateRoute from './components/PrivateRoute/PrivateRoute';
 // configs
-import { adminMenu } from '../../configs/menu.configs';
+import { adminMenu } from '../../../configs/menu.configs';
 
 const list = {
     Attendance,
@@ -26,12 +28,15 @@ function IndexRoutes() {
     return (
         <BrowserRouter>
             <>
+                <Analytics />
                 <Switch>
                     { /* main */ }
-                    <Route path="/admin" component={ProgramMaker} />
                     { adminMenu.map(item => (
-                        <Route path={item.path} component={list[item.component]} />
+                        <Route exact path={item.path} component={list[item.component]} />
                     ))}
+                    <Route path="/admin/login" component={Login} />
+                    <Route path="/admin/sign-up" component={SignUp} />
+                    <Route path="/admin" component={ProgramMaker} />
                     {/* <Route path="*" component={NotFoundPage} status={404} /> */}
                 </Switch>
             </>

@@ -3,33 +3,36 @@ import color from 'colors';
 
 // utils
 import { db } from '../utils/firebase.utils';
+import { fbDocId } from '../../js/utils/date';
 // configs
 import hymns from '../../configs/hymns.config.json';
 
-const programDate = '200906_1200';
+const programDate = fbDocId;
+// const programDate = '200920_1200';
 const programConfig = {
     presiding: 'Bishop Vaughn Kinghorn',
-    conducting: 'Shay Rolfson',
+    conducting: 'Peyton Smith',
     chorister: 'Nora Davidson',
     organist: 'Emily Hinchey',
-    opening_hymn: 116,
-    invocation: 'Craig Boyle',
-    sacrament_hymn: 191,
+    opening_hymn: 84,
+    invocation: 'Keri Kadri',
+    sacrament_hymn: 193,
     program: [{
-        type: 'talk',
-        title: 'Testimony',
+        type: 'music',
+        title: 'Musical Number',
         topic: '',
-        value: 'Eva Davidson',
+        value: `"Redeemer", performed by Brandon (viola)
+        and Shannon (piano) Andersen`,
         priority: 0
     }, {
         type: 'talk',
         title: 'Speaker',
         topic: '',
-        value: 'Mark Robbins',
+        value: 'Lyndsey Grimm',
         priority: 1
     }],
-    closing_hymn: 141,
-    benediction: 'Sara Judkins',
+    closing_hymn: 301,
+    benediction: 'Cody Stewart',
 };
 
 function updateWithHymns(program) {

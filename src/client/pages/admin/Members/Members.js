@@ -2,7 +2,7 @@ import React from 'react';
 // import {} from 'prop-types';
 import { Button } from 'antd';
 
-import Layout from '../../layouts/Main/Main';
+import Layout from '../../../layouts/Main/Main';
 // styles
 import { Container } from './Members.styles';
 

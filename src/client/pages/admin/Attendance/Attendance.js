@@ -4,15 +4,15 @@ import { Table, Row, Col } from 'antd';
 import { theme } from 'theme';
 
 // layouts
-import Layout from '../../layouts/Main/Main';
+import Layout from '../../../layouts/Main/Main';
 // components
-import Loading from '../../components/Loading/Loading';
+import Loading from '../../../components/Loading/Loading';
 // utils
 import { getData, unsubscribe } from './Attendance.utils';
 // configs
-import { attendingDates } from '../../../configs/unit.config';
+import { attendingDates } from '../../../../configs/unit.config';
 import { mainTableColumns, statTableColumns } from './Attendance.configs';
-import { dateLong, dateShortNoYear } from '../../../configs/dateFormats.configs';
+import { dateLong, dateShortNoYear } from '../../../../configs/dateFormats.configs';
 // styles
 import {
     Description,
@@ -54,7 +54,7 @@ function Attendance() {
 
         return () => unsubscribe();
     }, [date]);
-    console.log('state:', state, loading);
+
     return (
         <Layout title="Sacrament Attendance">
             <Description>COVID-19: To help keep our numbers for sacrament attendance under the states guidlines of 99 people. We are asking members to sign up for two different services.</Description>
@@ -71,8 +71,8 @@ function Attendance() {
                                     <Date>{dayjs(date, dateLong).format(dateShortNoYear)}</Date>
                                 </Col>
                             </Row>
-                            <Row gutter={{ xs: 8, sm: 16, md: 24 }}>
-                                <Col span={12}>
+                            <Row gutter={12}>
+                                <Col sm={24} md={12}>
                                     <Row>
                                         { sessions.map((session, index) => (
                                             <Col span={(24 / sessions.length) || 1} style={index !== 0 ? { borderLeft: `1px solid ${theme('color_grey_3')}` } : null}>

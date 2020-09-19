@@ -12,6 +12,7 @@ export default (envType) => {
         publicPath: envConfig.clientAppDir,
         port: envConfig.port,
         protocol: envConfig.protocol,
+        analytics: envConfig.analytics,
         dbEnv
     };
 };

@@ -5,10 +5,10 @@ import { Form, Select, Button, DatePicker, Input } from 'antd';
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
 
 // layout
-import Layout from '../../layouts/Main/Main';
+import Layout from '../../../layouts/Main/Main';
 // configs
-import members from '../../../configs/members.config';
-import hymns from '../../../configs/hymns.config.json';
+import members from '../../../../configs/members.config';
+import hymns from '../../../../configs/hymns.config.json';
 // styles
 import { ButtonGroup } from './ProgramMaker.styles';
 

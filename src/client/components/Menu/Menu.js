@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Menu } from 'antd';
+import { Menu, Divider } from 'antd';
 import { NavLink, useLocation } from 'react-router-dom';
 // import {} from 'prop-types';
-
+// utils
+import { signOut } from '../../utils/firebase.utils';
 // cofigs
 import { adminMenu } from '../../../configs/menu.configs';
 // styles
@@ -30,6 +31,10 @@ function MenuComp() {
                     }
                 </Menu.Item>
             ))}
+            <Divider />
+            <Menu.Item>
+                <NavLink to="/admin/login" onClick={() => signOut()}>Sign Out</NavLink>
+            </Menu.Item>
         </Menu>
     );
 }

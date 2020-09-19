@@ -14,17 +14,22 @@ export const core = {
     color_grey_2: '#CCCCCC',
     color_grey_3: '#eeeeee',
     // Greens
-    color_green_1: '#687864',
+    color_green_1: '#B5CA8D',
+    color_green_2: '#8BB174',
+    color_green_3: '#B2BD7E',
     // Blues
     color_blue_1: '#31708E',
     color_blue_2: '#5085A5',
     color_blue_3: '#8FC1E3',
     // Yellows
     color_yellow_1: '#EBC351',
+    color_yellow_2: '#F7CB15',
+    color_yellow_3: '#E9D985',
     // Oranges
-
+    color_orange_1: '#F55D3E',
     // Reds
-    color_red_1: '#db3737',
+    color_red_1: '#E03616',
+    color_red_2: '#B0413E',
     // Pinks
 
     // Violet
@@ -35,7 +40,7 @@ const primary = core.color_blue_1;
 export const colors = {
     // Main Colors
     color_primary: primary,
-    color_secondary: adjustHue(240, primary),
+    color_secondary: core.color_green_1,
     color_tertiary: adjustHue(120, primary),
     color_complement: complement(primary),
     color_primary_admin: adjustHue(-10, primary),

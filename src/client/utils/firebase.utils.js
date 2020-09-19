@@ -22,11 +22,11 @@ export const FieldValue = () => firebase.firestore.FieldValue;
 export const auth = firebase.auth();
 // export const user = () => auth.currentUser;
 // export const updateProfile = profile => user.updateProfile(profile);
-// export const createMember = (email, password) => auth.createUserWithEmailAndPassword(email, password);
+export const createMember = (email, password) => auth.createUserWithEmailAndPassword(email, password);
 // export const updatePassword = newPassword => user().updatePassword(newPassword);
 //
-// export const signIn = (email, password) => auth.signInWithEmailAndPassword(email, password);
-// export const signOut = () => auth.signOut();
+export const signIn = (email, password) => auth.signInWithEmailAndPassword(email, password);
+export const signOut = () => auth.signOut();
 //
 // export const emailLink = link => auth.isSignInWithEmailLink(link);
 

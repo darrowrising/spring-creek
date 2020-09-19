@@ -1,17 +1,18 @@
 {
-	"testEnv": false,
-	"env": "production",
-	"domain": "springcreeklds.firebaseapp.com",
+	"testEnv": true,
+	"env": "development",
+	"domain": "localhost",
 	"publicPath": "../public/static",
-	"port": 26140,
-	"protocol": "https",
-	"dbEnv": "production",
+	"port": 3010,
+	"protocol": "http",
+	"analytics": "UA-131499754-2",
+	"dbEnv": "test",
 	"firebaseConfig": {
-		"apiKey": "AIzaSyAAW3om87xpy3G7lIiasxEpuP-HpeaN9mo",
-		"authDomain": "springcreeklds.firebaseapp.com",
-		"databaseURL": "https://springcreeklds.firebaseio.com",
-		"projectId": "springcreeklds",
-		"storageBucket": "springcreeklds.appspot.com",
-		"messagingSenderId": "1065257626292"
+		"apiKey": "AIzaSyCY2mZFP_ahbp6RzqkWDSuZ6exuwwkn8Gw",
+		"authDomain": "springcreek-test.firebaseapp.com",
+		"databaseURL": "https://springcreek-test.firebaseio.com",
+		"projectId": "springcreek-test",
+		"storageBucket": "springcreek-test.appspot.com",
+		"messagingSenderId": "693722276180"
 	}
 }

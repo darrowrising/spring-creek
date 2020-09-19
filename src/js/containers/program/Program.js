@@ -105,12 +105,25 @@ function Program({ history }) {
                         <h3 className="center">Ward and Stake Business</h3>
 
                         {
-                            program.sort((a, b) => a.priority - b.priority).map(item => (
-                                <Leaders
-                                    title={item.title}
-                                    value={item.value}
-                                />
-                            ))
+                            program.sort((a, b) => a.priority - b.priority).map((item) => {
+                                switch (item.type) {
+                                    case 'music': {
+                                        return (
+                                            <div className="center musical-number-wrapper">
+                                                <div className="musical-number">{item.value}</div>
+                                            </div>
+                                        );
+                                    }
+                                    default: {
+                                        return (
+                                            <Leaders
+                                                title={item.title}
+                                                value={item.value}
+                                            />
+                                        );
+                                    }
+                                }
+                            })
                         }
 
                         <Leaders

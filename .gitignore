@@ -67,6 +67,7 @@ __snapshots__
 
 # Temp File and Directories
 /src/server/temp
+/src/generatedFiles/envConfig.json
 /tmp
 functions/*.js
 functions/config

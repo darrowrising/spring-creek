@@ -1,9 +1,9 @@
 import dayjs from 'dayjs';
 
 // utils
-import { store, docs } from '../../utils/firebase.utils';
+import { store, docs } from '../../../utils/firebase.utils';
 // configs
-import { meetingTimes as currentTimes } from '../../../configs/unit.config';
+import { meetingTimes as currentTimes } from '../../../../configs/unit.config';
 
 export let unsubscribe = null; // eslint-disable-line
 
@@ -30,7 +30,7 @@ function calcStats(meetingTimes, data) {
 
     return {
         statsTableData,
-        totalHouseholds: Object.values(statsTableData).map(session => session.map(item => item.households)[0]).reduce((a, b) => { console.log(a, b); return a + b; }),
+        totalHouseholds: Object.values(statsTableData).map(session => session.map(item => item.households)[0]).reduce((a, b) => a + b),
         totalHeadcount: Object.values(statsTableData).map(session => session.map(item => item.headcount)[0]).reduce((a, b) => a + b)
     };
 }
