@@ -34,8 +34,8 @@ function IndexRoutes() {
                     { adminMenu.map(item => (
                         <Route exact path={item.path} component={list[item.component]} />
                     ))}
-                    <Route path="/admin/login" component={Login} />
-                    <Route path="/admin/sign-up" component={SignUp} />
+                    <Route exact path="/admin/login" component={Login} />
+                    <Route exact path="/admin/sign-up" component={SignUp} />
                     <Route path="/admin" component={ProgramMaker} />
                     {/* <Route path="*" component={NotFoundPage} status={404} /> */}
                 </Switch>
