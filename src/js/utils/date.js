@@ -15,16 +15,16 @@ export function sundayFunc(nextSunday) {
     const sunId = moment(sunday).format(fbDocId);
     const session = meetingTimes.find((item) => {
         const formatedTime = parseMeetingTime(item);
-        if (meetingTimes.length === 1) return formatedTime;
+
+        if (meetingTimes.length === 1) return item;
 
         const compare = moment(`${sunId}_${formatedTime}`, compareTime).add(1, 'hour').format(compareTime);
+        if (now < compare) return item;
 
-        if (now < compare) return formatedTime;
-
-        return formatedTime;
+        return item;
     });
 
-    return `${sunId}_${session}`;
+    return `${sunId}_${parseMeetingTime(session)}`;
 }
 
 export const comingSunday = moment().day(7);
