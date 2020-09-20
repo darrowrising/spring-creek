@@ -2,7 +2,7 @@ import moment from 'moment';
 import dateFormat from '../configs/dateFormats';
 import { meetingTimes } from '../../configs/unit.config';
 
-function parseMeetingTime(time) {
+function parseMeetingTime(time = '') {
     return time.split(':').join('');
 }
 
@@ -13,10 +13,18 @@ export function sundayFunc(nextSunday) {
     const now = moment().format(compareTime);
     const sunday = today === moment().day(0).format(fbDocId) ? moment().day(0) : nextSunday;
     const sunId = moment(sunday).format(fbDocId);
-    const afterFirstSession = moment(`${sunId}_${parseMeetingTime(meetingTimes[0])}`, compareTime).add(1, 'hour').format(compareTime);
-    const session = now < afterFirstSession ? `${sunId}_${parseMeetingTime(meetingTimes[0])}` : `${sunId}_${parseMeetingTime(meetingTimes[1])}`;
-    console.log('now > afterFirstSession:', now > afterFirstSession, now, afterFirstSession);
-    return session;
+    const session = meetingTimes.find((item) => {
+        const formatedTime = parseMeetingTime(item);
+
+        if (meetingTimes.length === 1) return item;
+
+        const compare = moment(`${sunId}_${formatedTime}`, compareTime).add(1, 'hour').format(compareTime);
+        if (now < compare) return item;
+
+        return item;
+    });
+
+    return `${sunId}_${parseMeetingTime(session)}`;
 }
 
 export const comingSunday = moment().day(7);
