@@ -48,11 +48,11 @@ function Program({ history }) {
         if (snap.exists()) return setState({ ...snap.val(), loading: false });
         return setState({ loading: false });
     };
-    console.log('fbDocId:', fbDocId);
+
     useEffect(() => {
         const param = pathname.split('program/')[1];
         const stateRef = db.ref(`program/${param || fbDocId}`);
-        console.log('db:', `program/${param || fbDocId}`);
+
         stateRef.on('value', onstate);
 
         return () => stateRef.off('value', onstate);
