@@ -1,5 +1,7 @@
 import shortId from 'shortid';
 
+// configs
+import { loginRedirectDefault } from '../../../configs/menu.configs';
 // utils
 import { store as db, docs, createMember } from '../../utils/firebase.utils';
 import { dayjs } from '../../utils/date.utils';
@@ -18,7 +20,7 @@ export async function handleSubmit(values, set) {
             action: 'Error: Getting Member',
             label: `${firstName}_${lastName}_${email}`
         });
-        return set({ errorMsg: 'Something went wrong, please try again.' });
+        return set({ loading: false, errorMsg: 'Something went wrong, please try again.' });
     }
 
     const user = docs(snap)[0];
@@ -51,7 +53,7 @@ export async function handleSubmit(values, set) {
                 category: 'SignUp',
                 action: 'Account Created'
             });
-            set({ loading: false, errorMsg: '', redirect: '/admin' });
+            set({ loading: false, errorMsg: '', redirect: loginRedirectDefault });
         })
         .catch((err) => {
             console.error(err);

@@ -44,13 +44,6 @@ export const Button = styled(AntButton)`
     }
 `;
 
-export const Error = styled.div`
-    color: ${theme('color_error')};
-    font-size: 1.2rem;
-    padding-bottom: 10px;
-    text-align: center;
-`;
-
 export const ForgotPasswordWrapper = styled.div`
     margin-top: 30px;
     position: relative;

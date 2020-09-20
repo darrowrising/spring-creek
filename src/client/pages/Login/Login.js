@@ -1,55 +1,55 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Input, Form } from 'antd';
+import { Input, Form, Alert } from 'antd';
 
 // providers
-import { UserContext } from '../../Providers/User.provider';
+import { UserContext } from '../../providers/User.provider';
 // layout
 import Layout from '../../layouts/Clean/Clean';
 // utils
-import { handleSubmit, handleRedirect, isDisabled } from './Login.utilities'; // eslint-disable-line
+import { handleSubmit, handleRedirect } from './Login.utils';
 // styles
 import {
     Container,
     Wrapper,
     Button,
-    // Error,
     ForgotPasswordWrapper,
     ForgotPassword,
     NoAccountWrapper,
     NoAccount
 } from './Login.styles';
-/* eslint-disable */ /* TODO: Remove this eslint disable */
+
 function Login() {
     // hooks
     const [form] = Form.useForm();
+    const [isDisabled, setDisable] = useState(true);
+    const [state, setState] = useState({ loading: false, errorMsg: '', redirect: '' });
     const history = useHistory();
+    // data
+    const { loading, errorMsg, redirect } = state;
     const {
-        // isFieldTouched,
-        // getFieldError,
-        getFieldsError,
-        getFieldsValue
+        isFieldTouched,
+        getFieldError,
     } = form;
-    // local state & data
-    // const [errorMsg, setErrorMsg] = useState('');
-    // const [loading, setLoading] = useState(false);
     const { user } = useContext(UserContext);
-    // error validation
-    // const emailError = isFieldTouched('email') && getFieldError('email') ? 'error' : 'success';
-    // const passwordError = isFieldTouched('password') && getFieldError('password') ? 'error' : 'success';
     // handlers
+    const handleState = updated => setState({ ...state, ...updated });
     const handleBtnDisable = () => {
-        // const noErrors = names.every(name => getFieldError(name).length === 0);
-        // const allTouched = names.every(name => isFieldTouched(name));
-        //
-        // // checking validation is complete - enable confirm button
-        // if (noErrors && allTouched) setDisable(false);
-        // // if an error is created after enabling confirm button - disable it
-        // if (!noErrors && allTouched && !isDisabled) setDisable(true);
+        const names = ['email', 'password'];
+        const noErrors = names.every(name => getFieldError(name).length === 0);
+        const allTouched = names.every(name => isFieldTouched(name));
+
+        // checking validation is complete - enable confirm button
+        if (noErrors && allTouched) setDisable(false);
+        // if an error is created after enabling confirm button - disable it
+        if (!noErrors && allTouched && !isDisabled) setDisable(true);
     };
 
     useEffect(() => {
-        // if (user) handleRedirect(history);
+        if (redirect) history.push(redirect);
+    }, [redirect]);
+    useEffect(() => {
+        if (user) handleRedirect(history);
     }, [user]);
 
     return (
@@ -60,13 +60,13 @@ function Login() {
                         form={form}
                         layout="vertical"
                         colon={false}
-                        onFinish={!isDisabled ? handleSubmit : null}
+                        onFinish={isDisabled ? null : formValues => handleSubmit(formValues, handleState)}
                         onFieldsChange={handleBtnDisable}
                         hideRequiredMark
                     >
-                        {/* errorMsg && (
-                            <Error>{errorMsg}</Error>
-                        ) */}
+                        {errorMsg && (
+                            <Alert style={{ marginBottom: '10px' }} message={errorMsg} type="error" />
+                        )}
                         <Form.Item
                             label="Email Address"
                             name="email"
@@ -105,7 +105,7 @@ function Login() {
                                 htmlType="submit"
                                 block
                                 size="large"
-                                // loading={loading}
+                                loading={loading}
                             >
                                 Log In
                             </Button>
@@ -123,10 +123,5 @@ function Login() {
         </Layout>
     );
 }
-
-// Login.propTypes = {
-//     form: shape().isRequired,
-//     history: shape().isRequired
-// };
 
 export default Login;

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Menu, Divider } from 'antd';
+import { Menu } from 'antd';
 import { NavLink, useLocation } from 'react-router-dom';
 // import {} from 'prop-types';
 // utils
@@ -31,7 +31,6 @@ function MenuComp() {
                     }
                 </Menu.Item>
             ))}
-            <Divider />
             <Menu.Item>
                 <NavLink to="/admin/login" onClick={() => signOut()}>Sign Out</NavLink>
             </Menu.Item>

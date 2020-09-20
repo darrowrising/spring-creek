@@ -1,5 +1,7 @@
 import React from 'react'; // eslint-disable-line
 
+export const loginRedirectDefault = '/admin';
+
 // admin
 export const adminMenu = [{
     text: 'Program Maker',
