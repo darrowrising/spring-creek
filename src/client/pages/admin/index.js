@@ -3,7 +3,7 @@ import { render } from 'react-dom';
 import { ThemeProvider } from 'styled-components';
 
 // providers
-// import UserProvider from './providers/User.provider';
+import UserProvider from '../../providers/User.provider';
 // import NotificationProvider from './providers/Notification.provider';
 // components
 import Routes from './index.routes';
@@ -20,10 +20,12 @@ const themeVariables = theme.variables[theme.name];
 
 render(
     <ThemeProvider theme={themeVariables}>
-        <>
-            <GlobalStyle />
-            <Routes />
-        </>
+        <UserProvider>
+            <>
+                <GlobalStyle />
+                <Routes />
+            </>
+        </UserProvider>
     </ThemeProvider>,
     document.getElementById('app')
 );

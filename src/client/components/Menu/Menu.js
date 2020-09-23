@@ -1,16 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { Menu, Divider } from 'antd';
+import React, { useEffect, useState, useContext } from 'react';
+import { Menu } from 'antd';
 import { NavLink, useLocation } from 'react-router-dom';
-// import {} from 'prop-types';
+
+// providers
+import { UserContext } from '../../providers/User.provider';
 // utils
 import { signOut } from '../../utils/firebase.utils';
+import { hasPermission } from '../../utils/permissions.utils';
 // cofigs
 import { adminMenu } from '../../../configs/menu.configs';
 // styles
 // import {} from './Menu.styles';
-/* eslint-disable */ /* TODO: Remove this eslint disable */
+
 function MenuComp() {
     // hooks
+    const { user } = useContext(UserContext);
     const [selected, setSelected] = useState([]);
     const location = useLocation();
     // handlers
@@ -24,27 +28,20 @@ function MenuComp() {
     return (
         <Menu selectedKeys={selected} onClick={handleClick}>
             { adminMenu.map(item => (
-                <Menu.Item key={item.path}>
-                    { item.type === 'external'
-                        ? <a href={item.path}>{item.text}</a>
-                        : <NavLink exact to={item.path}>{item.text}</NavLink>
-                    }
-                </Menu.Item>
+                hasPermission(user?.permissions, item?.permissions || []) && (
+                    <Menu.Item key={item.path}>
+                        { item.type === 'external'
+                            ? <a href={item.path}>{item.text}</a>
+                            : <NavLink exact to={item.path}>{item.text}</NavLink>}
+                    </Menu.Item>
+                )
             ))}
-            <Divider />
+            <hr />
             <Menu.Item>
                 <NavLink to="/admin/login" onClick={() => signOut()}>Sign Out</NavLink>
             </Menu.Item>
         </Menu>
     );
 }
-
-// MenuComp.propTypes = {
-
-// };
-
-// MenuComp.defaultProps = {
-
-// };
 
 export default MenuComp;

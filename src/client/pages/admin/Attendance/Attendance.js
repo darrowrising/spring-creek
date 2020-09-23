@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import dayjs from 'dayjs';
 import { Table, Row, Col } from 'antd';
 import { theme } from 'theme';
 
+// providers
+import { UserContext } from '../../../providers/User.provider';
 // layouts
 import Layout from '../../../layouts/Main/Main';
 // components
@@ -40,6 +42,7 @@ const initialState = {
 
 function Attendance() {
     // hooks
+    const { user } = useContext(UserContext);
     const [date, setDate] = useState(() => {
         const today = dayjs().unix();
         const nextService = attendingDates.find(item => today <= dayjs(item, dateLong).unix());
@@ -84,7 +87,7 @@ function Attendance() {
                                         { sessions.map((session, index) => (
                                             <Col span={(24 / sessions.length) || 1} style={{ borderLeft: index !== 0 ? `1px solid ${theme('color_grey_3')}` : 0, backgroundColor: theme('color_white_1') }}>
                                                 <Table
-                                                    columns={mainTableColumns}
+                                                    columns={mainTableColumns(user)}
                                                     dataSource={data[session]}
                                                     rowKey={record => record.uid}
                                                     pagination={false}

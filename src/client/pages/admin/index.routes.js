@@ -6,15 +6,16 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 // analytics
 import Analytics from '../../components/Analytics/Analytics';
 // pages
+import Dashboard from './Dashboard/Dashboard';
 import ProgramMaker from './ProgramMaker/ProgramMaker';
 import Members from './Members/Members';
 import Attendance from './Attendance/Attendance';
 import Login from '../Login/Login';
 import SignUp from '../SignUp/SignUp';
-// import NotFoundPage from './pages/NotFound/NotFound';
+import NotFoundPage from '../NotFound/NotFound';
 // import Login from './pages/Login/Login';
 // components
-// import PrivateRoute from './components/PrivateRoute/PrivateRoute';
+import PrivateRoute from '../../components/PrivateRoute/PrivateRoute';
 // configs
 import { adminMenu } from '../../../configs/menu.configs';
 
@@ -32,12 +33,12 @@ function IndexRoutes() {
                 <Switch>
                     { /* main */ }
                     { adminMenu.map(item => (
-                        <Route exact path={item.path} component={list[item.component]} />
+                        <PrivateRoute exact permissions={item.permissions} path={item.path} component={list[item.component]} />
                     ))}
                     <Route exact path="/admin/login" component={Login} />
                     <Route exact path="/admin/sign-up" component={SignUp} />
-                    <Route path="/admin" component={ProgramMaker} />
-                    {/* <Route path="*" component={NotFoundPage} status={404} /> */}
+                    <PrivateRoute path="/admin" component={Dashboard} />
+                    <PrivateRoute path="*" component={NotFoundPage} status={404} />
                 </Switch>
             </>
         </BrowserRouter>

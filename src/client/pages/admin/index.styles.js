@@ -22,8 +22,8 @@ export const GlobalStyle = createGlobalStyle`
         -webkit-font-smoothing: antialiased;
         -moz-font-smoothing: antialiased;
         -o-font-smoothing: antialiased;
-        -webkit-overflow-scrolling: touch;
         height: 100%;
+        -webkit-overflow-scrolling: touch;
         overflow-y: scroll;
     }
 

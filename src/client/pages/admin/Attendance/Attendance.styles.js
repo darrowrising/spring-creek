@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 import { Select } from 'antd';
 import { theme } from 'theme';
-import { lighten } from 'polished';
+import { lighten, rgba } from 'polished';
+import { EditFilled, DeleteFilled } from '@ant-design/icons';
 
 export const Description = styled.p`
     font-size: 1.2rem;
@@ -67,4 +68,29 @@ export const TotalHeader = styled.h3`
 export const Total = styled.div`
     color: ${theme('color_primary')};
     font-size: 3rem;
+`;
+
+export const ButtonWrapper = styled.div``;
+
+const defaultIcon = icon => styled(icon)`
+    border: 1px solid ${theme('color_white_1')};
+    border-radius: 5px;
+    padding: 5px;
+    transition: all ${theme('transition_medium')};
+
+    &:hover {
+        opacity: 0.8;
+    }
+`;
+
+export const EditIcon = styled(defaultIcon(EditFilled))`
+    color: ${theme('color_grey_1')};
+`;
+
+export const DeleteIcon = styled(defaultIcon(DeleteFilled))`
+    color: ${theme('color_danger')};
+
+    &:hover {
+        border-color: ${rgba(theme('color_danger'), 0.5)};
+    }
 `;

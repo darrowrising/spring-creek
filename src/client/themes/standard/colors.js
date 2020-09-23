@@ -45,7 +45,7 @@ export const colors = {
     color_complement: complement(primary),
     color_primary_admin: adjustHue(-10, primary),
     // Utility Colors
-
+    color_danger: core.color_red_1,
     // Types
     color_confirmed: core.color_red_1,
     color_confirmed_active: desaturate(0.2, core.color_red_1),

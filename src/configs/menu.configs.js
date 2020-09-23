@@ -1,11 +1,13 @@
-import React from 'react'; // eslint-disable-line
+// import React from 'react';
+
+export const loginRedirectDefault = '/admin';
 
 // admin
 export const adminMenu = [{
     text: 'Program Maker',
     path: '/admin/program-maker',
     component: 'ProgramMaker',
-    permissions: ['callings:Ward_Clerk']
+    permissions: ['calling:Ward_Clerk']
 }, {
     text: 'Attendance',
     path: '/admin/attendance',
@@ -15,7 +17,7 @@ export const adminMenu = [{
     text: 'Members',
     path: '/admin/members',
     component: 'Members',
-    permissions: ['callings:Ward_Clerk']
+    permissions: ['calling:Ward_Clerk']
 }, {
     text: 'Main Site',
     path: '/',

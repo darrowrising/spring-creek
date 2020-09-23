@@ -14,18 +14,18 @@ const PrivateRoute = ({ component: Component, permissions, ...props }) => {
     if (loading) return null;
     /* save current location user is trying to link to
      * after they log in, they will be redirected. */
-    if (!user && window.location.pathname !== '/') {
+    if (!user && window.location.pathname !== '/admin') {
         setStorage('loginRedirect', window.location.pathname, 'session');
     }
     const canSeeRoute = (innerProps) => {
-        const component = hasPermission(user?.permissions, permissions) ? <Component {...innerProps} /> : <Redirect to="/noauth" />;
+        const component = hasPermission(user?.permissions, permissions) ? <Component {...innerProps} /> : <Redirect to="/admin/noauth" />;
         return component;
     };
 
     return (
         <Route
             {...props}
-            render={innerProps => (user ? canSeeRoute(innerProps) : <Redirect to="/login" />)}
+            render={innerProps => (user ? canSeeRoute(innerProps) : <Redirect to="/admin/login" />)}
         />
     );
 };
