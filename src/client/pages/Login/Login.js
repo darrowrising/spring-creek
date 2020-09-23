@@ -49,7 +49,7 @@ function Login() {
         if (redirect) history.push(redirect);
     }, [redirect]);
     useEffect(() => {
-        if (user) handleRedirect(history);
+        if (user) handleRedirect(handleState);
     }, [user]);
 
     return (

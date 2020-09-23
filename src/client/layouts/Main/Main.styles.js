@@ -8,7 +8,7 @@ export const Container = styled.div`
     display: flex;
     flex-direction: column;
     font-size: 1.6rem;
-    height: 100%;
+    /* height: 100%; */
     ${(props) => {
         const { animation } = props;
 
@@ -19,7 +19,6 @@ export const Container = styled.div`
     }}
     opacity: 1;
     position: relative;
-
 `;
 
 export const PageWrapper = styled.div`

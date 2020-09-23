@@ -29,7 +29,8 @@ export async function handleSubmit(values, set) {
         firstName,
         lastName,
         email,
-        lastVisited: dayjs.utc().format()
+        lastVisited: dayjs.utc().format(),
+        static: 'active'
     };
     const ref = db.collection('members').doc(userData.uid);
 

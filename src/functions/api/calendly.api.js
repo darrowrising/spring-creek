@@ -30,7 +30,7 @@ app.post('/api/hook/calendly', async (req, res) => {
     const [, snap] = await catchify(db.collection('members')
         .where('email', '==', email)
         .get());
-    const memberData = docs(snap)[0];
+    const memberData = snap ? docs(snap)[0] : {};
     const memberId = memberData?.uid || shortId.generate();
 
     if (type === 'invitee.created') {
@@ -48,11 +48,11 @@ app.post('/api/hook/calendly', async (req, res) => {
         });
 
         if (!memberData) {
-            const [firstName, lastName] = name.split(' ');
+            const nameArray = name.split(' ');
 
             db.collection('members').doc(memberId).set({
-                firstName,
-                lastName,
+                firstName: nameArray[0],
+                lastName: nameArray.length > 1 ? nameArray.pop() : '',
                 email,
                 createdOn,
                 uid: memberId
