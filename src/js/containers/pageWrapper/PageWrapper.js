@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import { shape } from 'prop-types';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, withRouter } from 'react-router-dom';
 
 // Components
 import { GAPageView } from '../../components/analytics/Analytics';
@@ -15,52 +15,44 @@ import SingleEvent from '../singleEvent/SingleEvent';
 import { handleURLParams } from '../../utils/qrCodes';
 // Styles
 import './pageWrapper.less';
-/* eslint-disable  react/static-property-placement */ /* TODO: Remove this eslint disable */
-export default class PageWrapper extends Component {
-    static propTypes = {
-        location: shape(),
-        history: shape()
-    }
 
-    static defaultProps = {
-        location: {},
-        history: {}
-    }
-
-    componentDidMount() {
-        const { location, history } = this.props;
+function PageWrapper({ history, location }) {
+    useEffect(() => {
         const isQR = handleURLParams(location.search);
 
         if (isQR) {
             history.push(location.pathname);
         }
-    }
-
-    shouldComponentUpdate(next) {
-        const { location } = next;
+    }, []);
+    useEffect(() => {
         let pathName = location.pathname;
 
         if (pathName === '/') pathName = 'home';
 
         GAPageView(pathName);
 
-        return true;
-    }
+        if (pathName.includes('/admin')) window.location.href = `${window.location.origin}/admin`;
+    }, [location.pathname]);
 
-    render() {
-        return (
-            <div id="pageWrapper">
-                <Header />
-                <Switch>
-                    <Route path="/" exact component={Home} />
-                    <Route path="/program/:date" component={Program} />
-                    <Route path="/program" component={Program} />
-                    <Route path="/announcements/:event" component={SingleEvent} />
-                    <Route path="/announcements" component={Announcements} />
-                    <Route path="/moderate" component={Moderate} />
-                    <Route path="*" component={Home} />
-                </Switch>
-            </div>
-        );
-    }
+    return (
+        <div id="pageWrapper">
+            <Header />
+            <Switch>
+                <Route path="/" exact component={Home} />
+                <Route path="/program/:date" component={Program} />
+                <Route path="/program" component={Program} />
+                <Route path="/announcements/:event" component={SingleEvent} />
+                <Route path="/announcements" component={Announcements} />
+                <Route path="/moderate" component={Moderate} />
+                <Route path="*" component={Home} />
+            </Switch>
+        </div>
+    );
 }
+
+PageWrapper.propTypes = {
+    history: shape().isRequired,
+    location: shape().isRequired
+};
+
+export default withRouter(PageWrapper);
