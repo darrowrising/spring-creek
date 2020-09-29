@@ -15,7 +15,8 @@ export const SelectStyled = styled(Select)`
 
 export const Wrapper = styled.div`
     display: flex;
-    width: 100%;
+    justify-content: center;
+    max-width: 800px;
 
     .center {
         text-align: center;

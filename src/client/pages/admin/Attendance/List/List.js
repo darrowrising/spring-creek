@@ -117,7 +117,7 @@ function List() {
                                     </Box>
                                 </StatsContainer>
                             </Col>
-                            <Col sm={24} md={24} lg={24} xl={14}>
+                            <Col sm={24} md={24} lg={24} xl={24}>
                                 <Row>
                                     { sessions.map((session, index) => (
                                         <Col span={(24 / sessions.length) || 1} style={index !== 0 ? { borderLeft: `1px solid ${theme('color_grey_3')}` } : null}>

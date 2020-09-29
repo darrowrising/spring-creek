@@ -13,14 +13,14 @@ const calendlyConfig = {
     event: 'invitee.created',
     payload: {
         event: {
-            start_time: 'September 20, 2020 1:30 PM',
+            start_time: 'September 27, 2020 12:00 PM',
         },
         invitee: {
-            name: 'Carl Kick Face',
+            name: 'York family',
             email: 'carlk@gmail.com',
         },
         questions_and_answers: [{
-            answer: '3'
+            answer: '6'
         }],
     },
 };
