@@ -11,28 +11,27 @@ const programDate = fbDocId;
 // const programDate = '200920_1200';
 const programConfig = {
     presiding: 'Bishop Vaughn Kinghorn',
-    conducting: 'Peyton Smith',
+    conducting: 'Shay Rolfson',
     chorister: 'Nora Davidson',
-    organist: 'Emily Hinchey',
-    opening_hymn: 84,
-    invocation: 'Keri Kadri',
-    sacrament_hymn: 193,
+    organist: 'Erin Dangerfield',
+    opening_hymn: 136,
+    invocation: 'Kathy Robbins',
+    sacrament_hymn: 173,
     program: [{
         type: 'music',
         title: 'Musical Number',
         topic: '',
-        value: `"Redeemer", performed by Brandon (viola)
-        and Shannon (piano) Andersen`,
+        value: `"Peace in Christ", performed by Hannah, Emily, Charlize, and Madelin Frasure, accompanied by Emily Hinchey`,
         priority: 0
     }, {
         type: 'talk',
         title: 'Speaker',
         topic: '',
-        value: 'Lyndsey Grimm',
+        value: 'Elder Parker Frasure',
         priority: 1
     }],
-    closing_hymn: 301,
-    benediction: 'Cody Stewart',
+    closing_hymn: 152,
+    benediction: 'Mike Bennett',
 };
 
 function updateWithHymns(program) {
