@@ -42,6 +42,8 @@ const initialState = {
 };
 
 function List() {
+    // hooks
+    const [sort, setSort] = useState({});
     const { user } = useContext(UserContext);
     const [date, setDate] = useState(() => {
         const today = dayjs().unix();
@@ -53,6 +55,9 @@ function List() {
     const { data, loading, sessions, stats, showPopover } = state;
     // hanlders
     const handleState = update => setState(deepSpread(state, update));
+    const handleChange = (pagination, antFilters, sorter) => {
+        setSort(sorter);
+    };
 
     useEffect(() => {
         getData(date, setState);
@@ -78,7 +83,7 @@ function List() {
                                     </Box>
                                     <Box>
                                         <TotalHeader>Total Headcount</TotalHeader>
-                                        <Total>{stats.totalHeadcount}</Total>
+                                        <Total limit={stats.totalHeadcount >= 150}>{stats.totalHeadcount}</Total>
                                     </Box>
                                     <Box>
                                         <TotalHeader>Actual Attendance</TotalHeader>
@@ -129,10 +134,11 @@ function List() {
                                     { sessions.map((session, index) => (
                                         <Col span={(24 / sessions.length) || 1} style={{ borderLeft: index !== 0 ? `1px solid ${theme('color_grey_3')}` : 0, backgroundColor: theme('color_white_1') }}>
                                             <Table
-                                                columns={mainTableColumns(user)}
+                                                columns={mainTableColumns(user, sort)}
                                                 dataSource={data[session]}
                                                 rowKey={record => record.uid}
                                                 pagination={false}
+                                                onChange={handleChange}
                                                 style={index !== 0 ? { borderLeft: `1px solid ${theme('color_grey_3')}` } : null}
                                             />
                                         </Col>

@@ -88,7 +88,11 @@ export async function getData(date, set) { // eslint-disable-line
                         ...item,
                         session: sessionTime,
                     }
-                ];
+                ].sort((a, b) => {
+                    if (a.createdOn > b.createdOn) return 1;
+                    if (a.createdOn < b.createdOn) return -1;
+                    return 0;
+                });
             });
 
             set({

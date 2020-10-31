@@ -114,6 +114,9 @@ function Program({ history }) {
                                             </div>
                                         );
                                     }
+                                    case 'meeting': {
+                                        return <div className="testimony-meeting center bold">{item.value}</div>;
+                                    }
                                     default: {
                                         return (
                                             <Leaders

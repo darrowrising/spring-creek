@@ -1,7 +1,10 @@
 import React from 'react';
 import { Popconfirm, message, Select } from 'antd';
 import { DeleteFilled } from '@ant-design/icons';
+import dayjs from 'dayjs';
 
+// configs
+import { dateShort } from '../../../../../configs/dateFormats.configs';
 // utils
 import { hasPermission } from '../../../../utils/permissions.utils';
 import { store as db } from '../../../../utils/firebase.utils';
@@ -14,17 +17,26 @@ import {
     Reason
 } from './List.styles';
 
-const mainDefaultColumns = [{
+const mainDefaultColumns = sort => ([{
     title: 'Family',
     dataIndex: 'name',
     key: 'family',
-    className: 'center'
+    className: 'center',
+    sorter: (a, b) => a.name.localeCompare(b.name),
+    sortOrder: sort.columnKey === 'family' && sort.order,
+    // render: record => <span dangerouslySetInnerHTML={{ __html: markSearchValue(record, searchValue) }} />
 }, {
     title: 'Attending',
     dataIndex: 'headcount',
     key: 'headcount',
     className: 'center'
-}];
+}, {
+    title: 'Signed Up',
+    dataIndex: 'createdOn',
+    key: 'signedUpDate',
+    className: 'center',
+    render: record => dayjs(record).format(dateShort)
+}]);
 
 const reasons = [{
     value: 'overlimit',
@@ -41,9 +53,9 @@ const { Option } = Select;
 
 let reason = reasons[0].value;
 
-export const mainTableColumns = (user = {}) => {
+export const mainTableColumns = (user = {}, sort) => {
     // data
-    let columns = mainDefaultColumns;
+    let columns = mainDefaultColumns(sort);
     // handlers
     const deleteRecord = ({ uid }) => {
         db.collection('attendance').doc(uid).update({
@@ -56,7 +68,7 @@ export const mainTableColumns = (user = {}) => {
 
     if (hasPermission(user?.permissions, ['calling:Ward_Clerk'])) {
         columns = [
-            ...mainDefaultColumns,
+            ...columns,
             {
                 title: 'More',
                 key: 'more',
@@ -104,4 +116,7 @@ export const statTableColumns = [{
     dataIndex: 'headcount',
     key: 'totalHeadcount',
     className: 'center'
+}, {
+    title: '',
+    key: 'empty'
 }];

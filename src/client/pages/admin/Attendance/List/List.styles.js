@@ -68,7 +68,7 @@ export const TotalHeader = styled.h3`
 `;
 
 export const Total = styled.div`
-    color: ${theme('color_primary')};
+    color: ${({ limit }) => (limit ? theme('color_danger') : theme('color_primary'))};
     font-size: 3rem;
     position: relative;
 

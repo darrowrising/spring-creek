@@ -1,6 +1,7 @@
-// import React from 'react';
-
+// redirects
 export const loginRedirectDefault = '/admin';
+// widths
+export const mobileWidthMax = 642;
 
 // admin
 export const adminMenu = [{
@@ -12,7 +13,7 @@ export const adminMenu = [{
     text: 'Attendance',
     path: '/admin/attendance',
     component: 'Attendance',
-    permissions: ['org:Bishopric']
+    permissions: ['org:Bishopric', 'org:Ward_Council', 'org:Relief_Society_Presidency']
 }, {
     text: 'Members',
     path: '/admin/members',

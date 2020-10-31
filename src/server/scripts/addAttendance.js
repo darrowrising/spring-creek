@@ -16,11 +16,11 @@ const calendlyConfig = {
             start_time: 'September 27, 2020 12:00 PM',
         },
         invitee: {
-            name: 'York family',
-            email: 'carlk@gmail.com',
+            name: 'Andersen',
+            email: 'charlesnandersen@gmail.com',
         },
         questions_and_answers: [{
-            answer: '6'
+            answer: '4'
         }],
     },
 };

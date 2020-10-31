@@ -13,25 +13,19 @@ const programConfig = {
     presiding: 'Bishop Vaughn Kinghorn',
     conducting: 'Shay Rolfson',
     chorister: 'Nora Davidson',
-    organist: 'Erin Dangerfield',
-    opening_hymn: 136,
-    invocation: 'Kathy Robbins',
-    sacrament_hymn: 173,
+    organist: 'Emily Hinchey',
+    opening_hymn: 123,
+    invocation: '',
+    sacrament_hymn: 187,
     program: [{
-        type: 'music',
-        title: 'Musical Number',
+        type: 'meeting',
+        title: '',
         topic: '',
-        value: `"Peace in Christ", performed by Hannah, Emily, Charlize, and Madelin Frasure, accompanied by Emily Hinchey`,
+        value: 'Bearing of Testimonies',
         priority: 0
-    }, {
-        type: 'talk',
-        title: 'Speaker',
-        topic: '',
-        value: 'Elder Parker Frasure',
-        priority: 1
     }],
-    closing_hymn: 152,
-    benediction: 'Mike Bennett',
+    closing_hymn: 147,
+    benediction: 'Kristy Whipple',
 };
 
 function updateWithHymns(program) {
