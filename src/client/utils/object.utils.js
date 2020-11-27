@@ -1,4 +1,9 @@
 export const isObject = obj => typeof obj === 'object' && !Array.isArray(obj);
+export function isObjectEmpty(obj) {
+    if (!obj) return null;
+
+    return Object.keys(obj).length === 0;
+}
 
 export function deepSpread(first, second) {
     const final = { ...first, ...second };

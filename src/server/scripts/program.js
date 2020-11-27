@@ -12,20 +12,32 @@ const programDate = fbDocId;
 const programConfig = {
     presiding: 'Bishop Vaughn Kinghorn',
     conducting: 'Shay Rolfson',
-    chorister: 'Nora Davidson',
+    chorister: 'Rachel Anderson',
     organist: 'Emily Hinchey',
-    opening_hymn: 123,
-    invocation: '',
-    sacrament_hymn: 187,
+    opening_hymn: 241,
+    invocation: 'Rachael Clegg',
+    sacrament_hymn: 86,
     program: [{
-        type: 'meeting',
+        type: 'talk',
+        title: 'Youth Speaker',
+        topic: '',
+        value: 'Brody Rolfson',
+        priority: 0
+    }, {
+        type: 'music',
         title: '',
         topic: '',
-        value: 'Bearing of Testimonies',
-        priority: 0
+        value: '"Praise to the Man/If You Could Hie to Kolob", performed by Nicholas Whipple',
+        priority: 1
+    }, {
+        type: 'talk',
+        title: 'Speaker',
+        topic: '',
+        value: 'Sister Eliza Dangerfield',
+        priority: 2
     }],
-    closing_hymn: 147,
-    benediction: 'Kristy Whipple',
+    closing_hymn: 14,
+    benediction: 'Jared Empey',
 };
 
 function updateWithHymns(program) {

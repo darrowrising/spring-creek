@@ -6,6 +6,8 @@ import Layout from '../../../layouts/Main/Main';
 // components
 import List from './List/List';
 import OverLimit from './OverLimit/OverLimit';
+// configs
+import { covidMaxCount } from '../../../../configs/unit.config';
 // styles
 import {
     Container,
@@ -18,7 +20,7 @@ function Attendance() {
     return (
         <Layout title="Sacrament Attendance">
             <Container>
-                <Description>COVID-19: To help keep our numbers for sacrament attendance under the states guidlines of 150 people. We are asking members to sign up for two different services.</Description>
+                <Description>{`COVID-19: To help keep our numbers for sacrament attendance under the states guidlines of ${covidMaxCount} people.`}</Description>
                 <Tabs type="card">
                     <TabPane tab="Attendance" key="1" style={{ background: 'white' }}>
                         <List />

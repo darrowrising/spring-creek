@@ -53,7 +53,7 @@ const { Option } = Select;
 
 let reason = reasons[0].value;
 
-export const mainTableColumns = (user = {}, sort) => {
+export const mainTableColumns = (user = {}, sort, set) => {
     // data
     let columns = mainDefaultColumns(sort);
     // handlers
@@ -74,7 +74,7 @@ export const mainTableColumns = (user = {}, sort) => {
                 key: 'more',
                 render: record => (
                     <ButtonWrapper>
-                        <EditIcon />
+                        <EditIcon onClick={() => set({ modalContent: record, showModal: true })} />
                         <Popconfirm
                             placement="topRight"
                             title={(

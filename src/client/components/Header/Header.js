@@ -28,7 +28,6 @@ function Header() {
         push('/admin');
     };
 
-    console.log('width:', width, mobileWidthMax);
     return (
         <Container ref={ref}>
             { width <= mobileWidthMax && <MenuOutlined onClick={() => setDrawer(!showDrawer)} /> }
