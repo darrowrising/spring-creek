@@ -6,6 +6,13 @@ import { Select } from 'antd';
 
 export const Container = styled.div`
     padding: 20px;
+
+    @media screen and (max-width: ${theme('mq_mobile_width')}) {
+        .table-attendees {
+            margin-left: -27px !important;
+            padding-left: 0 !important;
+        }
+    }
 `;
 
 export const SelectStyled = styled(Select)`
@@ -28,11 +35,11 @@ export const List = styled.div`
     width: 100%;
 `;
 
-export const Date = styled.strong`
-    display: block;
-    padding: 10px 0;
-    text-align: center;
-`;
+// export const Date = styled.strong`
+//     display: block;
+//     padding: 10px 0;
+//     text-align: center;
+// `;
 
 export const Session = styled.div`
     background-color: ${theme('color_white_1')};
@@ -65,6 +72,10 @@ export const Box = styled.div`
 
 export const TotalHeader = styled.h3`
     font-size: 1.5rem;
+
+    @media screen and (max-width: ${theme('mq_mobile_width')}) {
+        font-size: 1.2rem;
+    }
 `;
 
 export const Total = styled.div`
@@ -84,6 +95,10 @@ export const Total = styled.div`
         &:hover {
             opacity: 0.6;
         }
+    }
+
+    @media screen and (max-width: ${theme('mq_mobile_width')}) {
+        font-size: 2.5rem;
     }
 `;
 

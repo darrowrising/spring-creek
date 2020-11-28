@@ -29,7 +29,6 @@ import { handleState } from '../../../../utils/state.utils';
 import {
     Container,
     Wrapper,
-    // Date,
     Session,
     StatsContainer,
     Box,
@@ -224,6 +223,7 @@ function List() {
                                                     }
                                                     : null
                                             }
+                                            className="table-attendees"
                                         />
                                     </Col>
                                 ))}

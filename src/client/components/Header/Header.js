@@ -33,7 +33,7 @@ function Header() {
             )}
             <Logo onClick={handleClick}>Spring Creek Ward</Logo>
             <DrawerStyled
-                title="Spring Creek Ward"
+                title="Spring Creek"
                 placement="left"
                 closable={false}
                 onClose={() => setDrawer(false)}
