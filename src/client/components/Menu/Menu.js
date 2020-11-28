@@ -12,7 +12,7 @@ import { adminMenu } from '../../../configs/menu.configs';
 // styles
 // import {} from './Menu.styles';
 
-function MenuComp() {
+function MenuComp({ ...rest }) {
     // hooks
     const { user } = useContext(UserContext);
     const [selected, setSelected] = useState([]);
@@ -26,19 +26,28 @@ function MenuComp() {
     }, []);
 
     return (
-        <Menu selectedKeys={selected} onClick={handleClick}>
-            { adminMenu.map(item => (
-                hasPermission(user?.permissions, item?.permissions || []) && (
+        <Menu selectedKeys={selected} onClick={handleClick} {...rest}>
+            {adminMenu.map(
+                item => hasPermission(
+                    user?.permissions,
+                    item?.permissions || []
+                ) && (
                     <Menu.Item key={item.path}>
-                        { item.type === 'external'
-                            ? <a href={item.path}>{item.text}</a>
-                            : <NavLink exact to={item.path}>{item.text}</NavLink>}
+                        {item.type === 'external' ? (
+                            <a href={item.path}>{item.text}</a>
+                            ) : (
+                                <NavLink exact to={item.path}>
+                                    {item.text}
+                                </NavLink>
+                            )}
                     </Menu.Item>
                 )
-            ))}
+            )}
             <hr />
             <Menu.Item>
-                <NavLink to="/admin/login" onClick={() => signOut()}>Sign Out</NavLink>
+                <NavLink to="/admin/login" onClick={() => signOut()}>
+                    Sign Out
+                </NavLink>
             </Menu.Item>
         </Menu>
     );

@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
-import { Drawer } from 'antd';
 import { useHistory } from 'react-router-dom';
 import useDimensions from 'react-cool-dimensions';
-import { MenuOutlined } from '@ant-design/icons';
 
 // components
 import Menu from '../Menu/Menu';
@@ -11,7 +9,7 @@ import { GAEvent } from '../../../js/components/analytics/Analytics';
 // configs
 import { mobileWidthMax } from '../../../configs/menu.configs';
 // styles
-import { Container, Logo } from './Header.styles';
+import { Container, Logo, MenuIconStyled, DrawerStyled } from './Header.styles';
 
 function Header() {
     // hooks
@@ -30,19 +28,19 @@ function Header() {
 
     return (
         <Container ref={ref}>
-            { width <= mobileWidthMax && <MenuOutlined onClick={() => setDrawer(!showDrawer)} /> }
-            <Logo onClick={handleClick}>
-                Spring Creek Ward
-            </Logo>
-            <Drawer
-                title="Basic Drawer"
+            {width <= mobileWidthMax && (
+                <MenuIconStyled onClick={() => setDrawer(!showDrawer)} />
+            )}
+            <Logo onClick={handleClick}>Spring Creek Ward</Logo>
+            <DrawerStyled
+                title="Spring Creek Ward"
                 placement="left"
                 closable={false}
                 onClose={() => setDrawer(false)}
                 visible={showDrawer}
             >
                 <Menu />
-            </Drawer>
+            </DrawerStyled>
         </Container>
     );
 }

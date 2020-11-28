@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 import theme from 'theme';
 
+import Menu from '../../components/Menu/Menu';
+
 export const Container = styled.div`
     animation-duration: ${theme('animation_slow')};
     animation-name: ${({ animation }) => animation || ''};
@@ -13,7 +15,9 @@ export const Container = styled.div`
         const { animation } = props;
 
         if (animation) {
-            return `@keyframes ${animation} ${theme(`animation_${animation}`)(props)}`;
+            return `@keyframes ${animation} ${theme(`animation_${animation}`)(
+                props
+            )}`;
         }
         return null;
     }}
@@ -36,6 +40,12 @@ export const Page = styled.main`
     @media only screen and (max-width: ${theme('mq_tablet_width')}) {
         margin-left: 0;
         padding: 20px 15px 75px;
+    }
+`;
+
+export const MenuStyled = styled(Menu)`
+    @media only screen and (max-width: ${theme('mq_mobile_width')}) {
+        display: none;
     }
 `;
 

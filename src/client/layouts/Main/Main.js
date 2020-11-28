@@ -3,14 +3,13 @@ import { oneOfType, any, string } from 'prop-types';
 
 // components
 import Header from '../../components/Header/Header';
-import Menu from '../../components/Menu/Menu';
 // import Footer from '../../components/Footer/Footer';
 // import InfoBar from '../../components/InfoBar/InfoBar';
 
 // utils
 // import { getStorage, removeStorage } from '../../utils/localStorage.utils';
 // styles
-import { Container, Page, PageWrapper, Title } from './Main.styles';
+import { Container, Page, PageWrapper, Title, MenuStyled } from './Main.styles';
 
 function Main({ children, title }) {
     // const [openDrawer, setMobileDrawer] = useState(false);
@@ -26,9 +25,9 @@ function Main({ children, title }) {
         <Container>
             <Header />
             <PageWrapper>
-                <Menu />
+                <MenuStyled />
                 <Page>
-                    { title && <Title>{title}</Title> }
+                    {title && <Title>{title}</Title>}
                     {children}
                 </Page>
             </PageWrapper>
