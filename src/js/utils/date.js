@@ -23,7 +23,6 @@ export function sundayFunc(nextSunday) {
 
         return item;
     });
-
     return `${sunId}_${parseMeetingTime(session)}`;
 }
 

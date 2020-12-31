@@ -1,4 +1,4 @@
-export const meetingTimes = ['9:00'];
+export const meetingTimes = ['09:00'];
 export const sundaySchoolTime = '10:30';
 
 export const covidMaxCount = 99;

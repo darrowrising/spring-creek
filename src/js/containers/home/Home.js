@@ -1,10 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import moment from 'moment';
 // components
 import SpecialAnnouncement from '../../components/special/Special';
 import { GAEvent } from '../../components/analytics/Analytics';
 // utils
 import { meetingTimes, sundaySchoolTime, sacramentSchedule, covidMaxCount } from '../../../configs/unit.config';
+// configs
+import dateFormats from '../../configs/dateFormats';
 // styles
 import './home.less';
 
@@ -20,6 +23,7 @@ function handleClick(event) {
 }
 
 function Home() {
+    const { time } = dateFormats;
     return (
         <div className="homepage-container page center container">
             <div className="content-width">
@@ -38,7 +42,7 @@ function Home() {
                 <div className="schedule-container row">
                     <div className="col-xs-12 col-sm">
                         <h3>Sacrament Meeting</h3>
-                        <div>{`${meetingTimes[0]} am`}</div>
+                        <div>{moment(meetingTimes[0], 'hh:mm').format(time)}</div>
                         <h4>Sacrament Sign Up</h4>
                         <p className="sub-message">{`To help us keep to the Covid max count of ${covidMaxCount}`}</p>
                         <a href="https://calendly.com/springcreek/sacrament-meeting?month=2021-01" target="_blank" rel="noreferrer">Calendly Sign Ups</a>
@@ -47,7 +51,7 @@ function Home() {
                             {sacramentSchedule.map(item => <li key={item}>{item}</li>)}
                         </ul>
                         <h3>Adult/Youth Second Hour Classes</h3>
-                        <div>{`${sundaySchoolTime} am (Zoom)`}</div>
+                        <div>{`${moment(sundaySchoolTime, 'hh:mm').format(time)} (Zoom)`}</div>
                     </div>
                     <div className="col-xs-12 col-sm">
                         <h3>Map to New Building</h3>
