@@ -1,9 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-
+// components
 import SpecialAnnouncement from '../../components/special/Special';
 import { GAEvent } from '../../components/analytics/Analytics';
-
+// utils
+import { meetingTimes, sundaySchoolTime, sacramentSchedule, covidMaxCount } from '../../../configs/unit.config';
+// styles
 import './home.less';
 
 function handleClick(event) {
@@ -22,11 +24,7 @@ function Home() {
         <div className="homepage-container page center container">
             <div className="content-width">
                 <div className="main-message">
-                    <h2>Welcome to the new Spring Creek Ward website</h2>
-                    <p>
-                        This will be a location to post and view ward information.
-                        This is a work in progress so please keep checking the site.
-                    </p>
+                    <h2>Welcome to the Spring Creek Ward website</h2>
                 </div>
                 <SpecialAnnouncement />
                 <div className="link-blocks row">
@@ -36,6 +34,26 @@ function Home() {
                     <Link className="block announcements col-xs-12 col-sm" to="/announcements" onClick={handleClick}>
                         Announcements
                     </Link>
+                </div>
+                <div className="schedule-container row">
+                    <div className="col-xs-12 col-sm">
+                        <h3>Sacrament Meeting</h3>
+                        <div>{`${meetingTimes[0]} am`}</div>
+                        <h4>Sacrament Sign Up</h4>
+                        <p className="sub-message">{`To help us keep to the Covid max count of ${covidMaxCount}`}</p>
+                        <a href="https://calendly.com/springcreek/sacrament-meeting?month=2021-01" target="_blank" rel="noreferrer">Calendly Sign Ups</a>
+                        <h4>Families to Attend In Person</h4>
+                        <ul className="schedule-list center">
+                            {sacramentSchedule.map(item => <li key={item}>{item}</li>)}
+                        </ul>
+                        <h3>Adult/Youth Second Hour Classes</h3>
+                        <div>{`${sundaySchoolTime} am (Zoom)`}</div>
+                    </div>
+                    <div className="col-xs-12 col-sm">
+                        <h3>Map to New Building</h3>
+                        <div className="address">79 S 1525 W</div>
+                        <img className="map" src="https://firebasestorage.googleapis.com/v0/b/springcreeklds.appspot.com/o/NewChurchMap.jpg?alt=media&token=3d4d6add-cbf7-4f34-b472-af954d3a6fa4" alt="new building map" />
+                    </div>
                 </div>
             </div>
         </div>

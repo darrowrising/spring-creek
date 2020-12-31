@@ -1,7 +1,19 @@
 export const meetingTimes = ['9:00'];
+export const sundaySchoolTime = '10:30';
 
 export const covidMaxCount = 99;
 
+export const sacramentSchedule = [
+    'Jan 3rd - (I-Z)',
+    'Jan 10th - (A-H)',
+    'Jan 17th - (I-Z)',
+    'Jan 24th - (A-H)',
+    'Jan 31st - (I-Z)',
+    'Feb 7th - (I-Z)',
+    'Feb 14th - (A-H)',
+    'Feb 21st - (I-Z)',
+    'Feb 28th - (A-H)',
+];
 export const attendingDates = [
     'July 19, 2020',
     'August 9, 2020',
