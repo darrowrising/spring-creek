@@ -110,6 +110,7 @@ function Program({ history }) {
                                     case 'music': {
                                         return (
                                             <div className="center musical-number-wrapper">
+                                                <div className="musical-title">{item.title}</div>
                                                 <div className="musical-number">{item.value}</div>
                                             </div>
                                         );

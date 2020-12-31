@@ -1,4 +1,4 @@
-export const meetingTimes = ['12:00'];
+export const meetingTimes = ['9:00'];
 
 export const covidMaxCount = 99;
 
@@ -19,5 +19,14 @@ export const attendingDates = [
     'December 6, 2020',
     'December 13, 2020',
     'December 20, 2020',
-    'December 27, 2020'
+    'December 27, 2020',
+    'January 3, 2021',
+    'January 10, 2021',
+    'January 17, 2021',
+    'January 24, 2021',
+    'January 31, 2021',
+    'February 7, 2021',
+    'February 14, 2021',
+    'February 21, 2021',
+    'February 28, 2021',
 ];

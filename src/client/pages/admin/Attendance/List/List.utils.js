@@ -68,6 +68,7 @@ export async function getData(date, set) {
 
             if (statsSnap.exists) {
                 stats = parseStatsData(docs(statsSnap), dateVar);
+
                 if (!stats) {
                     statsRef.update({ [dateVar]: { actualAttendance: 0 } });
                     stats = { actualAttendance: 0 };
@@ -136,9 +137,9 @@ export function updateActualAttendance(date, value) {
 }
 
 export function setAttendance(data, type, set) {
-    const { firstName, lastName, headcount, date, uid, family } = data;
+    const { firstName, lastName, headcount, date, uid, memberId, name: famName, family } = data;
     const newDate = `${date} ${currentTimes[0]}`;
-    const name =        family !== uid ? family : `${firstName} ${lastName}`.trim() + ' family'; // eslint-disable-line
+    const name = famName || `${firstName} ${lastName}`.trim() + ' family'; // eslint-disable-line
     const document = {
         createdOn: dayjs.utc().format(),
         date: dayjs(date, dateLong).format(dateKey),
@@ -146,19 +147,18 @@ export function setAttendance(data, type, set) {
             .utc()
             .format(),
         headcount,
-        memberId: uid || '',
+        memberId: family,
         name,
         status: 'active',
-        uid: shortId.generate()
+        uid: uid || shortId.generate()
     };
-
-    const doc = store.collection('attendance').doc(uid || document.uid); // eslint-disable-line
+    const doc = store.collection('attendance').doc(document.uid); // eslint-disable-line
 
     if (type === 'update') {
         doc.update({
             headcount,
             name,
-            memberId: document.uid
+            memberId: memberId || family
         });
     } else {
         doc.set(document);

@@ -138,19 +138,21 @@ function List() {
                                                 content={(
                                                     <InputNumber
                                                         onPressEnter={(event) => {
-                                                            const val = event.target
-                                                                .value;
-                                                            handleStateFunc({
-                                                                showPopover: false,
-                                                                stats: {
-                                                                    actualAttendance: val
-                                                                }
-                                                            });
+                                                            const {
+                                                                value
+                                                            } = event.target;
 
                                                             updateActualAttendance(
                                                                 date,
-                                                                val
+                                                                value
                                                             );
+                                                            handleStateFunc({
+                                                                showPopover: false,
+                                                                stats: {
+                                                                    ...stats,
+                                                                    actualAttendance: value
+                                                                }
+                                                            });
                                                         }}
                                                     />
                                                 )}
@@ -160,7 +162,7 @@ function List() {
                                             >
                                                 <EditFilled
                                                     onClick={() => handleStateFunc({
-                                                        howPopover: true
+                                                        showPopover: true
                                                     })}
                                                 />
                                             </Popover>

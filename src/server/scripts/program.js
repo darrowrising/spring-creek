@@ -9,35 +9,44 @@ import hymns from '../../configs/hymns.config.json';
 
 const programDate = fbDocId;
 // const programDate = '200920_1200';
+/* Program Options
+ * talk
+ * music
+ * meeting
+*/
 const programConfig = {
     presiding: 'Bishop Vaughn Kinghorn',
-    conducting: 'Shay Rolfson',
-    chorister: 'Rachel Anderson',
-    organist: 'Emily Hinchey',
-    opening_hymn: 241,
-    invocation: 'Rachael Clegg',
-    sacrament_hymn: 86,
-    program: [{
-        type: 'talk',
-        title: 'Youth Speaker',
-        topic: '',
-        value: 'Brody Rolfson',
-        priority: 0
-    }, {
-        type: 'music',
-        title: '',
-        topic: '',
-        value: '"Praise to the Man/If You Could Hie to Kolob", performed by Nicholas Whipple',
-        priority: 1
-    }, {
-        type: 'talk',
-        title: 'Speaker',
-        topic: '',
-        value: 'Sister Eliza Dangerfield',
-        priority: 2
-    }],
-    closing_hymn: 14,
-    benediction: 'Jared Empey',
+    conducting: 'Bishop Vaughn Kinghorn',
+    chorister: 'Brandon Andersen',
+    organist: 'Erin Dangerfield',
+    opening_hymn: 210,
+    invocation: 'Charles Andersen',
+    sacrament_hymn: 175,
+    program: [
+        {
+            type: 'talk',
+            title: '',
+            topic: '',
+            value: 'Kylee Dickamore',
+            priority: 0
+        },
+        {
+            type: 'music',
+            title: 'In the Bleak Midwinter',
+            topic: '',
+            value: 'Performed by Nora Davidson (viola). Accompanied by Emily Hinchey',
+            priority: 1
+        },
+        {
+            type: 'talk',
+            title: '',
+            topic: '',
+            value: 'Ken Coxey',
+            priority: 2
+        },
+    ],
+    closing_hymn: 212,
+    benediction: 'Rachel Anderson'
 };
 
 function updateWithHymns(program) {
@@ -74,7 +83,11 @@ async function makeProgramData() {
 
     await db.ref(`/program/${programDate}`).set(program);
 
-    console.log('Program', color.yellow(programDate), color.green('uploaded successfully'));
+    console.log(
+        'Program',
+        color.yellow(programDate),
+        color.green('uploaded successfully')
+    );
     process.exit(0);
 }
 

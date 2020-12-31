@@ -4,7 +4,7 @@ import { Button, Form, InputNumber, Select } from 'antd';
 
 // utils
 import { getMembers, searchMembers } from './HeadcountForm.utils';
-// import { isObjectEmpty } from '../../../../utils/object.utils';
+import { isObjectEmpty } from '../../../../utils/object.utils';
 // styles
 import { ButtonGroup } from './HeadcountForm.styles';
 
@@ -14,7 +14,7 @@ const buildOptions = members => members.map(member => (
         {`${member?.firstName} ${member?.lastName}`.trim()}
     </Option>
 ));
-
+/* eslint-disable */ /* TODO: Remove this eslint disable */
 function HeadcountForm({ data, onSubmit, onCancel }) {
     const [form] = Form.useForm();
     const [{ members, filteredMembers }, setMembers] = useState({
@@ -36,10 +36,14 @@ function HeadcountForm({ data, onSubmit, onCancel }) {
             form={form}
             colon={false}
             onFinish={(formValues) => {
-                const familyInfo = data || filteredMembers.find(item => item.uid === family);
+                const familyInfo = filteredMembers.find(item => item.uid === family) || data;
+
                 onSubmit(
-                    { ...familyInfo, ...formValues },
-                    data ? 'update' : 'add'
+                    {...{
+                        ...familyInfo,
+                        uid: isObjectEmpty(data) ? null : data.uid
+                    }, ...formValues },
+                    isObjectEmpty(data) ? 'add' : 'update'
                 );
             }}
             layout="vertical"

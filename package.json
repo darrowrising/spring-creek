@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Ward program and announcement manager",
   "scripts": {
-    "start": "NODE_ENV=development DB_ENV=production run-p start:local make:EnvConfig",
+    "start": "NODE_ENV=development DB_ENV=test run-p start:local make:EnvConfig",
     "start:local": "node -r @babel/register server",
     "build": "run-s make:EnvConfig build:client",
     "build:client": "webpack -p -r @babel/register",
