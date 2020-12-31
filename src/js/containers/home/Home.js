@@ -52,8 +52,10 @@ function Home() {
                         </ul>
                         <h3>Adult/Youth Second Hour Classes</h3>
                         <div>{`${moment(sundaySchoolTime, 'hh:mm').format(time)} (Zoom)`}</div>
+                        <h3>Stake Website</h3>
+                        <a href="https://farmingtonwest.org/" target="_blank" rel="noreferrer">Farmington West Stake</a>
                     </div>
-                    <div className="col-xs-12 col-sm">
+                    <div id="map" className="col-xs-12 col-sm">
                         <h3>Map to New Building</h3>
                         <div className="address">79 S 1525 W</div>
                         <img className="map" src="https://firebasestorage.googleapis.com/v0/b/springcreeklds.appspot.com/o/NewChurchMap.jpg?alt=media&token=3d4d6add-cbf7-4f34-b472-af954d3a6fa4" alt="new building map" />
