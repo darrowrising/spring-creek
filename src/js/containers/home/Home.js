@@ -5,7 +5,7 @@ import moment from 'moment';
 import SpecialAnnouncement from '../../components/special/Special';
 import { GAEvent } from '../../components/analytics/Analytics';
 // utils
-import { meetingTimes, sundaySchoolTime, sacramentSchedule, covidMaxCount } from '../../../configs/unit.config';
+import { meetingTimes, sundaySchoolTime, sacramentSchedule, covidMaxCount, broadcastLink } from '../../../configs/unit.config';
 // configs
 import dateFormats from '../../configs/dateFormats';
 // styles
@@ -50,6 +50,17 @@ function Home() {
                         <ul className="schedule-list center">
                             {sacramentSchedule.map(item => <li key={item}>{item}</li>)}
                         </ul>
+                        <h4>Broadcast Information</h4>
+                        <a href={broadcastLink} target="_blank" rel="noreferrer">Meetinghouse Webcast</a>
+                        <ol className="schedule-list center" style={{ width: '80%' }}>
+                            <li>
+                                (Do Not use Firefox!) click &ldquo;
+                                <a href={broadcastLink} target="_blank" rel="noreferrer">here</a>
+                                &rdquo; or link above.
+                            </li>
+                            <li>Click on &ldquo;Green’s Building Sunday Mtgs&rdquo;</li>
+                            <li>Please add your last name (this helps us get attendance)</li>
+                        </ol>
                         <h3>Adult/Youth Second Hour Classes</h3>
                         <div>{`${moment(sundaySchoolTime, 'hh:mm').format(time)} (Zoom)`}</div>
                         <h3>Stake Website</h3>

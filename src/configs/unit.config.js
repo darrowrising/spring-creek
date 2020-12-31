@@ -1,5 +1,6 @@
 export const meetingTimes = ['09:00'];
 export const sundaySchoolTime = '10:30';
+export const broadcastLink = 'http://mywebcast.churchofjesuschrist.org/farmingtonutahfarmingtonbaystake';
 
 export const covidMaxCount = 99;
 
