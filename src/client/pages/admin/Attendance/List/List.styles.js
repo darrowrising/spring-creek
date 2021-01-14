@@ -104,7 +104,7 @@ export const Total = styled.div`
 
 export const ButtonWrapper = styled.div``;
 
-const defaultIcon = icon => styled(icon)`
+const defaultIcon = (icon) => styled(icon)`
     border: 1px solid ${theme('color_white_1')};
     border-radius: 5px;
     padding: 5px;

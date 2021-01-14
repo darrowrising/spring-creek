@@ -8,11 +8,13 @@ export function callSingleEvent(id) {
         firebase: {
             docId: '/announcements',
             type: 'query',
-            queries: [{
-                key: 'uid',
-                equalTo: id
-            }]
-        }
+            queries: [
+                {
+                    key: 'uid',
+                    equalTo: id,
+                },
+            ],
+        },
     };
 }
 
@@ -25,7 +27,7 @@ export function removeEvent(data) {
         firebase: {
             docId: `/announcements/${data.id}`,
             type: 'update',
-            data
-        }
+            data,
+        },
     };
 }

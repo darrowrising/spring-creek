@@ -11,20 +11,22 @@ function Badge(props) {
     const { intent, className, children, ...rest } = props;
 
     return (
-        <div {...rest} className={`badge ${groupClassName(intent)} ${className}`.trim()}>{children}</div>
+        <div {...rest} className={`badge ${groupClassName(intent)} ${className}`.trim()}>
+            {children}
+        </div>
     );
 }
 
 Badge.propTypes = {
     intent: string,
     children: node,
-    className: string
+    className: string,
 };
 
 Badge.defaultProps = {
     intent: '',
     children: null,
-    className: ''
+    className: '',
 };
 
 export default Badge;

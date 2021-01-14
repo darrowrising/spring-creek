@@ -11,5 +11,5 @@ export default combineReducers({
     announcements: announcementEntities,
     moderate: moderateEntities,
     special: special_entity,
-    singleEvent: singleEventEntities
+    singleEvent: singleEventEntities,
 });

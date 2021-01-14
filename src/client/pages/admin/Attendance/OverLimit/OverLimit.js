@@ -13,7 +13,7 @@ import { Container, Wrapper } from '../List/List.styles';
 
 const initialState = {
     loading: true,
-    data: []
+    data: [],
 };
 
 function OverLimit() {
@@ -31,21 +31,19 @@ function OverLimit() {
     return (
         <Container>
             <p>Families that have been asked to watch broadcast due to the meeting being over limit.</p>
-            {
-                loading
-                    ? <Loading />
-                    : (
-                        <Wrapper>
-                            <Table
-                                columns={tableColumns}
-                                dataSource={data}
-                                rowKey={record => record.uid}
-                                pagination={false}
-                                style={{ width: '100%' }}
-                            />
-                        </Wrapper>
-                    )
-            }
+            {loading ? (
+                <Loading />
+            ) : (
+                <Wrapper>
+                    <Table
+                        columns={tableColumns}
+                        dataSource={data}
+                        rowKey={(record) => record.uid}
+                        pagination={false}
+                        style={{ width: '100%' }}
+                    />
+                </Wrapper>
+            )}
         </Container>
     );
 }

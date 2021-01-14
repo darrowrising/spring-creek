@@ -11,7 +11,7 @@ function onClick(history, url) {
     GAEvent({
         category: 'User',
         action: 'Menu Link Clicked',
-        label: url === '/' ? '/' : url.replace('/', '')
+        label: url === '/' ? '/' : url.replace('/', ''),
     });
 
     history.push(url);
@@ -30,11 +30,11 @@ function MenuComponent(props) {
 }
 
 MenuComponent.propTypes = {
-    history: shape()
+    history: shape(),
 };
 
 MenuComponent.defaultProps = {
-    history: {}
+    history: {},
 };
 
 export default withRouter(MenuComponent);

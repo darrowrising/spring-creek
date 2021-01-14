@@ -13,7 +13,7 @@ export const programEntities = (state = initialState, action) => {
         case ActionTypes.GET_PROGRAM_REQUEST: {
             const actionState = {
                 loading: true,
-                error: {}
+                error: {},
             };
 
             return { ...state, ...actionState };
@@ -21,7 +21,7 @@ export const programEntities = (state = initialState, action) => {
         case ActionTypes.GET_PROGRAM_SUCCESS: {
             const actionState = {
                 loading: false,
-                error: {}
+                error: {},
             };
 
             return { ...state, ...actionState };
@@ -36,9 +36,9 @@ export const programEntities = (state = initialState, action) => {
             const actionState = {
                 error: {
                     message: errorName,
-                    on: true
+                    on: true,
                 },
-                loading: false
+                loading: false,
             };
 
             return { ...state, ...actionState };
@@ -49,6 +49,6 @@ export const programEntities = (state = initialState, action) => {
 };
 
 export const setProgramEntities = createSelector(
-    state => getEntities(state),
-    entities => entities?.program
+    (state) => getEntities(state),
+    (entities) => entities?.program
 );

@@ -21,16 +21,14 @@ function Header() {
         GAEvent({
             category: 'Admin',
             action: 'Header Logo Clicked',
-            label: 'Home'
+            label: 'Home',
         });
         push('/admin');
     };
 
     return (
         <Container ref={ref}>
-            {width <= mobileWidthMax && (
-                <MenuIconStyled onClick={() => setDrawer(!showDrawer)} />
-            )}
+            {width <= mobileWidthMax && <MenuIconStyled onClick={() => setDrawer(!showDrawer)} />}
             <Logo onClick={handleClick}>Spring Creek Ward</Logo>
             <DrawerStyled
                 title="Spring Creek"

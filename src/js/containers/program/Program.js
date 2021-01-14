@@ -27,12 +27,14 @@ const initialState = {
     sacrament_hymn: '',
     closing_hymn: '',
     benediction: '',
-    program: [{
-        type: 'talk',
-        title: 'Speaker',
-        value: 'TBA'
-    }],
-    loading: true
+    program: [
+        {
+            type: 'talk',
+            title: 'Speaker',
+            value: 'TBA',
+        },
+    ],
+    loading: true,
 };
 
 function Program({ history }) {
@@ -60,103 +62,96 @@ function Program({ history }) {
 
     return (
         <div className="program-container page center">
-            { loading
-                ? (
-                    <div className="loading">
-                        <Loading type="bars" color="#8FC1E3" />
-                    </div>
-                )
-                : (
-                    <div className="program-wrapper">
-                        { sessionLinks().length > 1 && (
-                            <div className="meeting-buttons-wrapper">
-                                { sessionLinks().map(({ link, display }) => (
-                                    <NavLink
-                                        exact
-                                        to={link}
-                                        className="meeting-button"
-                                        isActive={() => isSessionActive(state.date, display)}
-                                    >
-                                        {display}
-                                    </NavLink>
-                                ))}
-                            </div>
-                        )}
-                        <div className="center">
-                            <h1 className="page-header">Sacrament Meeting</h1>
-                            <div className="date">{date}</div>
+            {loading ? (
+                <div className="loading">
+                    <Loading type="bars" color="#8FC1E3" />
+                </div>
+            ) : (
+                <div className="program-wrapper">
+                    {sessionLinks().length > 1 && (
+                        <div className="meeting-buttons-wrapper">
+                            {sessionLinks().map(({ link, display }) => (
+                                <NavLink
+                                    exact
+                                    to={link}
+                                    className="meeting-button"
+                                    isActive={() => isSessionActive(state.date, display)}
+                                >
+                                    {display}
+                                </NavLink>
+                            ))}
                         </div>
-
-                        <Leaders title="Presiding" value={state?.presiding || 'TBA'} />
-                        <Leaders title="Conducting" value={state?.conducting || 'TBA'} />
-                        <Leaders title="Chorister" value={state?.chorister || 'TBA'} />
-                        <Leaders title="Organist" value={state?.organist || 'TBA'} />
-
-                        <h3 className="center">Welcome</h3>
-
-                        <Leaders
-                            title="Opening Hymn"
-                            value={state?.opening_hymn || 'TBA'}
-                            subValue={state.opening_hymn_title}
-                        />
-
-                        <Leaders title="Invocation" value={state?.invocation || 'TBA'} />
-
-                        <h3 className="center">Ward and Stake Business</h3>
-
-                        {
-                            program.sort((a, b) => a.priority - b.priority).map((item) => {
-                                switch (item.type) {
-                                    case 'music': {
-                                        return (
-                                            <div className="center musical-number-wrapper">
-                                                <div className="musical-title">{item.title}</div>
-                                                <div className="musical-number">{item.value}</div>
-                                            </div>
-                                        );
-                                    }
-                                    case 'meeting': {
-                                        return <div className="testimony-meeting center bold">{item.value}</div>;
-                                    }
-                                    default: {
-                                        return (
-                                            <Leaders
-                                                title={item.title}
-                                                value={item.value}
-                                            />
-                                        );
-                                    }
-                                }
-                            })
-                        }
-
-                        <Leaders
-                            title="Closing Hymn"
-                            value={state?.closing_hymn || 'TBA'}
-                            subValue={state.closing_hymn_title}
-                            className="closing-hymn"
-                        />
-
-                        <Leaders title="Benediction" value={state?.benediction || 'TBA'} style={{ marginBottom: '40px' }} />
-
-                        <Divider />
-
-                        <Leaders
-                            title="Sacrament Hymn"
-                            value={state?.sacrament_hymn || 'TBA'}
-                            subValue={state.sacrament_hymn_title}
-                            style={{ marginTop: '40px' }}
-                        />
-
-                        <h3 className="center bold sacrament">Administration of the Sacrament</h3>
+                    )}
+                    <div className="center">
+                        <h1 className="page-header">Sacrament Meeting</h1>
+                        <div className="date">{date}</div>
                     </div>
-                )}
+
+                    <Leaders title="Presiding" value={state?.presiding || 'TBA'} />
+                    <Leaders title="Conducting" value={state?.conducting || 'TBA'} />
+                    <Leaders title="Chorister" value={state?.chorister || 'TBA'} />
+                    <Leaders title="Organist" value={state?.organist || 'TBA'} />
+
+                    <h3 className="center">Welcome</h3>
+
+                    <Leaders
+                        title="Opening Hymn"
+                        value={state?.opening_hymn || 'TBA'}
+                        subValue={state.opening_hymn_title}
+                    />
+
+                    <Leaders title="Invocation" value={state?.invocation || 'TBA'} />
+
+                    <h3 className="center">Ward and Stake Business</h3>
+
+                    {program
+                        .sort((a, b) => a.priority - b.priority)
+                        .map((item) => {
+                            switch (item.type) {
+                                case 'music': {
+                                    return (
+                                        <div className="center musical-number-wrapper">
+                                            <div className="musical-title">{item.title}</div>
+                                            <div className="musical-number">{item.value}</div>
+                                        </div>
+                                    );
+                                }
+                                case 'meeting': {
+                                    return <div className="testimony-meeting center bold">{item.value}</div>;
+                                }
+                                default: {
+                                    return <Leaders title={item.title} value={item.value} />;
+                                }
+                            }
+                        })}
+
+                    <Leaders
+                        title="Closing Hymn"
+                        value={state?.closing_hymn || 'TBA'}
+                        subValue={state.closing_hymn_title}
+                        className="closing-hymn"
+                    />
+
+                    <Leaders title="Benediction" value={state?.benediction || 'TBA'} style={{ marginBottom: '40px' }} />
+
+                    <Divider />
+
+                    <Leaders
+                        title="Sacrament Hymn"
+                        value={state?.sacrament_hymn || 'TBA'}
+                        subValue={state.sacrament_hymn_title}
+                        style={{ marginTop: '40px' }}
+                    />
+
+                    <h3 className="center bold sacrament">Administration of the Sacrament</h3>
+                </div>
+            )}
         </div>
     );
 }
 
 Program.propTypes = {
-    history: shape().isRequired
+    history: shape().isRequired,
 };
 
 export default Program;

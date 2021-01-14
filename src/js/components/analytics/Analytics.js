@@ -9,8 +9,8 @@ export function GAInitialize() {
         debug: false,
         gaOptions: {
             siteSpeedSampleRate: 50,
-            alwaysSendReferrer: true
-        }
+            alwaysSendReferrer: true,
+        },
     });
 }
 

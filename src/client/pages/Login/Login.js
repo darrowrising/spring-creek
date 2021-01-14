@@ -16,7 +16,7 @@ import {
     ForgotPasswordWrapper,
     ForgotPassword,
     NoAccountWrapper,
-    NoAccount
+    NoAccount,
 } from './Login.styles';
 
 function Login() {
@@ -27,17 +27,14 @@ function Login() {
     const history = useHistory();
     // data
     const { loading, errorMsg, redirect } = state;
-    const {
-        isFieldTouched,
-        getFieldError,
-    } = form;
+    const { isFieldTouched, getFieldError } = form;
     const { user } = useContext(UserContext);
     // handlers
-    const handleState = updated => setState({ ...state, ...updated });
+    const handleState = (updated) => setState({ ...state, ...updated });
     const handleBtnDisable = () => {
         const names = ['email', 'password'];
-        const noErrors = names.every(name => getFieldError(name).length === 0);
-        const allTouched = names.every(name => isFieldTouched(name));
+        const noErrors = names.every((name) => getFieldError(name).length === 0);
+        const allTouched = names.every((name) => isFieldTouched(name));
 
         // checking validation is complete - enable confirm button
         if (noErrors && allTouched) setDisable(false);
@@ -60,43 +57,39 @@ function Login() {
                         form={form}
                         layout="vertical"
                         colon={false}
-                        onFinish={isDisabled ? null : formValues => handleSubmit(formValues, handleState)}
+                        onFinish={isDisabled ? null : (formValues) => handleSubmit(formValues, handleState)}
                         onFieldsChange={handleBtnDisable}
                         hideRequiredMark
                     >
-                        {errorMsg && (
-                            <Alert style={{ marginBottom: '10px' }} message={errorMsg} type="error" />
-                        )}
+                        {errorMsg && <Alert style={{ marginBottom: '10px' }} message={errorMsg} type="error" />}
                         <Form.Item
                             label="Email Address"
                             name="email"
                             validateTrigger={['onBlur']}
-                            rules={[{
-                                required: true,
-                                message: 'Please input your email!'
-                            }, {
-                                type: 'email',
-                                message: 'Please provide a valid email address.',
-                            }]}
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Please input your email!',
+                                },
+                                {
+                                    type: 'email',
+                                    message: 'Please provide a valid email address.',
+                                },
+                            ]}
                         >
-                            <Input
-                                placeholder="email"
-                                size="large"
-                            />
+                            <Input placeholder="email" size="large" />
                         </Form.Item>
                         <Form.Item
                             label="Password"
                             name="password"
-                            rules={[{
-                                required: true,
-                                message: 'Please input your Password!'
-                            }]}
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Please input your Password!',
+                                },
+                            ]}
                         >
-                            <Input
-                                placeholder="password"
-                                size="large"
-                                type="password"
-                            />
+                            <Input placeholder="password" size="large" type="password" />
                         </Form.Item>
                         <Form.Item>
                             <Button
@@ -117,7 +110,9 @@ function Login() {
                 </ForgotPasswordWrapper>
                 <NoAccountWrapper>
                     <NoAccount>Don&#39;t have an account?</NoAccount>
-                    <Button ghost type="secondary" onClick={() => history.push('/admin/sign-up')}>Sign Up</Button>
+                    <Button ghost type="secondary" onClick={() => history.push('/admin/sign-up')}>
+                        Sign Up
+                    </Button>
                 </NoAccountWrapper>
             </Container>
         </Layout>

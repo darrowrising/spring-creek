@@ -16,12 +16,9 @@ const { Option } = Select;
 
 function memberOption() {
     return members.map((mem) => {
-        const name = `${(mem?.preferredName || mem.firstName)} ${mem.lastName}`;
+        const name = `${mem?.preferredName || mem.firstName} ${mem.lastName}`;
         return (
-            <Option
-                key={mem.uid}
-                value={name}
-            >
+            <Option key={mem.uid} value={name}>
                 {name}
             </Option>
         );
@@ -30,10 +27,7 @@ function memberOption() {
 
 function hymnOption() {
     return hymns.map(({ title, number }) => (
-        <Option
-            key={`${title}_${number}`}
-            value={`${number}_${title}`}
-        >
+        <Option key={`${title}_${number}`} value={`${number}_${title}`}>
             {`${number}: ${title}`}
         </Option>
     ));
@@ -46,10 +40,11 @@ function ProgramMaker() {
         // isFieldsTouched,
         // getFieldValue,
         // getFieldError,
-        resetFields
+        resetFields,
     } = form;
     const isDisabled = false;
-    const handleConfirmBtn = () => { // eslint-disable-line
+    const handleConfirmBtn = () => {
+        // eslint-disable-line
         // const names = ['range', 'name'];
         // const listInputsReady = (getFieldValue('goals') || []).every(item => !!item);
         // const noErrors = names.every(name => getFieldError(name).length === 0) && listInputsReady;
@@ -82,40 +77,40 @@ function ProgramMaker() {
                 <Form.Item
                     label="Date"
                     name="date"
-                    rules={[{
-                        required: true,
-                        message: 'Please'
-                    }]}
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Please',
+                        },
+                    ]}
                 >
                     <DatePicker />
                 </Form.Item>
                 <Form.Item
                     label="Presiding"
                     name="presiding"
-                    rules={[{
-                        required: true,
-                        message: 'Please'
-                    }]}
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Please',
+                        },
+                    ]}
                 >
-                    <Select
-                        placeholder=""
-                        allowClear
-                    >
+                    <Select placeholder="" allowClear>
                         <Option value="Bishop Vaughn Kinghorn">Bishop Vaughn Kinghorn</Option>
                     </Select>
                 </Form.Item>
                 <Form.Item
                     label="Conducting"
                     name="conducting"
-                    rules={[{
-                        required: true,
-                        message: 'Please'
-                    }]}
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Please',
+                        },
+                    ]}
                 >
-                    <Select
-                        placeholder="Conducting"
-                        allowClear
-                    >
+                    <Select placeholder="Conducting" allowClear>
                         <Option value="Bishop Vaughn Kinghorn">Bishop Vaughn Kinghorn</Option>
                         <Option value="Peyton Smith">Peyton Smith</Option>
                         <Option value="Shay Rolfson">Shay Rolfson</Option>
@@ -124,72 +119,56 @@ function ProgramMaker() {
                 <Form.Item
                     label="Chorister"
                     name="chorister"
-                    rules={[{
-                        required: true,
-                        message: 'Please'
-                    }]}
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Please',
+                        },
+                    ]}
                 >
-                    <Select
-                        allowClear
-                        showSearch
-                        placeholder="Chorister"
-                        showArrow={false}
-                        notFoundContent={null}
-                    >
+                    <Select allowClear showSearch placeholder="Chorister" showArrow={false} notFoundContent={null}>
                         {memberOption()}
                     </Select>
                 </Form.Item>
                 <Form.Item
                     label="Opening Hymn"
                     name="opening_hymn"
-                    rules={[{
-                        required: true,
-                        message: 'Please'
-                    }]}
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Please',
+                        },
+                    ]}
                 >
-                    <Select
-                        allowClear
-                        showSearch
-                        placeholder="Opening Hymn"
-                        showArrow={false}
-                        notFoundContent={null}
-                    >
+                    <Select allowClear showSearch placeholder="Opening Hymn" showArrow={false} notFoundContent={null}>
                         {hymnOption()}
                     </Select>
                 </Form.Item>
                 <Form.Item
                     label="Invocation"
                     name="invocation"
-                    rules={[{
-                        required: true,
-                        message: 'Please'
-                    }]}
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Please',
+                        },
+                    ]}
                 >
-                    <Select
-                        allowClear
-                        showSearch
-                        placeholder="Opening Prayer"
-                        showArrow={false}
-                        notFoundContent={null}
-                    >
+                    <Select allowClear showSearch placeholder="Opening Prayer" showArrow={false} notFoundContent={null}>
                         {memberOption()}
                     </Select>
                 </Form.Item>
                 <Form.Item
                     label="Sacrament Hymn"
                     name="sacrament_hymn"
-                    rules={[{
-                        required: true,
-                        message: 'Please'
-                    }]}
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Please',
+                        },
+                    ]}
                 >
-                    <Select
-                        allowClear
-                        showSearch
-                        placeholder="Sacrament Hymn"
-                        showArrow={false}
-                        notFoundContent={null}
-                    >
+                    <Select allowClear showSearch placeholder="Sacrament Hymn" showArrow={false} notFoundContent={null}>
                         {hymnOption()}
                     </Select>
                 </Form.Item>
@@ -197,19 +176,17 @@ function ProgramMaker() {
                     {(fields, { add, remove }) => (
                         <div>
                             {fields.map((field, index) => (
-                                <Form.Item
-                                    label={index === 0 ? 'Speaker' : ''}
-                                    required={false}
-                                    key={field.key}
-                                >
+                                <Form.Item label={index === 0 ? 'Speaker' : ''} required={false} key={field.key}>
                                     <Form.Item
                                         {...field}
                                         validateTrigger={['onChange', 'onBlur']}
-                                        rules={[{
-                                            required: true,
-                                            whitespace: true,
-                                            message: 'Please add a speaker or remove the input.',
-                                        }]}
+                                        rules={[
+                                            {
+                                                required: true,
+                                                whitespace: true,
+                                                message: 'Please add a speaker or remove the input.',
+                                            },
+                                        ]}
                                         noStyle
                                     >
                                         <Input placeholder="Speaker" style={{ width: '60%' }} />
@@ -249,10 +226,7 @@ function ProgramMaker() {
                         </div>
                     )}
                 </Form.List>
-                <Form.Item
-                    label="Intermediant Hymn"
-                    name="intermediant_hymn"
-                >
+                <Form.Item label="Intermediant Hymn" name="intermediant_hymn">
                     <Select
                         allowClear
                         showSearch
@@ -265,16 +239,8 @@ function ProgramMaker() {
                 </Form.Item>
                 <Form.Item>
                     <ButtonGroup>
-                        <Button
-                            onClick={clearAll}
-                        >
-                            Reset
-                        </Button>
-                        <Button
-                            type="primary"
-                            htmlType="submit"
-                            disabled={isDisabled}
-                        >
+                        <Button onClick={clearAll}>Reset</Button>
+                        <Button type="primary" htmlType="submit" disabled={isDisabled}>
                             Done
                         </Button>
                     </ButtonGroup>

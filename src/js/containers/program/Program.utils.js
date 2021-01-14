@@ -17,7 +17,7 @@ export function sessionLinks() {
 
         return {
             display: moment(date, fbDocId_long).format(timeFormat),
-            link: `/program/${date}`
+            link: `/program/${date}`,
         };
     });
 }

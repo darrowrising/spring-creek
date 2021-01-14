@@ -46,5 +46,5 @@ export default keyMirror({
 
     CANCEL_REMOVAL_REQUEST: null,
     CANCEL_REMOVAL_SUCCESS: null,
-    CANCEL_REMOVAL_FAILURE: null
+    CANCEL_REMOVAL_FAILURE: null,
 });

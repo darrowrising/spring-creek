@@ -5,11 +5,7 @@ import catchify from '../../../../utils/catchify.util';
 import { dayjs } from '../../../../utils/date.utils';
 // configs
 import { meetingTimes as currentTimes } from '../../../../../configs/unit.config';
-import {
-    dateKey,
-    dateLong,
-    dateLongTime
-} from '../../../../../configs/dateFormats.configs';
+import { dateKey, dateLong, dateLongTime } from '../../../../../configs/dateFormats.configs';
 
 export let unsubscribe = null; // eslint-disable-line
 
@@ -23,17 +19,15 @@ function calcStats(meetingTimes, data) {
             statsTableData[time] = [
                 {
                     households: 0,
-                    headcount: 0
-                }
+                    headcount: 0,
+                },
             ];
         } else {
             statsTableData[time] = [
                 {
                     households: session.length,
-                    headcount: session
-                        .map(item => item.headcount)
-                        .reduce((a, b) => a + b)
-                }
+                    headcount: session.map((item) => item.headcount).reduce((a, b) => a + b),
+                },
             ];
         }
     });
@@ -41,11 +35,11 @@ function calcStats(meetingTimes, data) {
     return {
         statsTableData,
         totalHouseholds: Object.values(statsTableData)
-            .map(session => session.map(item => item.households)[0])
+            .map((session) => session.map((item) => item.households)[0])
             .reduce((a, b) => a + b),
         totalHeadcount: Object.values(statsTableData)
-            .map(session => session.map(item => item.headcount)[0])
-            .reduce((a, b) => a + b)
+            .map((session) => session.map((item) => item.headcount)[0])
+            .reduce((a, b) => a + b),
     };
 }
 
@@ -84,16 +78,13 @@ export async function getData(date, set) {
             if (dayjs().unix() <= dayjs(date, 'MMMM D, YYYY').unix()) {
                 meetingTimes = currentTimes.map((item) => {
                     const time = item.split(':');
-                    return dayjs()
-                        .hour(time[0])
-                        .minute(time[1])
-                        .format('h:mm');
+                    return dayjs().hour(time[0]).minute(time[1]).format('h:mm');
                 });
             }
 
             doc.forEach((item) => {
                 const sessionTime = dayjs(item.fullDate).format('h:mm');
-                const exist = meetingTimes.some(time => time === sessionTime);
+                const exist = meetingTimes.some((time) => time === sessionTime);
                 const sesh = data[sessionTime] || [];
 
                 if (!exist) meetingTimes.push(sessionTime);
@@ -102,8 +93,8 @@ export async function getData(date, set) {
                     ...sesh,
                     {
                         ...item,
-                        session: sessionTime
-                    }
+                        session: sessionTime,
+                    },
                 ].sort((a, b) => {
                     if (a.createdOn > b.createdOn) return 1;
                     if (a.createdOn < b.createdOn) return -1;
@@ -117,8 +108,8 @@ export async function getData(date, set) {
                 loading: false,
                 stats: {
                     ...calcStats(meetingTimes, data),
-                    ...stats
-                }
+                    ...stats,
+                },
             });
         });
 }
@@ -131,8 +122,8 @@ export function updateActualAttendance(date, value) {
         .doc('stats')
         .update({
             [dateVar]: {
-                actualAttendance: Number(value)
-            }
+                actualAttendance: Number(value),
+            },
         });
 }
 
@@ -143,14 +134,12 @@ export function setAttendance(data, type, set) {
     const document = {
         createdOn: dayjs.utc().format(),
         date: dayjs(date, dateLong).format(dateKey),
-        fullDate: dayjs(newDate, dateLongTime)
-            .utc()
-            .format(),
+        fullDate: dayjs(newDate, dateLongTime).utc().format(),
         headcount,
         memberId: family,
         name,
         status: 'active',
-        uid: uid || shortId.generate()
+        uid: uid || shortId.generate(),
     };
     const doc = store.collection('attendance').doc(document.uid); // eslint-disable-line
 
@@ -158,13 +147,13 @@ export function setAttendance(data, type, set) {
         doc.update({
             headcount,
             name,
-            memberId: memberId || family
+            memberId: memberId || family,
         });
     } else {
         doc.set(document);
     }
     set({
         showModal: false,
-        modalContent: {}
+        modalContent: {},
     });
 }

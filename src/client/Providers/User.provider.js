@@ -19,7 +19,7 @@ function UserProvider({ children }) {
         permissions: buildPermissions(userData),
         emailVerified: userAuth?.emailVerified,
         photoURL: userAuth?.photoURL,
-        uid: userData?.uid
+        uid: userData?.uid,
     });
 
     useEffect(() => {
@@ -43,13 +43,11 @@ function UserProvider({ children }) {
         });
     }, []);
 
-    return (
-        <UserContext.Provider value={user}>{children}</UserContext.Provider>
-    );
+    return <UserContext.Provider value={user}>{children}</UserContext.Provider>;
 }
 
 UserProvider.propTypes = {
-    children: node.isRequired
+    children: node.isRequired,
 };
 
 export default UserProvider;

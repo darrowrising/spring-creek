@@ -7,7 +7,7 @@ import { getViewStates } from '../../reducers/selectors';
 import ActionTypes from '../../configs/constants';
 
 const initialState = {
-    speakers: []
+    speakers: [],
 };
 
 export const programViewStates = (state = initialState, action) => {
@@ -31,7 +31,7 @@ export const programViewStates = (state = initialState, action) => {
                 sacrament_hymn: defaultVal,
                 closing_hymn: defaultVal,
                 benediction: defaultVal,
-                speakers: program?.speakers?.filter(item => item) || []
+                speakers: program?.speakers?.filter((item) => item) || [],
             };
 
             program.date = moment(init.date).format(dateFormats.longDate);
@@ -44,6 +44,6 @@ export const programViewStates = (state = initialState, action) => {
 };
 
 export const setProgramViewState = createSelector(
-    state => getViewStates(state),
-    viewState => viewState?.program || {}
+    (state) => getViewStates(state),
+    (viewState) => viewState?.program || {}
 );

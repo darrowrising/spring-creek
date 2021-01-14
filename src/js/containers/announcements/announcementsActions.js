@@ -8,10 +8,12 @@ export function getAnnouncementList() {
         firebase: {
             docId: '/announcements',
             type: 'query',
-            queries: [{
-                key: 'moderate',
-                equalTo: false
-            }]
-        }
+            queries: [
+                {
+                    key: 'moderate',
+                    equalTo: false,
+                },
+            ],
+        },
     };
 }

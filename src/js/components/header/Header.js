@@ -11,15 +11,24 @@ function handleClick() {
     GAEvent({
         category: 'User',
         action: 'Header Logo Clicked',
-        label: 'Home'
+        label: 'Home',
     });
 }
 
 function Header() {
     return (
         <header className="header-container row">
-            <h1 className="logo col-xs-10"><Link className="logo-link" to="/" onClick={handleClick}>Spring Creek Ward</Link></h1>
-            <Popover className="menu-icon col-xs-2" interactionKind="click-target" content={<Menu />} position="bottom-right">
+            <h1 className="logo col-xs-10">
+                <Link className="logo-link" to="/" onClick={handleClick}>
+                    Spring Creek Ward
+                </Link>
+            </h1>
+            <Popover
+                className="menu-icon col-xs-2"
+                interactionKind="click-target"
+                content={<Menu />}
+                position="bottom-right"
+            >
                 <Icon icon="menu" iconSize="32" />
             </Popover>
         </header>

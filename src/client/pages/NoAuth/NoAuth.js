@@ -21,13 +21,13 @@ function NoAuth() {
         <Layout>
             <Alert
                 message="Insufficient Permissions"
-                description={(
+                description={
                     <span>
                         You do not have the correct permissions to view this page. Please contact your administrator.
                         <br />
                         You will be redirected in {count} seconds. {/* eslint-disable-line */}
                     </span>
-                )}
+                }
                 type="info"
                 styles={{ marginTop: '100px' }}
             />

@@ -20,13 +20,13 @@ function MonthHeader(props) {
 MonthHeader.propTypes = {
     month: string,
     type: string,
-    title: string
+    title: string,
 };
 
 MonthHeader.defaultProps = {
     month: '',
     type: '',
-    title: ''
+    title: '',
 };
 
 export default MonthHeader;

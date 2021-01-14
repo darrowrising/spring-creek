@@ -5,7 +5,7 @@ export default {
         databaseURL: 'https://springcreeklds.firebaseio.com',
         projectId: 'springcreeklds',
         storageBucket: 'springcreeklds.appspot.com',
-        messagingSenderId: '1065257626292'
+        messagingSenderId: '1065257626292',
     },
     test: {
         apiKey: 'AIzaSyCY2mZFP_ahbp6RzqkWDSuZ6exuwwkn8Gw',
@@ -13,6 +13,6 @@ export default {
         databaseURL: 'https://springcreek-test.firebaseio.com',
         projectId: 'springcreek-test',
         storageBucket: 'springcreek-test.appspot.com',
-        messagingSenderId: '693722276180'
-    }
+        messagingSenderId: '693722276180',
+    },
 };

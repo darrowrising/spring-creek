@@ -15,9 +15,7 @@ export const Container = styled.div`
         const { animation } = props;
 
         if (animation) {
-            return `@keyframes ${animation} ${theme(`animation_${animation}`)(
-                props
-            )}`;
+            return `@keyframes ${animation} ${theme(`animation_${animation}`)(props)}`;
         }
         return null;
     }}

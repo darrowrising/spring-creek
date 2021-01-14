@@ -20,8 +20,8 @@ export async function setAnnoucementData(data) {
         firebase: {
             docId: '/announcements',
             type: 'push',
-            data: newData
-        }
+            data: newData,
+        },
     };
 }
 
@@ -33,8 +33,8 @@ export function editAnnouncementData(data) {
         firebase: {
             docId: `/announcements/${data.id}`,
             type: 'update',
-            data
-        }
+            data,
+        },
     };
 }
 
@@ -45,7 +45,7 @@ export function getIncNumber() {
         failureActionType: ActionTypes.GET_INC_NUMBER_FAILURE,
         firebase: {
             docId: '/announcements/inc',
-            type: 'get'
-        }
+            type: 'get',
+        },
     };
 }

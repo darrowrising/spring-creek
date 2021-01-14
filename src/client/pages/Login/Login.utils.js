@@ -19,17 +19,14 @@ export async function handleSubmit(values, set) {
     set({ loading: true });
 
     const [error, results] = await catchify(
-        Promise.all([
-            signIn(email, password),
-            db.collection('members').where('email', '==', email).get()
-        ])
+        Promise.all([signIn(email, password), db.collection('members').where('email', '==', email).get()])
     );
 
     if (error) {
         GAEvent({
             category: 'Login',
             action: 'Error: Loging in',
-            label: `${email.split('@')[0]}`
+            label: `${email.split('@')[0]}`,
         });
         console.log(error);
         return set({ loading: false, errorMsg: 'Email and/or password incorrect. Please try again.' });
@@ -43,7 +40,7 @@ export async function handleSubmit(values, set) {
     GAEvent({
         category: 'Login',
         action: 'Member logged in',
-        label: `${email.split('@')[0]}`
+        label: `${email.split('@')[0]}`,
     });
 
     set({ loading: false, errorMsg: '', redirect: loginRedirectDefault });

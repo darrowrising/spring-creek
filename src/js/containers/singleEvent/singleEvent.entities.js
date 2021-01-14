@@ -29,21 +29,21 @@ export const singleEventEntities = (state = initialState, action) => {
             }
 
             const actionState = {
-                event: data || false
+                event: data || false,
             };
 
             return { ...state, ...actionState };
         }
         case ActionTypes.DELETE_ANNOUNCEMENT_SUCCESS: {
             const actionState = {
-                toast: messaging.toaster.removeRequest
+                toast: messaging.toaster.removeRequest,
             };
 
             return { ...state, ...actionState };
         }
         case ActionTypes.EDIT_ANNOUNCEMENT_SUCCESS: {
             const actionState = {
-                toast: messaging.toaster.editRequest
+                toast: messaging.toaster.editRequest,
             };
 
             return { ...state, ...actionState };
@@ -54,11 +54,11 @@ export const singleEventEntities = (state = initialState, action) => {
 };
 
 export const getEvent = createSelector(
-    state => getEntities(state),
-    entities => entities?.singleEvent?.event
+    (state) => getEntities(state),
+    (entities) => entities?.singleEvent?.event
 );
 
 export const toastEvent = createSelector(
-    state => getEntities(state),
-    entities => entities?.singleEvent?.toast
+    (state) => getEntities(state),
+    (entities) => entities?.singleEvent?.toast
 );

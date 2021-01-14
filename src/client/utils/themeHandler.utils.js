@@ -14,12 +14,14 @@ export const theme = (varName) => {
 export default (variable, log) => (props) => {
     const val = props?.theme[variable];
     const css = 'padding: 5px 10px; background-color: #de0f0f; color: white; font-family: arial; font-size: 120%;';
-    const logCss = 'padding: 5px 10px; background-color: #336699; border-radius: 5px; color: white; font-size: 140%; font-family: arial;';
+    const logCss =
+        'padding: 5px 10px; background-color: #336699; border-radius: 5px; color: white; font-size: 140%; font-family: arial;';
     let showLog = log;
 
     if (!val) showLog = true;
     if (showLog) console.group('%cTheme Variables', logCss, '\n', props?.theme);
-    if (!val) return console.error(`%cError: Your theme variable "${variable}" is not found in the current theme.`, css);
+    if (!val)
+        return console.error(`%cError: Your theme variable "${variable}" is not found in the current theme.`, css);
     console.groupEnd();
 
     return val;

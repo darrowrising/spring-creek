@@ -1,4 +1,4 @@
-export const isObject = obj => typeof obj === 'object' && !Array.isArray(obj);
+export const isObject = (obj) => typeof obj === 'object' && !Array.isArray(obj);
 export function isObjectEmpty(obj) {
     if (!obj) return null;
 
@@ -15,6 +15,8 @@ export function deepSpread(first, second) {
     secondKeys.forEach((key) => {
         if (isObject(first[key]) && isObject(second[key])) {
             final[key] = deepSpread(first[key], second[key]);
+        } else if (Array.isArray(first[key])) {
+            final[key] = [...first[key], ...(second[key] || [])];
         } else {
             final[key] = typeof second[key] === 'boolean' ? second[key] : second[key] || first[key];
         }

@@ -22,7 +22,7 @@ import { adminMenu } from '../../../configs/menu.configs';
 const list = {
     Attendance,
     Members,
-    ProgramMaker
+    ProgramMaker,
 };
 
 function IndexRoutes() {
@@ -31,9 +31,14 @@ function IndexRoutes() {
             <>
                 <Analytics />
                 <Switch>
-                    { /* main */ }
-                    { adminMenu.map(item => (
-                        <PrivateRoute exact permissions={item.permissions} path={item.path} component={list[item.component]} />
+                    {/* main */}
+                    {adminMenu.map((item) => (
+                        <PrivateRoute
+                            exact
+                            permissions={item.permissions}
+                            path={item.path}
+                            component={list[item.component]}
+                        />
                     ))}
                     <Route exact path="/admin/login" component={Login} />
                     <Route exact path="/admin/sign-up" component={SignUp} />

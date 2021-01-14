@@ -9,10 +9,7 @@ import OverLimit from './OverLimit/OverLimit';
 // configs
 import { covidMaxCount } from '../../../../configs/unit.config';
 // styles
-import {
-    Container,
-    Description,
-} from './Attendance.styles';
+import { Container, Description } from './Attendance.styles';
 
 const { TabPane } = Tabs;
 

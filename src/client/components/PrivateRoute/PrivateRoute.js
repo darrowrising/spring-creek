@@ -18,31 +18,27 @@ const PrivateRoute = ({ component: Component, permissions, ...props }) => {
         setStorage('loginRedirect', window.location.pathname, 'session');
     }
     const canSeeRoute = (innerProps) => {
-        const component = hasPermission(user?.permissions, permissions) ? <Component {...innerProps} /> : <Redirect to="/admin/noauth" />;
+        const component = hasPermission(user?.permissions, permissions) ? (
+            <Component {...innerProps} />
+        ) : (
+            <Redirect to="/admin/noauth" />
+        );
         return component;
     };
 
     return (
-        <Route
-            {...props}
-            render={innerProps => (user ? canSeeRoute(innerProps) : <Redirect to="/admin/login" />)}
-        />
+        <Route {...props} render={(innerProps) => (user ? canSeeRoute(innerProps) : <Redirect to="/admin/login" />)} />
     );
 };
 
 PrivateRoute.propTypes = {
-    component: oneOfType([
-        shape(),
-        func
-    ]),
-    permissions: arrayOf(
-        string
-    )
+    component: oneOfType([shape(), func]),
+    permissions: arrayOf(string),
 };
 
 PrivateRoute.defaultProps = {
     component: null,
-    permissions: []
+    permissions: [],
 };
 
 export default PrivateRoute;

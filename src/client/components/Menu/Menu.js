@@ -28,20 +28,18 @@ function MenuComp({ ...rest }) {
     return (
         <Menu selectedKeys={selected} onClick={handleClick} {...rest}>
             {adminMenu.map(
-                item => hasPermission(
-                    user?.permissions,
-                    item?.permissions || []
-                ) && (
-                    <Menu.Item key={item.path}>
-                        {item.type === 'external' ? (
-                            <a href={item.path}>{item.text}</a>
+                (item) =>
+                    hasPermission(user?.permissions, item?.permissions || []) && (
+                        <Menu.Item key={item.path}>
+                            {item.type === 'external' ? (
+                                <a href={item.path}>{item.text}</a>
                             ) : (
                                 <NavLink exact to={item.path}>
                                     {item.text}
                                 </NavLink>
                             )}
-                    </Menu.Item>
-                )
+                        </Menu.Item>
+                    )
             )}
             <hr />
             <Menu.Item>

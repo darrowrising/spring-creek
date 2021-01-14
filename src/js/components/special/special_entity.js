@@ -13,12 +13,12 @@ export const special_entity = (state = initialState, action) => {
 
     switch (type) {
         case ActionTypes.GET_SPECIAL_ANNOUNCEMENT_SUCCESS: {
-            const data = result.find(item => moment(item.endDate).isBefore(comingSunday) && !item.moderate);
+            const data = result.find((item) => moment(item.endDate).isBefore(comingSunday) && !item.moderate);
 
             // data.general = true;
 
             const actionState = {
-                assignment: data
+                assignment: data,
             };
 
             return { ...state, ...actionState };
@@ -29,6 +29,6 @@ export const special_entity = (state = initialState, action) => {
 };
 
 export const getAssignments = createSelector(
-    state => getEntities(state),
-    entities => entities?.special?.assignment
+    (state) => getEntities(state),
+    (entities) => entities?.special?.assignment
 );

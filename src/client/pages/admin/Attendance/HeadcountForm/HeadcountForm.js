@@ -9,17 +9,17 @@ import { isObjectEmpty } from '../../../../utils/object.utils';
 import { ButtonGroup } from './HeadcountForm.styles';
 
 const { Option } = Select;
-const buildOptions = members => members.map(member => (
-    <Option key={member.uid} value={member?.uid || member.id}>
-        {`${member?.firstName} ${member?.lastName}`.trim()}
-    </Option>
-));
-/* eslint-disable */ /* TODO: Remove this eslint disable */
-function HeadcountForm({ data, onSubmit, onCancel }) {
+const buildOptions = (members) =>
+    members.map((member) => (
+        <Option key={member.uid} value={member?.uid || member.id}>
+            {`${member?.firstName} ${member?.lastName}`.trim()}
+        </Option>
+    )); /* TODO: Remove this eslint disable */
+/* eslint-disable */ function HeadcountForm({ data, onSubmit, onCancel }) {
     const [form] = Form.useForm();
     const [{ members, filteredMembers }, setMembers] = useState({
         members: [],
-        filteredMembers: []
+        filteredMembers: [],
     });
     const [family, setFamily] = useState(() => data?.name || null);
     const { resetFields } = form;
@@ -36,20 +36,23 @@ function HeadcountForm({ data, onSubmit, onCancel }) {
             form={form}
             colon={false}
             onFinish={(formValues) => {
-                const familyInfo = filteredMembers.find(item => item.uid === family) || data;
+                const familyInfo = filteredMembers.find((item) => item.uid === family) || data;
 
                 onSubmit(
-                    {...{
-                        ...familyInfo,
-                        uid: isObjectEmpty(data) ? null : data.uid
-                    }, ...formValues },
+                    {
+                        ...{
+                            ...familyInfo,
+                            uid: isObjectEmpty(data) ? null : data.uid,
+                        },
+                        ...formValues,
+                    },
                     isObjectEmpty(data) ? 'add' : 'update'
                 );
             }}
             layout="vertical"
             initialValues={{
                 family,
-                headcount: data?.headcount
+                headcount: data?.headcount,
             }}
         >
             <Form.Item label="Family" name="family">
@@ -60,19 +63,15 @@ function HeadcountForm({ data, onSubmit, onCancel }) {
                     defaultActiveFirstOption={false}
                     showArrow={false}
                     filterOption={false}
-                    onSearch={value => searchMembers(value, members, setMembers)}
-                    onChange={value => setFamily(value)}
+                    onSearch={(value) => searchMembers(value, members, setMembers)}
+                    onChange={(value) => setFamily(value)}
                     notFoundContent={null}
                 >
                     {buildOptions(filteredMembers)}
                 </Select>
             </Form.Item>
             <Form.Item label="Headcount" name="headcount">
-                <InputNumber
-                    name="headcount"
-                    placeholder="Headcount"
-                    style={{ width: '100px' }}
-                />
+                <InputNumber name="headcount" placeholder="Headcount" style={{ width: '100px' }} />
             </Form.Item>
             <Form.Item>
                 <ButtonGroup>
@@ -96,13 +95,13 @@ function HeadcountForm({ data, onSubmit, onCancel }) {
 HeadcountForm.propTypes = {
     data: shape(),
     onSubmit: func,
-    onCancel: func
+    onCancel: func,
 };
 
 HeadcountForm.defaultProps = {
     data: {},
     onSubmit: null,
-    onCancel: null
+    onCancel: null,
 };
 
 export default HeadcountForm;

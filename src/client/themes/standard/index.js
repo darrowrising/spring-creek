@@ -10,5 +10,5 @@ export default {
     ...core,
     ...fonts,
     ...dimensions,
-    ...mediaQueries
+    ...mediaQueries,
 };

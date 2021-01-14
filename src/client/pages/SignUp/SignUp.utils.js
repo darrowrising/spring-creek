@@ -18,7 +18,7 @@ export async function handleSubmit(values, set) {
         GAEvent({
             category: 'SignUp',
             action: 'Error: Getting Member',
-            label: `${firstName}_${lastName}_${email}`
+            label: `${firstName}_${lastName}_${email}`,
         });
         return set({ loading: false, errorMsg: 'Something went wrong, please try again.' });
     }
@@ -30,7 +30,7 @@ export async function handleSubmit(values, set) {
         lastName,
         email,
         lastVisited: dayjs.utc().format(),
-        static: 'active'
+        static: 'active',
     };
     const ref = db.collection('members').doc(userData.uid);
 
@@ -38,7 +38,7 @@ export async function handleSubmit(values, set) {
         GAEvent({
             category: 'SignUp',
             action: 'Error: Email Already Exists',
-            label: `${firstName}_${lastName}_${email}`
+            label: `${firstName}_${lastName}_${email}`,
         });
         return set({ errorMsg: 'This email is already in use.' });
     }
@@ -52,7 +52,7 @@ export async function handleSubmit(values, set) {
         .then(() => {
             GAEvent({
                 category: 'SignUp',
-                action: 'Account Created'
+                action: 'Account Created',
             });
             set({ loading: false, errorMsg: '', redirect: loginRedirectDefault });
         })
@@ -61,7 +61,7 @@ export async function handleSubmit(values, set) {
             GAEvent({
                 category: 'SignUp',
                 action: 'Error: Creating Account',
-                label: `${firstName}_${lastName}_${email}`
+                label: `${firstName}_${lastName}_${email}`,
             });
             set({ errorMsg: 'Sorry, we were unable to create an account at this time. Please try again.' });
         });

@@ -8,10 +8,12 @@ export function callAssignment() {
         firebase: {
             docId: '/announcements',
             type: 'query',
-            queries: [{
-                key: 'title',
-                equalTo: 'Building Cleaning Assignment'
-            }]
-        }
+            queries: [
+                {
+                    key: 'title',
+                    equalTo: 'Building Cleaning Assignment',
+                },
+            ],
+        },
     };
 }

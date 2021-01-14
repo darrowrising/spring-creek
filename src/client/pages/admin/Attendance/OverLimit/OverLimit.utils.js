@@ -3,7 +3,8 @@ import { store, docs } from '../../../../utils/firebase.utils';
 
 export let unsubscribe = null; // eslint-disable-line
 
-export async function getData(set) { // eslint-disable-line
+export async function getData(set) {
+    // eslint-disable-line
     unsubscribe = store
         .collection('attendance')
         .where('reason', '==', 'overlimit')
@@ -12,7 +13,7 @@ export async function getData(set) { // eslint-disable-line
 
             set({
                 loading: false,
-                data: doc
+                data: doc,
             });
         });
 }

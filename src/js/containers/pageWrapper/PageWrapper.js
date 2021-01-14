@@ -52,7 +52,7 @@ function PageWrapper({ history, location }) {
 
 PageWrapper.propTypes = {
     history: shape().isRequired,
-    location: shape().isRequired
+    location: shape().isRequired,
 };
 
 export default withRouter(PageWrapper);

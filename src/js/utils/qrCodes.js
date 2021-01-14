@@ -12,7 +12,7 @@ export function handleURLParams(search) {
             GAEvent({
                 category: 'Params',
                 action: `${key} | ${arr[1]}`,
-                label: `Param ${key} ${arr[1]}`
+                label: `Param ${key} ${arr[1]}`,
             });
         });
 

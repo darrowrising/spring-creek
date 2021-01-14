@@ -10,9 +10,7 @@ export function configureStore(history, ...middleware) {
     const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
     const store = createStore(
         Reducer(history),
-        composeEnhancers(
-            applyMiddleware(thunk, ReduxPromise, ...middleware, firebaseDispatchMiddleware(fetch))
-        )
+        composeEnhancers(applyMiddleware(thunk, ReduxPromise, ...middleware, firebaseDispatchMiddleware(fetch)))
     );
     return store;
 }

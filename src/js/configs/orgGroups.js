@@ -9,5 +9,5 @@ export default [
     'Neighborhood',
     'Elders Quorum',
     'Scouts',
-    'Primary'
+    'Primary',
 ];

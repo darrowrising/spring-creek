@@ -1,6 +1,4 @@
-import {
-    adjustHue, complement, desaturate, lighten
-} from 'polished';
+import { adjustHue, complement, desaturate, lighten } from 'polished';
 
 export const core = {
     // Whites
@@ -31,9 +29,8 @@ export const core = {
     color_red_1: '#E03616',
     color_red_2: '#B0413E',
     // Pinks
-
     // Violet
-    color_purple_1: '#760f9c'
+    color_purple_1: '#760f9c',
 };
 const primary = core.color_blue_1;
 
@@ -46,6 +43,7 @@ export const colors = {
     color_primary_admin: adjustHue(-10, primary),
     // Utility Colors
     color_danger: core.color_red_1,
+    color_success: core.color_green_1,
     // Types
     color_confirmed: core.color_red_1,
     color_confirmed_active: desaturate(0.2, core.color_red_1),
@@ -61,5 +59,5 @@ export const colors = {
     /* Bar */
     color_graph_bar: core.color_black_2,
     /* Line */
-    color_graph_line: core.color_black_2
+    color_graph_line: core.color_black_2,
 };

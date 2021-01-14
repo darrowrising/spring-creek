@@ -10,5 +10,5 @@ export default {
     day: 'D',
     month: 'MMMM',
     dayOfWeek: 'ddd',
-    utc: 'ddd MMM DD YYYY hh:mm:ss [GMT]Z'
+    utc: 'ddd MMM DD YYYY hh:mm:ss [GMT]Z',
 };

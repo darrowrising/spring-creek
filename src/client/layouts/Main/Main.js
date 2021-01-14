@@ -37,11 +37,11 @@ function Main({ children, title }) {
 
 Main.propTypes = {
     children: oneOfType([any]).isRequired,
-    title: string
+    title: string,
 };
 
 Main.defaultProps = {
-    title: ''
+    title: '',
 };
 
 export default Main;

@@ -16,37 +16,30 @@ const programDate = fbDocId;
 */
 const programConfig = {
     presiding: 'Bishop Vaughn Kinghorn',
-    conducting: 'Bishop Vaughn Kinghorn',
+    conducting: 'Peyton Smith',
     chorister: 'Brandon Andersen',
-    organist: 'Erin Dangerfield',
-    opening_hymn: 210,
-    invocation: 'Charles Andersen',
-    sacrament_hymn: 175,
+    organist: 'Emily Hinchey',
+    opening_hymn: 97,
+    invocation: 'Lyndsey Grimm',
+    sacrament_hymn: 195,
     program: [
         {
-            type: 'talk',
-            title: '',
+            type: 'speaker',
+            title: 'Youth Speaker',
             topic: '',
-            value: 'Kylee Dickamore',
+            value: 'Brandon Andersen',
             priority: 0
         },
         {
-            type: 'music',
-            title: 'In the Bleak Midwinter',
+            type: 'speaker',
+            title: 'Speaker',
             topic: '',
-            value: 'Performed by Nora Davidson (viola). Accompanied by Emily Hinchey',
+            value: 'Garrett Clegg',
             priority: 1
         },
-        {
-            type: 'talk',
-            title: '',
-            topic: '',
-            value: 'Ken Coxey',
-            priority: 2
-        },
     ],
-    closing_hymn: 212,
-    benediction: 'Rachel Anderson'
+    closing_hymn: 113,
+    benediction: 'Tim Crowther'
 };
 
 function updateWithHymns(program) {

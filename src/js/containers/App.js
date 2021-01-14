@@ -19,15 +19,16 @@ const store = configureStore(history, middleware); // Create a store connected w
 
 GAInitialize();
 
-render((
+render(
     <Provider store={store}>
         <ConnectedRouter history={history}>
             <BrowserRouter>
                 <Switch>
-                    { /* <Route path="/login" component={Login} /> */ }
+                    {/* <Route path="/login" component={Login} /> */}
                     <Route path="*" component={PageWrapper} />
                 </Switch>
             </BrowserRouter>
         </ConnectedRouter>
-    </Provider>
-), document.getElementById('app'));
+    </Provider>,
+    document.getElementById('app')
+);

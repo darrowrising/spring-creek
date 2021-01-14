@@ -7,18 +7,20 @@ function ErrorMsg(props) {
     const { msg, className, ...rest } = props;
 
     return (
-        <div {...rest} className={`field-error-message ${className}`.trim()}>{msg}</div>
+        <div {...rest} className={`field-error-message ${className}`.trim()}>
+            {msg}
+        </div>
     );
 }
 
 ErrorMsg.propTypes = {
     msg: string,
-    className: string
+    className: string,
 };
 
 ErrorMsg.defaultProps = {
     msg: '',
-    className: ''
+    className: '',
 };
 
 export default ErrorMsg;

@@ -13,15 +13,13 @@ function Clean({ children }) {
     return (
         <Container>
             <Header />
-            <Page>
-                {children}
-            </Page>
+            <Page>{children}</Page>
         </Container>
     );
 }
 
 Clean.propTypes = {
-    children: oneOfType([any]).isRequired
+    children: oneOfType([any]).isRequired,
 };
 
 export default Clean;

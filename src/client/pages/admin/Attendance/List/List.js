@@ -12,30 +12,13 @@ import HeadcountForm from '../HeadcountForm/HeadcountForm';
 // configs
 import { mainTableColumns, statTableColumns } from './List.configs';
 import { dateLong } from '../../../../../configs/dateFormats.configs';
-import {
-    attendingDates,
-    covidMaxCount
-} from '../../../../../configs/unit.config';
+import { attendingDates, covidMaxCount } from '../../../../../configs/unit.config';
 // utils
-import {
-    getData,
-    unsubscribe,
-    updateActualAttendance,
-    setAttendance
-} from './List.utils';
+import { getData, unsubscribe, updateActualAttendance, setAttendance } from './List.utils';
 import { hasPermission } from '../../../../utils/permissions.utils';
 import { handleState } from '../../../../utils/state.utils';
 // styles
-import {
-    Container,
-    Wrapper,
-    Session,
-    StatsContainer,
-    Box,
-    TotalHeader,
-    Total,
-    SelectStyled
-} from './List.styles';
+import { Container, Wrapper, Session, StatsContainer, Box, TotalHeader, Total, SelectStyled } from './List.styles';
 
 const { Option } = SelectStyled;
 const initialState = {
@@ -43,11 +26,11 @@ const initialState = {
     data: {},
     sessions: [],
     stats: {
-        statsTableData: {}
+        statsTableData: {},
     },
     showPopover: false,
     showModal: false,
-    modalContent: {}
+    modalContent: {},
 };
 
 function List() {
@@ -56,27 +39,14 @@ function List() {
     const { user } = useContext(UserContext);
     const [date, setDate] = useState(() => {
         const today = dayjs().unix();
-        const nextService = attendingDates.find(
-            item => today
-                <= dayjs(item, dateLong)
-                    .add(1, 'day')
-                    .unix()
-        );
+        const nextService = attendingDates.find((item) => today <= dayjs(item, dateLong).add(1, 'day').unix());
         return nextService;
     });
     const [state, setState] = useState(initialState);
     // data
-    const {
-        data,
-        loading,
-        sessions,
-        stats,
-        showPopover,
-        showModal,
-        modalContent
-    } = state;
+    const { data, loading, sessions, stats, showPopover, showModal, modalContent } = state;
     // hanlders
-    const handleStateFunc = update => handleState(update, setState);
+    const handleStateFunc = (update) => handleState(update, setState);
     const handleChange = (pagination, antFilters, sorter) => {
         setSort(sorter);
     };
@@ -90,15 +60,12 @@ function List() {
     return (
         <Container>
             {hasPermission(user?.permissions, ['calling:Ward_Clerk']) && (
-                <Button
-                    type="primary"
-                    onClick={() => handleStateFunc({ showModal: true })}
-                >
+                <Button type="primary" onClick={() => handleStateFunc({ showModal: true })}>
                     Add Family
                 </Button>
             )}
-            <SelectStyled defaultValue={date} onChange={val => setDate(val)}>
-                {attendingDates.map(item => (
+            <SelectStyled defaultValue={date} onChange={(val) => setDate(val)}>
+                {attendingDates.map((item) => (
                     <Option value={item}>{item}</Option>
                 ))}
             </SelectStyled>
@@ -115,55 +82,41 @@ function List() {
                                 </Box>
                                 <Box>
                                     <TotalHeader>Total Headcount</TotalHeader>
-                                    <Total
-                                        limit={
-                                            stats.totalHeadcount
-                                            >= covidMaxCount
-                                        }
-                                    >
-                                        {stats.totalHeadcount}
-                                    </Total>
+                                    <Total limit={stats.totalHeadcount >= covidMaxCount}>{stats.totalHeadcount}</Total>
                                 </Box>
                                 <Box>
                                     <TotalHeader>Actual Attendance</TotalHeader>
                                     <Total>
-                                        {stats?.actualAttendance || (
-                                            <MinusOutlined />
-                                        )}
-                                        {hasPermission(user?.permissions, [
-                                            'calling:Ward_Clerk'
-                                        ]) ? (
+                                        {stats?.actualAttendance || <MinusOutlined />}
+                                        {hasPermission(user?.permissions, ['calling:Ward_Clerk']) ? (
                                             <Popover
                                                 placement="topRight"
-                                                content={(
+                                                content={
                                                     <InputNumber
                                                         onPressEnter={(event) => {
-                                                            const {
-                                                                value
-                                                            } = event.target;
+                                                            const { value } = event.target;
 
-                                                            updateActualAttendance(
-                                                                date,
-                                                                value
-                                                            );
+                                                            updateActualAttendance(date, value);
                                                             handleStateFunc({
                                                                 showPopover: false,
                                                                 stats: {
                                                                     ...stats,
-                                                                    actualAttendance: value
-                                                                }
+                                                                    actualAttendance: value,
+                                                                },
                                                             });
                                                         }}
                                                     />
-                                                )}
+                                                }
                                                 trigger="click"
                                                 className="edit-total"
                                                 visible={showPopover}
                                             >
                                                 <EditFilled
-                                                    onClick={() => handleStateFunc({
-                                                        showPopover: true
-                                                    })}
+                                                    onClick={() =>
+                                                        handleStateFunc({
+                                                            showPopover: true,
+                                                        })
+                                                    }
                                                 />
                                             </Popover>
                                         ) : null}
@@ -177,13 +130,7 @@ function List() {
                                     <Col
                                         span={24 / sessions.length || 1}
                                         style={
-                                            index !== 0
-                                                ? {
-                                                    borderLeft: `1px solid ${theme(
-                                                        'color_grey_3'
-                                                    )}`
-                                                }
-                                                : null
+                                            index !== 0 ? { borderLeft: `1px solid ${theme('color_grey_3')}` } : null
                                         }
                                     >
                                         <Session>{session}</Session>
@@ -195,34 +142,19 @@ function List() {
                                     <Col
                                         span={24 / sessions.length || 1}
                                         style={{
-                                            borderLeft:
-                                                index !== 0
-                                                    ? `1px solid ${theme(
-                                                        'color_grey_3'
-                                                    )}`
-                                                    : 0,
-                                            backgroundColor: theme(
-                                                'color_white_1'
-                                            )
+                                            borderLeft: index !== 0 ? `1px solid ${theme('color_grey_3')}` : 0,
+                                            backgroundColor: theme('color_white_1'),
                                         }}
                                     >
                                         <Table
-                                            columns={mainTableColumns(
-                                                user,
-                                                sort,
-                                                handleStateFunc
-                                            )}
+                                            columns={mainTableColumns(user, sort, handleStateFunc)}
                                             dataSource={data[session]}
-                                            rowKey={record => record.uid}
+                                            rowKey={(record) => record.uid}
                                             pagination={false}
                                             onChange={handleChange}
                                             style={
                                                 index !== 0
-                                                    ? {
-                                                        borderLeft: `1px solid ${theme(
-                                                            'color_grey_3'
-                                                        )}`
-                                                    }
+                                                    ? { borderLeft: `1px solid ${theme('color_grey_3')}` }
                                                     : null
                                             }
                                             className="table-attendees"
@@ -235,29 +167,17 @@ function List() {
                                     <Col
                                         span={24 / sessions.length || 1}
                                         style={
-                                            index !== 0
-                                                ? {
-                                                    borderLeft: `1px solid ${theme(
-                                                        'color_grey_3'
-                                                    )}`
-                                                }
-                                                : null
+                                            index !== 0 ? { borderLeft: `1px solid ${theme('color_grey_3')}` } : null
                                         }
                                     >
                                         <Table
                                             columns={statTableColumns}
-                                            dataSource={
-                                                stats.statsTableData[session]
-                                            }
-                                            rowKey={record => `stats_${record.uid}`}
+                                            dataSource={stats.statsTableData[session]}
+                                            rowKey={(record) => `stats_${record.uid}`}
                                             pagination={false}
                                             style={
                                                 index !== 0
-                                                    ? {
-                                                        borderLeft: `1px solid ${theme(
-                                                            'color_grey_3'
-                                                        )}`
-                                                    }
+                                                    ? { borderLeft: `1px solid ${theme('color_grey_3')}` }
                                                     : null
                                             }
                                         />
@@ -276,15 +196,13 @@ function List() {
             >
                 <HeadcountForm
                     data={modalContent}
-                    onCancel={() => handleStateFunc({
-                        showModal: false,
-                        modalContent: null
-                    })}
-                    onSubmit={(formData, type) => setAttendance(
-                        { date, ...formData },
-                        type,
-                        handleStateFunc
-                    )}
+                    onCancel={() =>
+                        handleStateFunc({
+                            showModal: false,
+                            modalContent: null,
+                        })
+                    }
+                    onSubmit={(formData, type) => setAttendance({ date, ...formData }, type, handleStateFunc)}
                 />
             </Modal>
         </Container>
