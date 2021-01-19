@@ -39,6 +39,11 @@ export const GlobalStyle = createGlobalStyle`
         }
     }
 
+    mark {
+        background-color: ${theme('color_yellow_1')};
+        color: ${theme('color_black_2')};
+    }
+
     /* *** Ant Design Overrides *** */
     /* Only put styles here when you don't have a variable to override for the component */
     .ant-btn-secondary {

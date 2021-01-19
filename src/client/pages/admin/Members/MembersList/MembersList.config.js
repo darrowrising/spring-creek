@@ -3,27 +3,24 @@ import { MoreOutlined } from '@ant-design/icons';
 import { Tag, Menu, Dropdown } from 'antd';
 // components
 import Status from '../../../../components/Status/Status';
+// configs
+import { organizations } from '../../../../../configs/organizations.configs';
 // utils
 import { markSearchValue } from '../../../../utils/search.util';
 
+const { Item } = Menu;
+
 const menu = (record) => (
     <Menu>
-        <Menu.Item onClick={() => record.onClick(record, 'edit')}>Edit</Menu.Item>
-        {record?.status === 'invited' && (
-            <Menu.Item onClick={() => record.onClick(record, 'resend-invite')}>Resend Invite</Menu.Item>
+        <Item onClick={() => record.onClick(record, 'edit')}>Edit</Item>
+        <Item onClick={() => record.onClick(record, 'combine')}>Combine Records</Item>
+        {record?.status !== 'deactivated' && (
+            <Item onClick={() => record.onClick(record, 'deactivate')}>Deactivate</Item>
         )}
-        {record?.status === 'active' && (
-            <Menu.Item onClick={() => record.onClick(record, 'reset-password')}>Reset Password</Menu.Item>
-        )}
-        {
-            <Menu.Item onClick={() => record.onClick(record, 'remove-from-org')}>
-                {`Remove from ${record?.orgName}`}
-            </Menu.Item>
-        }
     </Menu>
 );
 
-export const tableHeaders = (filters, teams = [], sort, searchValue) => [
+export const tableHeaders = (filters, sort, searchValue) => [
     {
         title: 'Name',
         dataIndex: 'displayName',
@@ -41,34 +38,29 @@ export const tableHeaders = (filters, teams = [], sort, searchValue) => [
         render: (record) => <span dangerouslySetInnerHTML={{ __html: markSearchValue(record, searchValue) }} />,
     },
     {
-        title: 'Roles',
-        dataIndex: 'activeRoles',
-        key: 'activeRoles',
-        render: (activeRoles) => {
-            if (!activeRoles) return '';
+        title: 'Callings',
+        dataIndex: 'callingsDisplay',
+        key: 'callings',
+        render: (record) => <span dangerouslySetInnerHTML={{ __html: markSearchValue(record, searchValue) }} />,
+    },
+    {
+        title: 'Organizations',
+        dataIndex: 'organizations',
+        key: 'organizations',
+        filters:
+            organizations.length > 1 ? organizations.map((item) => ({ text: item?.name, value: item?.name })) : null,
+        filteredValue: filters.organizations || null,
+        onFilter: (value, record) => (record?.organizations || []).includes(value),
+        render: (record) => {
+            if (!record) return '';
+            const orgs = record.map((org) => organizations.find((item) => item.name === org));
 
             return (
                 <span>
-                    {activeRoles.map((role) => (
-                        <Tag key={role?.roleUID}>{role?.roleName}</Tag>
-                    ))}
-                </span>
-            );
-        },
-    },
-    {
-        title: 'Teams',
-        dataIndex: 'activeTeams',
-        key: 'activeTeams',
-        filters: teams.length > 1 ? teams.map((item) => ({ text: item?.name, value: item?.uid })) : null,
-        filteredValue: filters.activeTeams || null,
-        onFilter: (value, record) => (record?.teams || []).includes(value),
-        render: (record) => {
-            if (!record) return '';
-            return (
-                <span>
-                    {record.map((team) => (
-                        <Tag key={team?.teamUID}>{team?.teamName}</Tag>
+                    {orgs.map((org) => (
+                        <Tag key={org?.uid} color={org.color}>
+                            {org?.name}
+                        </Tag>
                     ))}
                 </span>
             );

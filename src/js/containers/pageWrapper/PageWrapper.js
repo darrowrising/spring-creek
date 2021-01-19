@@ -11,6 +11,7 @@ import Program from '../program/Program';
 import Announcements from '../announcements/Announcements';
 import Moderate from '../moderate/Moderate';
 import SingleEvent from '../singleEvent/SingleEvent';
+import Questions from '../../../client/pages/questions/Questions';
 // Utilities
 import { handleURLParams } from '../../utils/qrCodes';
 // Styles
@@ -44,6 +45,7 @@ function PageWrapper({ history, location }) {
                 <Route path="/announcements/:event" component={SingleEvent} />
                 <Route path="/announcements" component={Announcements} />
                 <Route path="/moderate" component={Moderate} />
+                <Route path="/question/:category" component={Questions} />
                 <Route path="*" component={Home} />
             </Switch>
         </div>

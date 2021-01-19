@@ -13,38 +13,38 @@ const programDate = fbDocId;
  * talk
  * music
  * meeting
-*/
+ */
 const programConfig = {
     presiding: 'Bishop Vaughn Kinghorn',
     conducting: 'Peyton Smith',
-    chorister: 'Brandon Andersen',
-    organist: 'Emily Hinchey',
-    opening_hymn: 97,
-    invocation: 'Lyndsey Grimm',
-    sacrament_hymn: 195,
+    chorister: 'Lydia York',
+    organist: 'Shawn Petersen',
+    opening_hymn: 259,
+    invocation: 'Mark Robbins',
+    sacrament_hymn: 176,
     program: [
         {
             type: 'speaker',
-            title: 'Youth Speaker',
+            title: 'Speaker',
             topic: '',
-            value: 'Brandon Andersen',
-            priority: 0
+            value: 'Abby Hansen',
+            priority: 0,
         },
         {
             type: 'speaker',
             title: 'Speaker',
             topic: '',
-            value: 'Garrett Clegg',
-            priority: 1
+            value: 'Josh Cowdin',
+            priority: 1,
         },
     ],
-    closing_hymn: 113,
-    benediction: 'Tim Crowther'
+    closing_hymn: 220,
+    benediction: 'Taryn Lichfield',
 };
 
 function updateWithHymns(program) {
     const { opening_hymn, sacrament_hymn, closing_hymn } = program;
-    const getHymn = number => hymns.find(item => item.number === number);
+    const getHymn = (number) => hymns.find((item) => item.number === number);
     const open = getHymn(opening_hymn);
     const sacrament = getHymn(sacrament_hymn);
     const close = getHymn(closing_hymn);
@@ -56,7 +56,7 @@ function updateWithHymns(program) {
         sacrament_hymn: sacrament ? `#${sacrament.number}` : '',
         sacrament_hymn_title: sacrament.title || '',
         closing_hymn: close ? `#${close.number}` : '',
-        closing_hymn_title: close.title || ''
+        closing_hymn_title: close.title || '',
     };
 }
 
@@ -66,7 +66,7 @@ function updateDate(program) {
 
     return {
         ...program,
-        date
+        date,
     };
 }
 
@@ -76,11 +76,7 @@ async function makeProgramData() {
 
     await db.ref(`/program/${programDate}`).set(program);
 
-    console.log(
-        'Program',
-        color.yellow(programDate),
-        color.green('uploaded successfully')
-    );
+    console.log('Program', color.yellow(programDate), color.green('uploaded successfully'));
     process.exit(0);
 }
 

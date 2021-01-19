@@ -1,7 +1,8 @@
 import styled from 'styled-components';
-import theme from 'theme';
+import { theme } from 'theme';
 
 export const Container = styled.div`
-    color: ${(props) => theme(`color_${props.type}`)(props)};
+    color: ${({ type }) => theme(`color_status_${type}`)};
+    font-weight: bold;
     text-transform: capitalize;
 `;

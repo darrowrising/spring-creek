@@ -1,11 +1,23 @@
 import firebase from 'firebase/app';
 import 'firebase/database';
+import 'firebase/firestore';
 import env from './envHandler';
 import fireConfig from '../../configs/firebase.configs';
 
 firebase.initializeApp(fireConfig[env()?.firebase]);
 
 const fireDB = firebase.database();
+
+export const store = firebase.firestore();
+
+// firebase data handling
+/* single return of firebase doc */
+export const docs = (snapshot) => {
+    if (snapshot?.docs) return snapshot?.docs.map((doc) => doc.data());
+    return snapshot.data();
+};
+/* multilpe from a promise all */
+export const allDocs = (snapshots) => snapshots.map((snap) => docs(snap));
 
 export default fireDB;
 
@@ -45,48 +57,63 @@ export function fbRef(options, success, err) {
         case 'query': {
             /* eslint-disable */ /* TODO: Remove this eslint disable */
             const queries = options?.queries;
-            const promises = queries.map(query => new Promise((resolve) => {
-                ref.orderByChild(query.key).equalTo(query.equalTo).once('value', (snap) => {
-                    const valObject = snap.val() || {};
-                    const successVal = addKeyToObjectValue(valObject);
+            const promises = queries.map(
+                (query) =>
+                    new Promise((resolve) => {
+                        ref.orderByChild(query.key)
+                            .equalTo(query.equalTo)
+                            .once('value', (snap) => {
+                                const valObject = snap.val() || {};
+                                const successVal = addKeyToObjectValue(valObject);
 
-                    resolve(successVal);
-                });
-            }));
+                                resolve(successVal);
+                            });
+                    })
+            );
 
-            return Promise.all(promises).then(function(values) {
-                const result = values.filter(item => item.length >= 1).flatMap(arr => arr);
+            return Promise.all(promises).then(function (values) {
+                const result = values.filter((item) => item.length >= 1).flatMap((arr) => arr);
 
                 successFunc(result);
             });
         }
         case 'remove':
-            return ref.remove().then(() => {
-                const id = docId.split('/').pop();
-                successFunc(id);
-            })
+            return ref
+                .remove()
+                .then(() => {
+                    const id = docId.split('/').pop();
+                    successFunc(id);
+                })
                 .catch((error) => {
                     errorFunc(error);
                 });
         case 'update':
-            return ref.update(data).then(() => {
-                successFunc(data);
-            })
+            return ref
+                .update(data)
+                .then(() => {
+                    successFunc(data);
+                })
                 .catch((error) => {
                     errorFunc(error);
                 });
         case 'set':
-            return ref.set(data).then(() => {
-                successFunc(data);
-            })
+            return ref
+                .set(data)
+                .then(() => {
+                    successFunc(data);
+                })
                 .catch((error) => {
                     errorFunc(error);
                 });
         default:
-            return fireDB.ref(options).once('value', (snap) => {
-                const val = snap.exists() ? snap.val() : 'No Data';
+            return fireDB.ref(options).once(
+                'value',
+                (snap) => {
+                    const val = snap.exists() ? snap.val() : 'No Data';
 
-                successFunc(val);
-            }, error => errorFunc(error));
+                    successFunc(val);
+                },
+                (error) => errorFunc(error)
+            );
     }
 }

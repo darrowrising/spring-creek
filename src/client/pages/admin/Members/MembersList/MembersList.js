@@ -10,7 +10,7 @@ import { Container, Wrapper, Bar } from './MembersList.styles';
 
 const { Search } = Input;
 
-function MembersList({ members, loading, memberState }) {
+function MembersList({ members, loading, memberState, onClick }) {
     // hooks
     const [filters, setFilters] = useState({});
     const [list, setList] = useState([]);
@@ -18,7 +18,7 @@ function MembersList({ members, loading, memberState }) {
     const [searchValue, setSearchValue] = useState('');
     // data
     const columns = tableHeaders(filters, sort, searchValue);
-    const data = list.map((items) => ({ ...items, memberState }));
+    const data = list.map((items) => ({ ...items, memberState, onClick }));
     // handlers
     const handleChange = (pagination, antFilters, sorter) => {
         setFilters(antFilters);
@@ -49,6 +49,9 @@ function MembersList({ members, loading, memberState }) {
     return (
         <Container>
             <Bar>
+                <Button className="left" onClick={() => onClick({}, 'edit')}>
+                    Add Member
+                </Button>
                 <Button onClick={handleClear}>Clear Filters and Sort</Button>
                 <Search placeholder="search" onChange={handleSearch} style={{ width: 200 }} value={searchValue} />
             </Bar>
@@ -70,6 +73,7 @@ MembersList.propTypes = {
     members: arrayOf().isRequired,
     loading: bool.isRequired,
     memberState: func.isRequired,
+    onClick: func.isRequired,
 };
 
 export default MembersList;
