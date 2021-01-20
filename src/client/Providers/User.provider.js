@@ -9,7 +9,9 @@ import { buildPermissions } from '../utils/permissions.utils';
 export const UserContext = createContext({ user: null, loading: true });
 
 function UserProvider({ children }) {
+    // hooks
     const [user, setUser] = useState({ user: null, loading: true });
+    // handlers
     const filterUserData = (userAuth, userData) => ({
         // pull out the values we want from the larger object and return them below.
         displayName: `${userData?.firstName} ${userData?.lastName}`,

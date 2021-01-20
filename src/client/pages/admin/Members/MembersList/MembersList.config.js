@@ -5,8 +5,10 @@ import { Tag, Menu, Dropdown } from 'antd';
 import Status from '../../../../components/Status/Status';
 // configs
 import { organizations } from '../../../../../configs/organizations.configs';
+import { dateSimple } from '../../../../../configs/dateFormats.configs';
 // utils
 import { markSearchValue } from '../../../../utils/search.util';
+import { utc } from '../../../../utils/date.utils';
 
 const { Item } = Menu;
 
@@ -65,6 +67,12 @@ export const tableHeaders = (filters, sort, searchValue) => [
                 </span>
             );
         },
+    },
+    {
+        title: 'Last Visted',
+        dataIndex: 'lastVisited',
+        key: 'lastVisited',
+        render: (record) => (record ? utc(record, dateSimple) : ''),
     },
     {
         title: 'Status',

@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useEffect, useContext } from 'react';
 import { oneOfType, any, string } from 'prop-types';
-
+import { useLocation } from 'react-router-dom';
+// providers
+import { UserContext } from '../../providers/User.provider';
 // components
 import Header from '../../components/Header/Header';
 // import Footer from '../../components/Footer/Footer';
@@ -8,18 +10,21 @@ import Header from '../../components/Header/Header';
 
 // utils
 // import { getStorage, removeStorage } from '../../utils/localStorage.utils';
+import { updateMemberStats } from '../../utils/analytics.utils';
 // styles
 import { Container, Page, PageWrapper, Title, MenuStyled } from './Main.styles';
 
 function Main({ children, title }) {
-    // const [openDrawer, setMobileDrawer] = useState(false);
-    // const animation = getStorage('animation');
+    // hooks
+    const { user } = useContext(UserContext);
+    const { pathname } = useLocation();
 
-    // useEffect(() => {
-    //     if (animation) {
-    //         removeStorage('animation');
-    //     }
-    // }, []);
+    useEffect(() => {
+        if (user) {
+            const { stats } = user;
+            updateMemberStats(user.uid, stats, pathname);
+        }
+    }, [pathname]);
 
     return (
         <Container>
