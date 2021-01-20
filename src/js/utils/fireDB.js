@@ -1,4 +1,5 @@
 import firebase from 'firebase/app';
+import 'firebase/auth';
 import 'firebase/database';
 import 'firebase/firestore';
 import env from './envHandler';
@@ -9,6 +10,8 @@ firebase.initializeApp(fireConfig[env()?.firebase]);
 const fireDB = firebase.database();
 
 export const store = firebase.firestore();
+
+export const auth = firebase.auth();
 
 // firebase data handling
 /* single return of firebase doc */

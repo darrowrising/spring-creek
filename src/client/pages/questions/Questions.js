@@ -8,7 +8,7 @@ import Layout from '../../layouts/Old/Old';
 import { handleState } from '../../utils/state.utils';
 import { saveQuestion } from './Questions.utils';
 // styles
-import { Title, Description, Label, ButtonStyled, Message } from './Questions.styles';
+import { Title, Description, Label, ButtonStyled, Message, Sub } from './Questions.styles';
 
 const { TextArea } = Input;
 
@@ -47,9 +47,9 @@ function Questions({ match }) {
             {errorMessage && <Alert type="error" message={errorMessage} />}
             <Title>We want to hear from you</Title>
             <Description>
-                For our 5th Sunday this month we want to hear from you. Please provide a question or concern about how
-                you are feeling right now. All questions and comments are anonymous.
+                For our 5th Sunday this month we would like to answer questions you might have. Please submit below.
             </Description>
+            <Sub>All questions submitted are anonymous.</Sub>
             <Label>Your Question</Label>
             <TextArea onChange={(event) => set({ question: event.target.value })} value={question} />
             <ButtonStyled disabled={!question} size="large" type="primary" onClick={handleSubmit}>

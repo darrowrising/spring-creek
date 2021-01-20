@@ -4,7 +4,7 @@ import { dayjs, utc } from './date.utils';
 // configs
 import { dateSimple } from '../../configs/dateFormats.configs';
 
-export function updateMemberStats(memberId, currentStats, page) {
+export function updateMemberStats(memberId, currentStats = {}, page) {
     const statPage = currentStats?.stats[page] || {};
     const data = { lastVisited: utc() };
 

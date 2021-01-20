@@ -10,4 +10,5 @@ export function utc(date, format) {
     return dayjsLib.utc(date).format();
 }
 
+export const comingSunday = dayjsLib().day(7);
 export const dayjs = dayjsLib;
