@@ -4,6 +4,7 @@ import { Tabs } from 'antd';
 // layouts
 import Layout from '../../../layouts/Main/Main';
 // components
+import PageHeader from '../../../components/PageHeader/PageHeader';
 import List from './List/List';
 import OverLimit from './OverLimit/OverLimit';
 // configs
@@ -15,7 +16,8 @@ const { TabPane } = Tabs;
 
 function Attendance() {
     return (
-        <Layout title="Sacrament Attendance">
+        <Layout>
+            <PageHeader>Sacrament Attendance</PageHeader>
             <Container>
                 <Description>{`COVID-19: To help keep our numbers for sacrament attendance under the states guidlines of ${covidMaxCount} people.`}</Description>
                 <Tabs type="card">

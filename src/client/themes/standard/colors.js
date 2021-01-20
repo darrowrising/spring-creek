@@ -67,4 +67,7 @@ export const colors = {
     color_status_pending: core.color_orange_2,
     color_status_inactive: core.color_grey_1,
     color_status_deactivated: core.color_red_1,
+    // Categories
+    color_category_youth: core.color_green_3,
+    color_category_adult: core.color_orange_1,
 };

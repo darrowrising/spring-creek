@@ -1,9 +1,7 @@
 import styled from 'styled-components';
 import theme from 'theme';
 
-export const Container = styled.section`
-    margin-top: 47px;
-`;
+export const Container = styled.section``;
 
 export const Wrapper = styled.div`
     height: 560px;

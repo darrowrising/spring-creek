@@ -10,6 +10,7 @@ import Dashboard from './Dashboard/Dashboard';
 import ProgramMaker from './ProgramMaker/ProgramMaker';
 import Members from './Members/Members';
 import Attendance from './Attendance/Attendance';
+import Questions from './Questions/Questions';
 import Login from '../Login/Login';
 import SignUp from '../SignUp/SignUp';
 import NotFoundPage from '../NotFound/NotFound';
@@ -23,6 +24,7 @@ const list = {
     Attendance,
     Members,
     ProgramMaker,
+    Questions,
 };
 
 function IndexRoutes() {

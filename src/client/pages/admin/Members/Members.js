@@ -9,7 +9,7 @@ import EditMember from './AddEditMember/AddEditMember';
 import { getMembers } from './Members.utils';
 import { handleState } from '../../../utils/state.utils';
 // styles
-import { Container } from './Members.styles';
+// import { Container } from './Members.styles';
 
 const initialState = {
     loading: true,
@@ -55,9 +55,7 @@ function Members() {
 
     return (
         <Layout>
-            <Container>
-                <MembersList members={members} loading={loading} memberState={set} onClick={handleOnClick} />
-            </Container>
+            <MembersList members={members} loading={loading} memberState={set} onClick={handleOnClick} />
             <Modal
                 header={null}
                 footer={null}

@@ -24,6 +24,12 @@ export const adminMenu = [
         permissions: ['calling:Ward_Clerk'],
     },
     {
+        text: 'Questions List',
+        path: '/admin/questions',
+        component: 'Questions',
+        permissions: ['org:Bishopric'],
+    },
+    {
         text: 'Main Site',
         path: '/',
         type: 'external', // default is a nav link

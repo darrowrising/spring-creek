@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 // components
 import Layout from '../../layouts/Old/Old';
 // utils
-import { buildCalendlyScript } from './SacramentSignup.utils';
+import { buildCalendlyScript, removeCalendlyScript } from './SacramentSignup.utils';
 import { dayjs, comingSunday } from '../../utils/date.utils';
 // configs
 import { calendlyDate, calendlyMonth } from '../../../configs/dateFormats.configs';
@@ -27,6 +27,7 @@ function SacramentSignup() {
 
     useEffect(() => {
         buildCalendlyScript();
+        return removeCalendlyScript();
     }, []);
 
     return (

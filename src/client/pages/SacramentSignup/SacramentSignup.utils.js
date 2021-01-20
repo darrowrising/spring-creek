@@ -15,3 +15,7 @@ export function buildCalendlyScript() {
         document.body.appendChild(script);
     }
 }
+
+export function removeCalendlyScript() {
+    document.getElementById(calendlyId).remove();
+}

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Button, Input } from 'antd';
 import { arrayOf, bool, func } from 'prop-types';
+// components
+import PageHeader from '../../../../components/PageHeader/PageHeader';
 // utils
 import { searchList } from './MembersList.utils';
 // configs
@@ -48,6 +50,7 @@ function MembersList({ members, loading, memberState, onClick }) {
 
     return (
         <Container>
+            <PageHeader>Members</PageHeader>
             <Bar>
                 <Button className="left" onClick={() => onClick({}, 'edit')}>
                     Add Member
