@@ -10,10 +10,10 @@ export const sacramentSchedule = [
     'Jan 17th - (I-Z)',
     'Jan 24th - (A-H)',
     'Jan 31st - (I-Z)',
-    'Feb 7th - (I-Z)',
-    'Feb 14th - (A-H)',
-    'Feb 21st - (I-Z)',
-    'Feb 28th - (A-H)',
+    'Feb 7th - (A-H)',
+    'Feb 14th - (I-Z)',
+    'Feb 21st - (A-H)',
+    'Feb 28th - (I-Z)',
 ];
 export const attendingDates = [
     'July 19, 2020',

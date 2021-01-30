@@ -17,29 +17,22 @@ const programDate = fbDocId;
 const programConfig = {
     presiding: 'Bishop Vaughn Kinghorn',
     conducting: 'Peyton Smith',
-    chorister: 'Lydia York',
-    organist: 'Shawn Petersen',
-    opening_hymn: 259,
-    invocation: 'Mark Robbins',
-    sacrament_hymn: 176,
+    chorister: 'Avery Kadri',
+    organist: 'Emily Hinchey',
+    opening_hymn: 123,
+    invocation: '',
+    sacrament_hymn: 184,
     program: [
         {
             type: 'speaker',
             title: 'Speaker',
             topic: '',
-            value: 'Abby Hansen',
+            value: 'Preston Bailey',
             priority: 0,
         },
-        {
-            type: 'speaker',
-            title: 'Speaker',
-            topic: '',
-            value: 'Josh Cowdin',
-            priority: 1,
-        },
     ],
-    closing_hymn: 220,
-    benediction: 'Taryn Lichfield',
+    closing_hymn: 227,
+    benediction: 'Melissa Ellis',
 };
 
 function updateWithHymns(program) {
