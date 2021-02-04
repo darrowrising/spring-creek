@@ -5,13 +5,7 @@ import moment from 'moment';
 import SpecialAnnouncement from '../../components/special/Special';
 import { GAEvent } from '../../components/analytics/Analytics';
 // utils
-import {
-    meetingTimes,
-    sundaySchoolTime,
-    sacramentSchedule,
-    covidMaxCount,
-    broadcastLink,
-} from '../../../configs/unit.config';
+import { meetingTimes, sundaySchoolTime, covidMaxCount, broadcastLink } from '../../../configs/unit.config';
 // configs
 import dateFormats from '../../configs/dateFormats';
 // styles
@@ -73,12 +67,6 @@ function Home() {
                         <Link className="block sign-up" to="/sacrament-signup" onClick={handleClick}>
                             Sign Up
                         </Link>
-                        <h4>Families to Attend In Person</h4>
-                        <ul className="schedule-list center">
-                            {sacramentSchedule.map((item) => (
-                                <li key={item}>{item}</li>
-                            ))}
-                        </ul>
                         <h4>Broadcast Information</h4>
                         <a href={broadcastLink} target="_blank" rel="noreferrer">
                             Meetinghouse Webcast

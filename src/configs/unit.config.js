@@ -2,7 +2,7 @@ export const meetingTimes = ['09:00'];
 export const sundaySchoolTime = '10:30';
 export const broadcastLink = 'http://mywebcast.churchofjesuschrist.org/Events/farmingtonutahweststake';
 
-export const covidMaxCount = 99;
+export const covidMaxCount = 150;
 
 export const sacramentSchedule = [
     'Jan 3rd - (I-Z)',
