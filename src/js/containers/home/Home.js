@@ -5,7 +5,7 @@ import moment from 'moment';
 import SpecialAnnouncement from '../../components/special/Special';
 import { GAEvent } from '../../components/analytics/Analytics';
 // utils
-import { meetingTimes, sundaySchoolTime, covidMaxCount, broadcastLink } from '../../../configs/unit.config';
+import { meetingTimes, sundaySchoolTime, covidMaxCount, broadcastLink } from '../../../configs/unit.config'; /* eslint-disable-line */
 // configs
 import dateFormats from '../../configs/dateFormats';
 // styles
@@ -68,6 +68,8 @@ function Home() {
                             Sign Up
                         </Link>
                         <h4>Broadcast Information</h4>
+                        <span style={{ color: 'red' }}>A new link is coming</span>
+                        {/*
                         <a href={broadcastLink} target="_blank" rel="noreferrer">
                             Meetinghouse Webcast
                         </a>
@@ -81,7 +83,7 @@ function Home() {
                             </li>
                             <li>Click on &ldquo;Spring Creek Ward Sacrament Meetings&rdquo;</li>
                             <li>Please add your last name (this helps us get attendance)</li>
-                        </ol>
+                        </ol> */}
                         <h3>Adult/Youth Second Hour Classes</h3>
                         <div>{`${moment(sundaySchoolTime, 'hh:mm').format(time)} (Zoom)`}</div>
                         <h3>Stake Website</h3>

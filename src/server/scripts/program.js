@@ -1,8 +1,7 @@
-import moment from 'moment';
 import color from 'colors';
-
 // utils
 import { db } from '../utils/firebase.utils';
+import { dayjs } from '../../client/utils/date.utils';
 import { fbDocId } from '../../js/utils/date';
 // configs
 import hymns from '../../configs/hymns.config.json';
@@ -17,29 +16,29 @@ const programDate = fbDocId;
 const programConfig = {
     presiding: 'Bishop Vaughn Kinghorn',
     conducting: 'Shay Rolfson',
-    chorister: 'Avery Kadri',
+    chorister: 'Brandon Andersen',
     organist: 'Emily Hinchey',
-    opening_hymn: 123,
-    invocation: 'Omar Kadri',
-    sacrament_hymn: 184,
+    opening_hymn: 105,
+    invocation: 'Collin Davidson',
+    sacrament_hymn: 172,
     program: [
         {
             type: 'speaker',
             title: 'Youth Speaker',
             topic: '',
-            value: 'Mykelle Rolfson',
+            value: 'Hannah Frasure',
             priority: 0,
         },
         {
             type: 'speaker',
             title: 'Speaker',
             topic: '',
-            value: 'Preston Bailey',
+            value: 'Chad Milne',
             priority: 1,
         },
     ],
-    closing_hymn: 227,
-    benediction: 'Melissa Ellis',
+    closing_hymn: 270,
+    benediction: 'Megan Dyreng',
 };
 
 function updateWithHymns(program) {
@@ -61,8 +60,8 @@ function updateWithHymns(program) {
 }
 
 function updateDate(program) {
-    const parseDate = moment(programDate, 'YYMMDD_hhmm');
-    const date = moment.utc(parseDate).format();
+    const parseDate = dayjs(programDate, 'YYMMDD_hhmm');
+    const date = dayjs.utc(parseDate).format();
 
     return {
         ...program,
