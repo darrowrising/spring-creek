@@ -16,7 +16,7 @@ const programDate = fbDocId;
  */
 const programConfig = {
     presiding: 'Bishop Vaughn Kinghorn',
-    conducting: 'Peyton Smith',
+    conducting: 'Shay Rolfson',
     chorister: 'Avery Kadri',
     organist: 'Emily Hinchey',
     opening_hymn: 123,
