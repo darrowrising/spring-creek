@@ -8,6 +8,7 @@ import { saveMember } from './AddEditMember.utils';
 // configs
 import { callings } from '../../../../../configs/callings.configs';
 import { organizations } from '../../../../../configs/organizations.configs';
+import { roles } from '../../../../../configs/roles.configs';
 // styles
 // import {} from './AddEditMember.styles';
 
@@ -98,6 +99,13 @@ function AddEditMember({ content, setParentState }) {
                             <Option key={item.name}>
                                 <Tag color={item.color}>{item.name}</Tag>
                             </Option>
+                        ))}
+                    </Select>
+                </Form.Item>
+                <Form.Item label="Roles" name="roles">
+                    <Select mode="multiple" allowClear style={{ width: '100%' }} placeholder="Please select">
+                        {roles.map((item) => (
+                            <Option key={item.name}>{item.name}</Option>
                         ))}
                     </Select>
                 </Form.Item>

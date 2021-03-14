@@ -6,6 +6,7 @@ import Status from '../../../../components/Status/Status';
 // configs
 import { organizations } from '../../../../../configs/organizations.configs';
 import { dateSimple } from '../../../../../configs/dateFormats.configs';
+import { roles } from '../../../../../configs/roles.configs';
 // utils
 import { markSearchValue } from '../../../../utils/search.util';
 import { utc } from '../../../../utils/date.utils';
@@ -40,10 +41,12 @@ export const tableHeaders = (filters, sort, searchValue) => [
         render: (record) => <span dangerouslySetInnerHTML={{ __html: markSearchValue(record, searchValue) }} />,
     },
     {
-        title: 'Callings',
-        dataIndex: 'callingsDisplay',
-        key: 'callings',
-        render: (record) => <span dangerouslySetInnerHTML={{ __html: markSearchValue(record, searchValue) }} />,
+        title: 'Roles',
+        dataIndex: 'roles',
+        key: 'roles',
+        filters: roles.length >= 1 ? roles.map((item) => ({ text: item?.name, value: item?.name })) : null,
+        filteredValue: filters.roles || null,
+        onFilter: (value, record) => (record?.roles || []).includes(value),
     },
     {
         title: 'Organizations',

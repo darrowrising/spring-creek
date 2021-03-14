@@ -1,6 +1,6 @@
-import moment from 'moment';
+/* eslint-disable */
 import color from 'colors';
-
+import moment from 'moment';
 // utils
 import { db } from '../utils/firebase.utils';
 import { fbDocId } from '../../js/utils/date';
@@ -16,30 +16,37 @@ const programDate = fbDocId;
  */
 const programConfig = {
     presiding: 'Bishop Vaughn Kinghorn',
-    conducting: 'Peyton Smith',
-    chorister: 'Avery Kadri',
+    conducting: 'Bishop Vaughn Kinghorn',
+    chorister: 'Brandon Andersen',
     organist: 'Emily Hinchey',
-    opening_hymn: 123,
-    invocation: 'Omar Kadri',
-    sacrament_hymn: 184,
+    opening_hymn: 81,
+    invocation: 'Joe Davidson',
+    sacrament_hymn: 180,
     program: [
         {
-            type: 'speaker',
+            type: 'talk',
             title: 'Youth Speaker',
             topic: '',
-            value: 'Mykelle Rolfson',
+            value: 'Gage Lichfield',
             priority: 0,
         },
         {
-            type: 'speaker',
-            title: 'Speaker',
+            type: 'talk',
+            title: 'Youth Speaker',
             topic: '',
-            value: 'Preston Bailey',
+            value: 'Addy Grimm',
             priority: 1,
         },
+        {
+            type: 'talk',
+            title: 'Speaker',
+            topic: '',
+            value: 'Cody Stewart',
+            priority: 2,
+        },
     ],
-    closing_hymn: 227,
-    benediction: 'Melissa Ellis',
+    closing_hymn: 246,
+    benediction: 'Erin Dangerfield',
 };
 
 function updateWithHymns(program) {
