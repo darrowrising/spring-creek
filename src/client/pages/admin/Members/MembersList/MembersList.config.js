@@ -7,6 +7,7 @@ import Status from '../../../../components/Status/Status';
 import { organizations } from '../../../../../configs/organizations.configs';
 import { dateSimple } from '../../../../../configs/dateFormats.configs';
 import { roles } from '../../../../../configs/roles.configs';
+import { callings } from '../../../../../configs/callings.configs';
 // utils
 import { markSearchValue } from '../../../../utils/search.util';
 import { utc } from '../../../../utils/date.utils';
@@ -28,6 +29,7 @@ export const tableHeaders = (filters, sort, searchValue) => [
         title: 'Name',
         dataIndex: 'displayName',
         key: 'displayName',
+        fixed: 'left',
         sorter: (a, b) => a.displayName.localeCompare(b.displayName),
         sortOrder: sort.columnKey === 'displayName' && sort.order,
         render: (record) => <span dangerouslySetInnerHTML={{ __html: markSearchValue(record, searchValue) }} />,
@@ -72,9 +74,23 @@ export const tableHeaders = (filters, sort, searchValue) => [
         },
     },
     {
+        title: 'Callings',
+        dataIndex: 'callings',
+        key: 'callings',
+        filters: callings.length >= 1 ? callings.map((item) => ({ text: item?.name, value: item?.name })) : null,
+        filteredValue: filters.callings || null,
+        onFilter: (value, record) => (record?.callings || []).includes(value),
+    },
+    {
         title: 'Last Visted',
         dataIndex: 'lastVisited',
         key: 'lastVisited',
+        render: (record) => (record ? utc(record, dateSimple) : ''),
+    },
+    {
+        title: 'Created On',
+        dataIndex: 'createdOn',
+        key: 'createdOn',
         render: (record) => (record ? utc(record, dateSimple) : ''),
     },
     {
@@ -97,5 +113,6 @@ export const tableHeaders = (filters, sort, searchValue) => [
             </Dropdown>
         ),
         width: '50px',
+        fixed: 'right',
     },
 ];

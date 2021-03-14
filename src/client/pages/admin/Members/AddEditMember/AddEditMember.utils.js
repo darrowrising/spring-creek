@@ -1,6 +1,7 @@
 import shortId from 'shortid';
 import { notification } from 'antd';
 // utils
+import { utc } from '../../../../utils/date.utils';
 import { store as db } from '../../../../utils/firebase.utils';
 
 /* eslint-disable */
@@ -23,12 +24,15 @@ export async function saveMember(record, set, setParent) {
             delete obj.displayName;
             delete obj.memberState;
             delete obj.onClick;
+            obj.status = !status ? 'active' : obj.status;
             await ref.update(obj);
             message = 'Member Updated';
         } else {
             await ref.set({
                 ...obj,
                 uid,
+                createdOn: utc(),
+                status: 'active',
             });
             message = 'Member Created';
         }

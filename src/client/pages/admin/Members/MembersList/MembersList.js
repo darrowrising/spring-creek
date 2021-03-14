@@ -66,6 +66,7 @@ function MembersList({ members, loading, memberState, onClick }) {
                     loading={loading}
                     onChange={handleChange}
                     rowKey={(record) => record.uid}
+                    scroll={{ x: 'max-content' }}
                 />
             </Wrapper>
         </Container>

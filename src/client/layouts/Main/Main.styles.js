@@ -31,6 +31,7 @@ export const PageWrapper = styled.div`
 export const Page = styled.main`
     height: 100%;
     min-height: 100vh;
+    overflow-y: hidden;
     padding: 20px 32px 75px;
     width: 100%;
 

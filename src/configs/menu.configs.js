@@ -15,7 +15,7 @@ export const adminMenu = [
         text: 'Attendance',
         path: '/admin/attendance',
         component: 'Attendance',
-        permissions: ['org:Bishopric', 'org:Ward_Council', 'org:Relief_Society_Presidency'],
+        permissions: ['org:Bishopric', 'org:Ward_Council', 'org:Relief_Society_Presidency', 'page:attendance'],
     },
     {
         text: 'Members',
