@@ -1,6 +1,6 @@
 export const meetingTimes = ['09:00'];
 export const sundaySchoolTime = '10:30';
-export const broadcastLink = 'http://mywebcast.churchofjesuschrist.org/Events/farmingtonutahweststake';
+export const broadcastLink = 'https://farmingtonwest.org/ward/spring_creek';
 
 export const covidMaxCount = 150;
 
@@ -42,4 +42,21 @@ export const attendingDates = [
     'February 14, 2021',
     'February 21, 2021',
     'February 28, 2021',
+    'March 7, 2021',
+    'March 14, 2021',
+    'March 21, 2021',
+    'March 28, 2021',
+    'April 4, 2021',
+    'April 11, 2021',
+    'April 18, 2021',
+    'April 25, 2021',
+    'May 2, 2021',
+    'May 9, 2021',
+    'May 16, 2021',
+    'May 23, 2021',
+    'May 30, 2021',
+    'June 6, 2021',
+    'June 13 2021',
+    'June 20, 2021',
+    'June 27, 2021',
 ];

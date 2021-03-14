@@ -52,7 +52,7 @@ function MembersList({ members, loading, memberState, onClick }) {
         <Container>
             <PageHeader>Members</PageHeader>
             <Bar>
-                <Button className="left" onClick={() => onClick({}, 'edit')}>
+                <Button type="primary" className="left" onClick={() => onClick({}, 'edit')}>
                     Add Member
                 </Button>
                 <Button onClick={handleClear}>Clear Filters and Sort</Button>

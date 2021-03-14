@@ -15,6 +15,10 @@ export const Bar = styled.div`
     button {
         margin-right: 15px;
     }
+
+    .left {
+        margin-right: auto;
+    }
 `;
 
 export const StatusColor = styled.span`

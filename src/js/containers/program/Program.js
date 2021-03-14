@@ -48,7 +48,7 @@ function Program({ history }) {
     const date = state?.date ? moment(state?.date).format(dateTime) : moment(fbDocId, fbDocId_long).format(dateTime);
     const onstate = (snap) => {
         if (snap.exists()) return setState({ ...snap.val(), loading: false });
-        return setState({ loading: false });
+        return setState({ ...state, loading: false });
     };
 
     useEffect(() => {

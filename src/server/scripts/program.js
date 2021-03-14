@@ -1,7 +1,8 @@
+/* eslint-disable */
 import color from 'colors';
+import moment from 'moment';
 // utils
 import { db } from '../utils/firebase.utils';
-import { dayjs } from '../../client/utils/date.utils';
 import { fbDocId } from '../../js/utils/date';
 // configs
 import hymns from '../../configs/hymns.config.json';
@@ -15,30 +16,37 @@ const programDate = fbDocId;
  */
 const programConfig = {
     presiding: 'Bishop Vaughn Kinghorn',
-    conducting: 'Shay Rolfson',
+    conducting: 'Bishop Vaughn Kinghorn',
     chorister: 'Brandon Andersen',
     organist: 'Emily Hinchey',
-    opening_hymn: 105,
-    invocation: 'Collin Davidson',
-    sacrament_hymn: 172,
+    opening_hymn: 81,
+    invocation: 'Joe Davidson',
+    sacrament_hymn: 180,
     program: [
         {
-            type: 'speaker',
+            type: 'talk',
             title: 'Youth Speaker',
             topic: '',
-            value: 'Hannah Frasure',
+            value: 'Gage Lichfield',
             priority: 0,
         },
         {
-            type: 'speaker',
-            title: 'Speaker',
+            type: 'talk',
+            title: 'Youth Speaker',
             topic: '',
-            value: 'Chad Milne',
+            value: 'Addy Grimm',
             priority: 1,
         },
+        {
+            type: 'talk',
+            title: 'Speaker',
+            topic: '',
+            value: 'Cody Stewart',
+            priority: 2,
+        },
     ],
-    closing_hymn: 270,
-    benediction: 'Megan Dyreng',
+    closing_hymn: 246,
+    benediction: 'Erin Dangerfield',
 };
 
 function updateWithHymns(program) {
@@ -60,8 +68,8 @@ function updateWithHymns(program) {
 }
 
 function updateDate(program) {
-    const parseDate = dayjs(programDate, 'YYMMDD_hhmm');
-    const date = dayjs.utc(parseDate).format();
+    const parseDate = moment(programDate, 'YYMMDD_hhmm');
+    const date = moment.utc(parseDate).format();
 
     return {
         ...program,

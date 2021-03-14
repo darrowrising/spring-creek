@@ -68,22 +68,10 @@ function Home() {
                             Sign Up
                         </Link>
                         <h4>Broadcast Information</h4>
-                        <span style={{ color: 'red' }}>A new link is coming</span>
-                        {/*
+                        <div>Zoom link to the broadcast.</div>
                         <a href={broadcastLink} target="_blank" rel="noreferrer">
-                            Meetinghouse Webcast
+                            {broadcastLink}
                         </a>
-                        <ol className="schedule-list center" style={{ width: '80%' }}>
-                            <li>
-                                (Do Not use Firefox!) click &ldquo;
-                                <a href={broadcastLink} target="_blank" rel="noreferrer">
-                                    here
-                                </a>
-                                &rdquo; or link above.
-                            </li>
-                            <li>Click on &ldquo;Spring Creek Ward Sacrament Meetings&rdquo;</li>
-                            <li>Please add your last name (this helps us get attendance)</li>
-                        </ol> */}
                         <h3>Adult/Youth Second Hour Classes</h3>
                         <div>{`${moment(sundaySchoolTime, 'hh:mm').format(time)} (Zoom)`}</div>
                         <h3>Stake Website</h3>
