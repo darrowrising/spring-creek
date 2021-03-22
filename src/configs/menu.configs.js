@@ -22,6 +22,7 @@ export const adminMenu = [
         path: '/admin/members',
         component: 'Members',
         permissions: ['calling:Ward_Clerk'],
+        notification: 'newMembers',
     },
     {
         text: 'Questions List',

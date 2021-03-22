@@ -1,15 +1,18 @@
-import React, { useEffect, useState } from 'react';
-// import {} from 'prop-types';
+import React, { useEffect, useState, useContext } from 'react';
 import { Modal } from 'antd';
+// providers
+import { NotificationsContext } from '../../../providers/Notifications.provider';
 // components
 import Layout from '../../../layouts/Main/Main';
 import MembersList from './MembersList/MembersList';
 import EditMember from './AddEditMember/AddEditMember';
+import PageHeader from '../../../components/PageHeader/PageHeader';
+import ModerateNewMembers from './ModerateNewMembers/ModerateNewMembers';
 // utils
 import { getMembers } from './Members.utils';
 import { handleState } from '../../../utils/state.utils';
 // styles
-// import { Container } from './Members.styles';
+import { ModerateContainer } from './Members.styles';
 
 const initialState = {
     loading: true,
@@ -22,6 +25,7 @@ const initialState = {
 function Members() {
     // hooks
     const [state, setState] = useState(initialState);
+    const { newMembers } = useContext(NotificationsContext);
     // data
     const { members, loading, showModal, modalContent, modalTemplate } = state;
     const ModalContentComp = modalTemplate;
@@ -52,9 +56,17 @@ function Members() {
     useEffect(() => {
         getMembers(set);
     }, []);
-
+    /* eslint-disable indent, react/jsx-indent */
     return (
         <Layout>
+            <PageHeader>Members</PageHeader>
+            {newMembers.length !== 0 ? (
+                <ModerateContainer>
+                    {newMembers.map((member) => (
+                        <ModerateNewMembers member={member} />
+                    ))}
+                </ModerateContainer>
+            ) : null}
             <MembersList members={members} loading={loading} memberState={set} onClick={handleOnClick} />
             <Modal
                 header={null}
@@ -67,14 +79,7 @@ function Members() {
             </Modal>
         </Layout>
     );
+    /* eslint-enable indent, react/jsx-indent */
 }
-
-// Members.propTypes = {
-
-// };
-
-// Members.defaultProps = {
-
-// };
 
 export default Members;

@@ -4,7 +4,7 @@ import { ThemeProvider } from 'styled-components';
 
 // providers
 import UserProvider from '../../providers/User.provider';
-// import NotificationProvider from './providers/Notification.provider';
+import NotificationsProvider from '../../providers/Notifications.provider';
 // components
 import Routes from './index.routes';
 // configs
@@ -21,10 +21,12 @@ const themeVariables = theme.variables[theme.name];
 render(
     <ThemeProvider theme={themeVariables}>
         <UserProvider>
-            <>
-                <GlobalStyle />
-                <Routes />
-            </>
+            <NotificationsProvider>
+                <>
+                    <GlobalStyle />
+                    <Routes />
+                </>
+            </NotificationsProvider>
         </UserProvider>
     </ThemeProvider>,
     document.getElementById('app')

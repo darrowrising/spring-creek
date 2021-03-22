@@ -1,10 +1,13 @@
 import React from 'react';
 import { string } from 'prop-types';
-
+// utils
+import { idLink } from './leaders.utils';
+// styles
 import './leaders.less';
 
 function Leaders(props) {
     const { title, value, subValue, className, ...rest } = props;
+    const isCSB = value.includes('CSB');
 
     return (
         <>
@@ -13,7 +16,9 @@ function Leaders(props) {
                     <div className="leaders-wrapper">
                         <span className="leaders-title left">{title}</span>
                         <span className="dot-leaders" />
-                        <span className="leaders-value right">{value}</span>
+                        <span className="leaders-value right">
+                            {isCSB ? <a href={idLink(value)}>{value}</a> : value}
+                        </span>
                     </div>
                     {subValue && (
                         <div className="row subValue-wrapper">

@@ -20,7 +20,7 @@ function Main({ children, title }) {
     const { pathname } = useLocation();
 
     useEffect(() => {
-        if (user) {
+        if (user?.email) {
             const { stats } = user;
             updateMemberStats(user.uid, stats, pathname);
         }

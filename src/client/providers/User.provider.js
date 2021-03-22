@@ -14,25 +14,24 @@ function UserProvider({ children }) {
     // handlers
     const filterUserData = (userAuth, userData) => ({
         // pull out the values we want from the larger object and return them below.
-        displayName: `${userData?.firstName} ${userData?.lastName}`,
-        email: userData?.email,
-        status: userData?.status,
-        organizations: userData?.orgs,
-        permissions: buildPermissions(userData),
-        emailVerified: userAuth?.emailVerified,
-        photoURL: userAuth?.photoURL,
-        uid: userData?.uid,
+        displayName: `${userData?.firstName || ''} ${userData?.lastName || ''}`,
+        email: userData?.email || '',
+        status: userData?.status || '',
+        organizations: userData?.orgs || [],
+        permissions: buildPermissions(userData) || [],
+        emailVerified: userAuth?.emailVerified || false,
+        photoURL: userAuth?.photoURL || '',
+        uid: userData?.uid || '',
     });
 
     useEffect(() => {
         auth.onIdTokenChanged(async (userAuth) => {
             // no user is returned.
-
             if (!userAuth) return setUser({ user: null, loading: false });
 
             // const [, { claims = {} }] = await catchify(userAuth.getIdTokenResult());
             const [error, dbInfoSnapshots] = await catchify(
-                db.collection('members').where('email', '==', userAuth.email).get()
+                db.collection('members').where('email', '==', userAuth?.email).get()
             );
 
             if (error) {

@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { Menu } from 'antd';
+import { Menu, Badge } from 'antd';
 import { NavLink, useLocation } from 'react-router-dom';
 
 // providers
 import { UserContext } from '../../providers/User.provider';
+import { NotificationsContext } from '../../providers/Notifications.provider';
 // utils
 import { signOut } from '../../utils/firebase.utils';
 import { hasPermission } from '../../utils/permissions.utils';
@@ -15,6 +16,7 @@ import { adminMenu } from '../../../configs/menu.configs';
 function MenuComp({ ...rest }) {
     // hooks
     const { user } = useContext(UserContext);
+    const notes = useContext(NotificationsContext);
     const [selected, setSelected] = useState([]);
     const location = useLocation();
     // handlers
@@ -31,13 +33,15 @@ function MenuComp({ ...rest }) {
                 (item) =>
                     hasPermission(user?.permissions, item?.permissions || []) && (
                         <Menu.Item key={item.path}>
-                            {item.type === 'external' ? (
-                                <a href={item.path}>{item.text}</a>
-                            ) : (
-                                <NavLink exact to={item.path}>
-                                    {item.text}
-                                </NavLink>
-                            )}
+                            <Badge count={((notes || [])[item?.notification] || []).length} offset={[13, 7]}>
+                                {item.type === 'external' ? (
+                                    <a href={item.path}>{item.text}</a>
+                                ) : (
+                                    <NavLink exact to={item.path}>
+                                        {item.text}
+                                    </NavLink>
+                                )}
+                            </Badge>
                         </Menu.Item>
                     )
             )}

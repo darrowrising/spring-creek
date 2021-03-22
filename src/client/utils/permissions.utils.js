@@ -5,7 +5,7 @@ export function hasPermission(user = [], compare = []) {
     return user.some((userPermission) => compare.some((comparePermission) => userPermission === comparePermission));
 }
 
-export function buildPermissions(userData) {
+export function buildPermissions(userData = {}) {
     const { callings = [], organizations = [], roles = [] } = userData;
     const permissions = [];
     const construct = (title, group) => {

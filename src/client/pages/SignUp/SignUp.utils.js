@@ -1,10 +1,11 @@
 import shortId from 'shortid';
-
+/* TODO: Remove this eslint disable */
+/* eslint-disable */
 // configs
 import { loginRedirectDefault } from '../../../configs/menu.configs';
 // utils
 import { store as db, docs, createMember } from '../../utils/firebase.utils';
-import { dayjs } from '../../utils/date.utils';
+import { utc } from '../../utils/date.utils';
 import catchify from '../../utils/catchify.util';
 import { GAEvent } from '../../components/Analytics/Analytics';
 
@@ -29,8 +30,12 @@ export async function handleSubmit(values, set) {
         firstName,
         lastName,
         email,
-        lastVisited: dayjs.utc().format(),
-        static: 'active',
+        lastVisited: utc(),
+        status: 'pending',
+        organizations: user?.organizations || [],
+        roles: user?.roles || [],
+        callings: user?.callings || [],
+        createdOn: user?.createdOn || utc(),
     };
     const ref = db.collection('members').doc(userData.uid);
 

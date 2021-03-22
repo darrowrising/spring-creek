@@ -7,6 +7,8 @@ import { Divider } from '@blueprintjs/core';
 
 // components
 import Leaders from '../../components/leaders/Leaders';
+import * as CSB from '../../../client/static/csb';
+import PDF from '../../../client/components/PDF/PDF';
 // utils
 import { fbDocId, comingSunday } from '../../utils/date';
 import db from '../../utils/fireDB';
@@ -50,6 +52,10 @@ function Program({ history }) {
         if (snap.exists()) return setState({ ...snap.val(), loading: false });
         return setState({ ...state, loading: false });
     };
+    const csbHymns = Object.keys(state)
+        .filter((item) => item.includes('fileName'))
+        .filter((item) => state[item])
+        .map((item) => state[item]);
 
     useEffect(() => {
         const param = pathname.split('program/')[1];
@@ -144,6 +150,15 @@ function Program({ history }) {
                     />
 
                     <h3 className="center bold sacrament">Administration of the Sacrament</h3>
+                    {/* eslint-disable react/jsx-indent, indent */}
+                    {csbHymns.length !== 0
+                        ? csbHymns.map((csbHymn) => (
+                              <div className="csb-wrapper">
+                                  <PDF file={CSB[csbHymn]} />
+                              </div>
+                          ))
+                        : null}
+                    {/* eslint-enable react/jsx-indent, indent */}
                 </div>
             )}
         </div>

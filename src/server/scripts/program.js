@@ -6,6 +6,7 @@ import { db } from '../utils/firebase.utils';
 import { fbDocId } from '../../js/utils/date';
 // configs
 import hymns from '../../configs/hymns.config.json';
+import csbHymns from '../../configs/csbHymns.config.json';
 
 const programDate = fbDocId;
 // const programDate = '200920_1200';
@@ -14,56 +15,76 @@ const programDate = fbDocId;
  * music
  * meeting
  */
+/* Hymn Options
+ * [number] = reqular hymns
+ * csb_[number] = children song book
+ */
 const programConfig = {
     presiding: 'Bishop Vaughn Kinghorn',
     conducting: 'Bishop Vaughn Kinghorn',
-    chorister: 'Brandon Andersen',
-    organist: 'Emily Hinchey',
-    opening_hymn: 81,
-    invocation: 'Joe Davidson',
-    sacrament_hymn: 180,
+    chorister: 'Lydia York',
+    organist: 'Erin Dangerfield',
+    opening_hymn: 10,
+    invocation: 'Laura York',
+    sacrament_hymn: 171,
     program: [
         {
             type: 'talk',
-            title: 'Youth Speaker',
+            title: 'Speaker',
             topic: '',
-            value: 'Gage Lichfield',
+            value: 'Kevin Christiansen',
             priority: 0,
-        },
-        {
-            type: 'talk',
-            title: 'Youth Speaker',
-            topic: '',
-            value: 'Addy Grimm',
-            priority: 1,
         },
         {
             type: 'talk',
             title: 'Speaker',
             topic: '',
-            value: 'Cody Stewart',
-            priority: 2,
+            value: 'Darrin Gunnell',
+            priority: 1,
         },
     ],
-    closing_hymn: 246,
-    benediction: 'Erin Dangerfield',
+    closing_hymn: 'csb_109',
+    benediction: 'Matt Grimm',
 };
+
+function getHymn(hymnRaw) {
+    const isCSB = typeof hymnRaw === 'string' && hymnRaw.includes('csb');
+
+    if (isCSB) {
+        const number = Number(hymnRaw.split('_')[1]);
+        const csbHymn = csbHymns.find((item) => item.number === number);
+        console.log('csbHymn:', csbHymn, csbHymns, number);
+        return {
+            ...csbHymn,
+            number: `CSB #${number}`,
+            fileName: `CSB${number}`,
+        };
+    }
+
+    const hymn = hymns.find((item) => item.number === hymnRaw);
+    return {
+        ...hymn,
+        number: `#${hymn.number}`,
+    };
+}
 
 function updateWithHymns(program) {
     const { opening_hymn, sacrament_hymn, closing_hymn } = program;
-    const getHymn = (number) => hymns.find((item) => item.number === number);
     const open = getHymn(opening_hymn);
     const sacrament = getHymn(sacrament_hymn);
     const close = getHymn(closing_hymn);
 
     return {
         ...program,
-        opening_hymn: open ? `#${open.number}` : '',
+        opening_hymn: open?.number || '',
         opening_hymn_title: open?.title || '',
-        sacrament_hymn: sacrament ? `#${sacrament.number}` : '',
-        sacrament_hymn_title: sacrament.title || '',
-        closing_hymn: close ? `#${close.number}` : '',
-        closing_hymn_title: close.title || '',
+        opening_hymn_fileName: open?.fileName || '',
+        sacrament_hymn: sacrament?.number || '',
+        sacrament_hymn_title: sacrament?.title || '',
+        sacrament_hymn_fileName: sacrament?.fileName || '',
+        closing_hymn: close?.number || '',
+        closing_hymn_title: close?.title || '',
+        closing_hymn_fileName: close?.fileName || '',
     };
 }
 
