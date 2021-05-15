@@ -1,18 +1,12 @@
-/* TODO: Remove eslint-disable */
+/* TODO: Remove this eslint disable */
 /* eslint-disable */
 import React, { Component, Fragment, Suspense, lazy } from 'react';
-//import {} from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import shortId from 'shortid';
-import { Button, Dialog, Toaster, Breadcrumbs } from '@blueprintjs/core';
+import { Button, Dialog, Toaster, Breadcrumbs, Collapse } from '@blueprintjs/core';
+import { CaretDownOutlined } from '@ant-design/icons';
 import moment from 'moment';
-
-// components
-const AnnouncementForm = lazy(() => import('../../components/forms/announcementForm/AnnouncementsForm'));
-const AnnouncementItem = lazy(() => import('../../components/announcementItem/AnnouncementItem'));
-const MonthHeader = lazy(() => import('../../components/monthHeader/MonthHeader'));
-const RemoveRequest = lazy(() => import('../../components/forms/simpleRequest/SimpleRequest'));
 // utilites
 import { GAEvent } from '../../components/analytics/Analytics';
 import { callSingleEvent, removeEvent } from './singleEvent.actions';
@@ -21,6 +15,11 @@ import { getEvent, toastEvent } from './singleEvent.entities';
 import dateFormats from '../../configs/dateFormats';
 // style
 import './singleEvent.less';
+// lazy components
+const AnnouncementForm = lazy(() => import('../../components/forms/announcementForm/AnnouncementsForm'));
+const AnnouncementItem = lazy(() => import('../../components/announcementItem/AnnouncementItem'));
+const MonthHeader = lazy(() => import('../../components/monthHeader/MonthHeader'));
+const RemoveRequest = lazy(() => import('../../components/forms/simpleRequest/SimpleRequest'));
 
 class SingleEvent extends Component {
     //static propTypes = {
@@ -35,13 +34,14 @@ class SingleEvent extends Component {
         super(props);
         this.state = {
             modalOpen: false,
-            dialogTitle: "",
+            dialogTitle: '',
             editDialog: false,
-            removeDialog: false
-        }
+            removeDialog: false,
+            showInformation: false,
+        };
         this.refHandlers = {
-            toaster: (ref) => this.toaster = ref
-        }
+            toaster: (ref) => (this.toaster = ref),
+        };
     }
 
     componentDidMount() {
@@ -62,7 +62,7 @@ class SingleEvent extends Component {
             GAEvent({
                 category: 'Event Landing Page',
                 action: `Page Load | No Event`,
-                label: `Can't find event ${params.event}`
+                label: `Can't find event ${params.event}`,
             });
         }
 
@@ -73,9 +73,9 @@ class SingleEvent extends Component {
         GAEvent({
             category: 'Event Landing Page',
             action: `Click | ${actionType}`,
-            label
+            label,
         });
-    }
+    };
 
     handleModalTemplate = () => {
         const { editDialog, removeDialog } = this.state;
@@ -84,15 +84,23 @@ class SingleEvent extends Component {
         if (editDialog) {
             return (
                 <Suspense fallback={<div>Something went wrong...</div>}>
-                    <AnnouncementForm data={event} isEdit saveBtnClicked={() => this.handleModalClose('Announcement Edited')} />
+                    <AnnouncementForm
+                        data={event}
+                        isEdit
+                        saveBtnClicked={() => this.handleModalClose('Announcement Edited')}
+                    />
                 </Suspense>
             );
         } else if (removeDialog) {
             return (
                 <Suspense fallback={<div>Something went wrong...</div>}>
-                    <RemoveRequest action={this.handleRemoveRequest} reasonLabel="Reason for Removal" onClose={this.handleModalClose} />
+                    <RemoveRequest
+                        action={this.handleRemoveRequest}
+                        reasonLabel="Reason for Removal"
+                        onClose={this.handleModalClose}
+                    />
                 </Suspense>
-            )
+            );
         }
 
         return (
@@ -100,32 +108,32 @@ class SingleEvent extends Component {
                 <div>Error...</div>
             </Suspense>
         );
-    }
+    };
 
     handleRemoveRequest = (formData) => {
         const { event, remove } = this.props;
-        const newEvent = {...event};
+        const newEvent = { ...event };
 
         newEvent.remove = {
             name: `${formData.firstName} ${formData.lastName}`,
             date: moment().format(dateFormats.utc),
-            reason: formData.reason
+            reason: formData.reason,
         };
 
         newEvent.moderate = true;
 
         this.handleGAClick('Remove Event Requested', 'Remove Event');
         remove(newEvent);
-        this.setState({modalOpen: false});
-    }
+        this.setState({ modalOpen: false });
+    };
 
     onEdit = () => {
-        this.setState({modalOpen: true, dialogTitle: "Edit Announcement", editDialog: true});
-    }
+        this.setState({ modalOpen: true, dialogTitle: 'Edit Announcement', editDialog: true });
+    };
 
     onRemoval = () => {
-        this.setState({modalOpen: true, dialogTitle: "Remove Announcement Request", removeDialog: true});
-    }
+        this.setState({ modalOpen: true, dialogTitle: 'Remove Announcement Request', removeDialog: true });
+    };
 
     handleModalClose = (label) => {
         const { editDialog, removeDialog } = this.state;
@@ -135,21 +143,21 @@ class SingleEvent extends Component {
         if (editDialog) type = 'edit';
         else if (removeDialog) type = 'remove';
 
-        this.handleGAClick("Announcement Edited" || `close ${type} dialog`, label || `${type} dialog closed`);
+        this.handleGAClick('Announcement Edited' || `close ${type} dialog`, label || `${type} dialog closed`);
         this.setState({ modalOpen: false });
-    }
+    };
 
     handleBreadCrumbs = () => {
         const { event } = this.props;
 
         return [
-            { href: "/announcements", icon: "folder-close", text: "Announcements" },
-            { icon: "document", text: event?.title },
+            { href: '/announcements', icon: 'folder-close', text: 'Announcements' },
+            { icon: 'document', text: event?.title },
         ];
-    }
+    };
 
     render() {
-        const { modalOpen, dialogTitle } = this.state;
+        const { modalOpen, dialogTitle, showInformation } = this.state;
         const { event } = this.props;
 
         return (
@@ -158,53 +166,97 @@ class SingleEvent extends Component {
                     <Fragment>
                         <Breadcrumbs className="breadcrumbs" items={this.handleBreadCrumbs()} />
                         <div className="row">
-                            <div className="col-xs-12 first-sm col-sm-5 announcement-data">
-                                <h2 className="title">{event?.title}</h2>
-                                <div className="sub-title">
-                                    ends on
-                                    <span className="end-date">{moment(event?.date || event?.endDate, dateFormats.utc).format(dateFormats.longDate)}</span>
-                                </div>
-                                <div className="button-group">
-                                    <Button text="Edit" onClick={this.onEdit} />
-                                    <Button intent="danger" text="Remove" onClick={this.onRemoval}/>
+                            <div className="col-xs-12 col-sm-8 center">
+                                <div className="row v-align-middle">
+                                    <div className="col-xs-6 announcement-data first-xs">
+                                        <h2 className="title">{event?.title}</h2>
+                                        <div className="sub-title">
+                                            ends on
+                                            <span className="end-date">
+                                                {moment(event?.date || event?.endDate, dateFormats.utc).format(
+                                                    dateFormats.longDate
+                                                )}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div className="col-xs-6 button-group">
+                                        <Button text="Edit" onClick={this.onEdit} />
+                                        <Button intent="danger" text="Remove" onClick={this.onRemoval} />
+                                    </div>
                                 </div>
                             </div>
-                            <div className="col-xs-12 first-xs col-sm-7 announcement">
+                        </div>
+                        <div className="row">
+                            <div className="col-xs-12 first-xs col-sm-8 center announcement">
                                 <Suspense fallback={<div>Can't find announcement</div>}>
                                     <MonthHeader month={event?.month} />
                                     <AnnouncementItem data={event} />
                                 </Suspense>
                             </div>
                         </div>
-                        <h3 className="info-heading">Information</h3>
-                        <div className="row info-content">
-                            <div className="col-xs-12 col-sm-6">
-                                <h4>Created</h4>
-                                <div>by: <span>{event?.created?.name || `${event?.firstName} ${event?.lastName}`}</span></div>
-                                <div>on: <span>{event?.createdDate || moment(event?.created?.date, dateFormats.utc).format(dateFormats.dateTime)}</span></div>
-                                <h4>Approved</h4>
-                                <div>by: <span>{event?.approved?.name}</span></div>
-                                <div>on: <span>{moment(event?.approved?.date, dateFormats.utc).format(dateFormats.dateTime)}</span></div>
-                            </div>
-                            <div className="col-xs-12 col-sm-6">
-                                {event?.edited && (
-                                    event.edited.map((item, index) => (
-                                        <div key={shortId.generate()}>
-                                            <h4>Edited</h4>
-                                            <div>by: {item?.name}</div>
-                                            <div>on: {moment(item?.date, dateFormats.utc).format(dateFormats.dateTime)}</div>
-                                            {!item.approvedBy && <div>status: waiting for approval</div>}
-                                            {item?.approvedBy && (
-                                                <Fragment>
-                                                    <div>approved by: {item?.approvedBy}</div>
-                                                    <div>approved on: {moment(item?.approvedOn, dateFormats.utc).format(dateFormats.dateTime)}</div>
-                                                </Fragment>
+                        <h3
+                            className="info-heading"
+                            onClick={() => this.setState({ showInformation: !showInformation })}
+                        >
+                            Information <CaretDownOutlined className="down-arrow" />
+                        </h3>
+                        <Collapse isOpen={showInformation}>
+                            <div className="row info-content">
+                                <div className="col-xs-12 col-sm-6">
+                                    <h4>Created</h4>
+                                    <div>
+                                        by:{' '}
+                                        <span>{event?.created?.name || `${event?.firstName} ${event?.lastName}`}</span>
+                                    </div>
+                                    <div>
+                                        on:{' '}
+                                        <span>
+                                            {event?.createdDate ||
+                                                moment(event?.created?.date, dateFormats.utc).format(
+                                                    dateFormats.dateTime
+                                                )}
+                                        </span>
+                                    </div>
+                                    <h4>Approved</h4>
+                                    <div>
+                                        by: <span>{event?.approved?.name}</span>
+                                    </div>
+                                    <div>
+                                        on:{' '}
+                                        <span>
+                                            {moment(event?.approved?.date, dateFormats.utc).format(
+                                                dateFormats.dateTime
                                             )}
-                                        </div>
-                                    ))
-                                )}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div className="col-xs-12 col-sm-6">
+                                    {event?.edited &&
+                                        event.edited.map((item, index) => (
+                                            <div key={shortId.generate()}>
+                                                <h4>Edited</h4>
+                                                <div>by: {item?.name}</div>
+                                                <div>
+                                                    on:{' '}
+                                                    {moment(item?.date, dateFormats.utc).format(dateFormats.dateTime)}
+                                                </div>
+                                                {!item.approvedBy && <div>status: waiting for approval</div>}
+                                                {item?.approvedBy && (
+                                                    <Fragment>
+                                                        <div>approved by: {item?.approvedBy}</div>
+                                                        <div>
+                                                            approved on:{' '}
+                                                            {moment(item?.approvedOn, dateFormats.utc).format(
+                                                                dateFormats.dateTime
+                                                            )}
+                                                        </div>
+                                                    </Fragment>
+                                                )}
+                                            </div>
+                                        ))}
+                                </div>
                             </div>
-                        </div>
+                        </Collapse>
                         <Dialog
                             title={dialogTitle}
                             isOpen={modalOpen}
@@ -232,17 +284,14 @@ class SingleEvent extends Component {
     }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     event: getEvent(state),
-    toast: toastEvent(state)
+    toast: toastEvent(state),
 });
 
 const mapDispatchToProps = {
     callEvent: callSingleEvent,
-    remove: removeEvent
+    remove: removeEvent,
 };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(SingleEvent);
+export default connect(mapStateToProps, mapDispatchToProps)(SingleEvent);

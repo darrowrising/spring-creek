@@ -8,6 +8,7 @@ import { organizations } from '../../../../../configs/organizations.configs';
 import { dateSimple } from '../../../../../configs/dateFormats.configs';
 import { roles } from '../../../../../configs/roles.configs';
 import { callings } from '../../../../../configs/callings.configs';
+import { statuses } from '../../../../../configs/members.config';
 // utils
 import { markSearchValue } from '../../../../utils/search.util';
 import { utc } from '../../../../utils/date.utils';
@@ -96,9 +97,9 @@ export const tableHeaders = (filters, sort, searchValue) => [
     {
         title: 'Status',
         dataIndex: 'status',
-        key: 'status',
-        sorter: (a, b) => a.status.localeCompare(b.status),
-        sortOrder: sort.columnKey === 'status' && sort.order,
+        filters: statuses.map((item) => ({ text: item?.name, value: item?.name })),
+        filteredValue: filters.status || ['active', 'pending', 'inactive'],
+        onFilter: (value, record) => (record?.status || []).includes(value),
         width: '150px',
         render: (record) => (
             <Status type={record} dangerouslySetInnerHTML={{ __html: markSearchValue(record, searchValue) }} />

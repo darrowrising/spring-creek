@@ -9,10 +9,10 @@ import EditMember from './AddEditMember/AddEditMember';
 import PageHeader from '../../../components/PageHeader/PageHeader';
 import ModerateNewMembers from './ModerateNewMembers/ModerateNewMembers';
 // utils
-import { getMembers } from './Members.utils';
+import { getMembers, deactivateMember, combineMembers } from './Members.utils';
 import { handleState } from '../../../utils/state.utils';
 // styles
-import { ModerateContainer } from './Members.styles';
+import { ModerateContainer, ModerateTable, Heading } from './Members.styles';
 
 const initialState = {
     loading: true,
@@ -41,12 +41,11 @@ function Members() {
                 });
             }
             case 'combine':
-                console.info('combine');
+                combineMembers(record);
                 // return resendInviteConfirm(record);
                 return;
             case 'deactivate':
-                console.info('deactivate');
-                // return resetPasswordConfirm(record);
+                deactivateMember(record);
                 return;
             default:
                 return null;
@@ -62,9 +61,22 @@ function Members() {
             <PageHeader>Members</PageHeader>
             {newMembers.length !== 0 ? (
                 <ModerateContainer>
-                    {newMembers.map((member) => (
-                        <ModerateNewMembers member={member} />
-                    ))}
+                    <Heading>New Members Requesting Access</Heading>
+                    <ModerateTable>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Date Signed Up</th>
+                                <th style={{ textAlign: 'center' }}>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {newMembers.map((member) => (
+                                <ModerateNewMembers member={member} />
+                            ))}
+                        </tbody>
+                    </ModerateTable>
                 </ModerateContainer>
             ) : null}
             <MembersList members={members} loading={loading} memberState={set} onClick={handleOnClick} />

@@ -5,7 +5,12 @@ import moment from 'moment';
 import SpecialAnnouncement from '../../components/special/Special';
 import { GAEvent } from '../../components/analytics/Analytics';
 // utils
-import { meetingTimes, sundaySchoolTime, covidMaxCount, broadcastLink } from '../../../configs/unit.config'; /* eslint-disable-line */
+import {
+    meetingTimes,
+    sundaySchoolTime,
+    // covidMaxCount,
+    broadcastLink,
+} from '../../../configs/unit.config'; /* eslint-disable-line */
 // configs
 import dateFormats from '../../configs/dateFormats';
 // styles
@@ -62,11 +67,11 @@ function Home() {
                     <div className="col-xs-12 col-sm">
                         <h3>Sacrament Meeting</h3>
                         <div>{moment(meetingTimes[0], 'hh:mm').format(time)}</div>
-                        <h4>Sacrament Sign Up</h4>
+                        {/* <h4>Sacrament Sign Up</h4>
                         <p className="sub-message">{`To help us keep to the Covid max count of ${covidMaxCount}`}</p>
                         <Link className="block sign-up" to="/sacrament-signup" onClick={handleClick}>
                             Sign Up
-                        </Link>
+                        </Link> */}
                         <h4>Broadcast Information</h4>
                         <div>Zoom link to the broadcast.</div>
                         <a href={broadcastLink} target="_blank" rel="noreferrer">

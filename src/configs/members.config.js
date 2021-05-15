@@ -1,3 +1,5 @@
+export const statuses = [{ name: 'active' }, { name: 'pending' }, { name: 'inactive' }, { name: 'deactivated' }];
+
 export default [
     {
         firstName: 'Vaughn',

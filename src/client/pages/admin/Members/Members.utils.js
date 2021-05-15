@@ -1,5 +1,7 @@
+import { notification } from 'antd';
 // utils
 import { store, docs } from '../../../utils/firebase.utils';
+import { utc } from '../../../utils/date.utils';
 
 export let unsubscribe = null; // eslint-disable-line
 
@@ -19,4 +21,29 @@ export async function getMembers(set) {
             });
         set({ members, loading: false });
     });
+}
+
+export async function deactivateMember(member) {
+    try {
+        await store.collection('members').doc(member.uid).update({
+            updatedOn: utc(),
+            status: 'deactivated',
+            organizations: [],
+            roles: [],
+            callings: [],
+        });
+
+        notification.success({
+            message: 'Member has been deactivated',
+        });
+    } catch (error) {
+        notification.error({
+            message: 'There was a problem deactivating member.',
+        });
+        console.error('error deactivating member', error);
+    }
+}
+
+export async function combineMembers() {
+    console.info('combine');
 }

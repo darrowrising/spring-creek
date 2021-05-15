@@ -21,30 +21,51 @@ const programDate = fbDocId;
  */
 const programConfig = {
     presiding: 'Bishop Vaughn Kinghorn',
-    conducting: 'Bishop Vaughn Kinghorn',
-    chorister: 'Lydia York',
-    organist: 'Erin Dangerfield',
-    opening_hymn: 10,
-    invocation: 'Laura York',
-    sacrament_hymn: 171,
+    conducting: 'Shay Rolfson',
+    chorister: 'Brandon Andersen',
+    organist: 'Emily Hinchey',
+    opening_hymn: 304,
+    invocation: 'Derek Wilcox',
+    sacrament_hymn: 177,
     program: [
         {
             type: 'talk',
-            title: 'Speaker',
+            title: 'Youth Speaker',
             topic: '',
-            value: 'Kevin Christiansen',
+            value: 'Jane Hunt',
             priority: 0,
         },
         {
             type: 'talk',
-            title: 'Speaker',
+            title: 'Youth Speaker',
             topic: '',
-            value: 'Darrin Gunnell',
+            value: 'Westin Stewart',
             priority: 1,
         },
+        {
+            type: 'music',
+            title: '',
+            topic: '',
+            value: '"More Than Enough", performed by Clara Petersen. Accompanied by Shawn Petersen.',
+            priority: 2,
+        },
+        {
+            type: 'talk',
+            title: 'Youth Speaker',
+            topic: '',
+            value: 'Lydia York',
+            priority: 3,
+        },
+        {
+            type: 'talk',
+            title: 'Speaker',
+            topic: '',
+            value: 'Josh Dyreng',
+            priority: 4,
+        },
     ],
-    closing_hymn: 'csb_109',
-    benediction: 'Matt Grimm',
+    closing_hymn: 'csb_202',
+    benediction: 'Kenny Frasure',
 };
 
 function getHymn(hymnRaw) {

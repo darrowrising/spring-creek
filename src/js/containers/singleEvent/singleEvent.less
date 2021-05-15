@@ -21,12 +21,18 @@
         padding-right: 30px;
     }
 
+    .v-align-middle {
+        align-items: center;
+        display: flex;
+    }
+
     .announcement-data {
-        margin-top: 40px;
+        padding: 20px 0;
 
         .title {
             font-size: 120%;
             margin-bottom: 2px;
+            text-align: left;
         }
 
         .sub-title {
@@ -34,22 +40,21 @@
             font-size: 70%;
             margin: 0;
             text-indent: 1px;
+            text-align: left;
         }
 
         .end-date {
             color: @color-grey-1;
             padding-left: 5px;
         }
+    }
 
-        .button-group {
-            margin-top: 40px;
+    .button-group {
+        button {
+            width: 120px;
 
-            button {
-                width: 120px;
-
-                &:first-child {
-                    margin-right: 20px;
-                }
+            &:first-child {
+                margin-right: 20px;
             }
         }
     }
@@ -57,9 +62,22 @@
     .info-heading {
         background-color: @color-grey-3;
         color: @color-grey-1;
+        cursor: pointer;
         font-size: 100%;
         margin-top: 50px;
+        opacity: 1;
         padding: 5px 10px;
+        transition: opacity 0.3s ease;
+
+        &:hover {
+            opacity: 0.8;
+        }
+
+        .down-arrow {
+            float: right;
+            position: relative;
+            top: 5px;
+        }
     }
 
     .info-content {
