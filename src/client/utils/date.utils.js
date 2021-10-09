@@ -10,5 +10,10 @@ export function utc(date, format) {
     return dayjsLib.utc(date).format();
 }
 
+export function dateIdMaker(dateStr) {
+    return dateStr.split(' ').join('');
+}
+
+export const currentYear = dayjsLib().year();
 export const comingSunday = dayjsLib().day(7);
 export const dayjs = dayjsLib;

@@ -24,7 +24,7 @@ export async function saveMember(record, set, setParent) {
             delete obj.displayName;
             delete obj.memberState;
             delete obj.onClick;
-            obj.status = !status ? 'active' : obj.status;
+
             await ref.update(obj);
             message = 'Member Updated';
         } else {
@@ -32,7 +32,7 @@ export async function saveMember(record, set, setParent) {
                 ...obj,
                 uid,
                 createdOn: utc(),
-                status: 'active',
+                status: 'inactive',
             });
             message = 'Member Created';
         }

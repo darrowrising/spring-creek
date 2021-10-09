@@ -12,7 +12,9 @@ const { Search } = Input;
 
 function MembersList({ members, loading, memberState, onClick }) {
     // hooks
-    const [filters, setFilters] = useState({});
+    const [filters, setFilters] = useState({
+        status: ['active', 'pending', 'inactive'],
+    });
     const [list, setList] = useState([]);
     const [sort, setSort] = useState({});
     const [searchValue, setSearchValue] = useState('');

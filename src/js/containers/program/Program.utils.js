@@ -4,10 +4,13 @@ import moment from 'moment';
 import { meetingTimes } from '../../../configs/unit.config';
 import dateFormats from '../../configs/dateFormats';
 // utils
-import { comingSunday } from '../../utils/date';
+import { comingSunday, fbDocId as sudayId } from '../../utils/date';
+import { store, docs } from '../../utils/fireDB';
 
-const { fbDocId, fbDocId_long } = dateFormats;
+const { fbDocId, fbDocId_long, dateTime } = dateFormats;
 const timeFormat = 'h:mm A';
+
+export let unsubscribe = null; // eslint-disable-line
 
 export function sessionLinks() {
     return meetingTimes.map((item) => {
@@ -25,4 +28,28 @@ export function sessionLinks() {
 export function isSessionActive(date, session) {
     const time = moment(date).format(timeFormat);
     return time === session;
+}
+
+export function getProgramData(set, programDate) {
+    const programId = programDate || sudayId;
+
+    unsubscribe = store
+        .collection('program')
+        .where('id', '==', programId)
+        .onSnapshot((programSnap) => {
+            const program = docs(programSnap)[0];
+            let state = {};
+
+            if (program) {
+                return set({ ...program, date: moment.utc(program.date).format(dateTime), loading: false });
+            }
+
+            if (programDate) {
+                state = {
+                    ...state,
+                    errorMessage: 'No program can be found',
+                };
+            }
+            return set({ loading: false, ...state });
+        });
 }

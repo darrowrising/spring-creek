@@ -11,6 +11,7 @@ import ProgramMaker from './ProgramMaker/ProgramMaker';
 import Members from './Members/Members';
 import Attendance from './Attendance/Attendance';
 import Questions from './Questions/Questions';
+import Speakers from './Speakers/Speakers';
 import Login from '../Login/Login';
 import SignUp from '../SignUp/SignUp';
 import NotFoundPage from '../NotFound/NotFound';
@@ -22,6 +23,7 @@ import { adminMenu } from '../../../configs/menu.configs';
 
 const list = {
     Attendance,
+    Speakers,
     Members,
     ProgramMaker,
     Questions,

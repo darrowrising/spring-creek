@@ -12,10 +12,16 @@ export const adminMenu = [
         permissions: ['calling:Ward_Clerk'],
     },
     {
+        text: 'Sacrament Speakers',
+        path: '/admin/sacrament-speakers',
+        component: 'Speakers',
+        permissions: ['org:Bishopric'],
+    },
+    {
         text: 'Attendance',
         path: '/admin/attendance',
         component: 'Attendance',
-        permissions: ['org:Bishopric', 'org:Ward_Council', 'org:Relief_Society_Presidency', 'page:attendance'],
+        permissions: ['calling:Ward_Clerk'],
     },
     {
         text: 'Members',

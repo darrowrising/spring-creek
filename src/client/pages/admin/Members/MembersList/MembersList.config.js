@@ -97,9 +97,10 @@ export const tableHeaders = (filters, sort, searchValue) => [
     {
         title: 'Status',
         dataIndex: 'status',
-        filters: statuses.map((item) => ({ text: item?.name, value: item?.name })),
-        filteredValue: filters.status || ['active', 'pending', 'inactive'],
-        onFilter: (value, record) => (record?.status || []).includes(value),
+        key: 'status',
+        filters: statuses.map(({ name }) => ({ text: name, value: name })),
+        filteredValue: filters.status || null,
+        onFilter: (value, { status = [] }) => value === status,
         width: '150px',
         render: (record) => (
             <Status type={record} dangerouslySetInnerHTML={{ __html: markSearchValue(record, searchValue) }} />

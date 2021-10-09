@@ -1,15 +1,19 @@
 /* eslint-disable */
 import color from 'colors';
 import moment from 'moment';
+import shortId from 'shortid';
 // utils
-import { db } from '../utils/firebase.utils';
+import { db, store, docs } from '../utils/firebase.utils';
 import { fbDocId } from '../../js/utils/date';
+import { utc } from '../../client/utils/date.utils';
 // configs
 import hymns from '../../configs/hymns.config.json';
 import csbHymns from '../../configs/csbHymns.config.json';
+import { meetingTimes } from '../../configs/unit.config';
+import dateFormats from '../../js/configs/dateFormats';
 
-const programDate = fbDocId;
-// const programDate = '200920_1200';
+const programDate = null;
+// const programDate = '200112';
 /* Program Options
  * talk
  * music
@@ -21,60 +25,50 @@ const programDate = fbDocId;
  */
 const programConfig = {
     presiding: 'Bishop Vaughn Kinghorn',
-    conducting: 'Shay Rolfson',
+    conducting: 'Bishop Vaughn Kinghorn',
     chorister: 'Brandon Andersen',
-    organist: 'Emily Hinchey',
-    opening_hymn: 304,
-    invocation: 'Derek Wilcox',
-    sacrament_hymn: 177,
+    organist: 'Erin Dangerfield',
+    opening_hymn: 105,
+    invocation: 'Lyndsey Grimm',
+    sacrament_hymn: 190,
+    topic: "Sister Tayrn Kadri's Fairwell",
     program: [
         {
             type: 'talk',
             title: 'Youth Speaker',
-            topic: '',
-            value: 'Jane Hunt',
+            value: 'Hailey Dangerfield',
             priority: 0,
-        },
-        {
-            type: 'talk',
-            title: 'Youth Speaker',
-            topic: '',
-            value: 'Westin Stewart',
-            priority: 1,
         },
         {
             type: 'music',
             title: '',
-            topic: '',
-            value: '"More Than Enough", performed by Clara Petersen. Accompanied by Shawn Petersen.',
-            priority: 2,
-        },
-        {
-            type: 'talk',
-            title: 'Youth Speaker',
-            topic: '',
-            value: 'Lydia York',
-            priority: 3,
+            value: '"Savior Redeemer of My Soul", Sung by Kate and Sadie Stevenson, accompanied by Marianne Torbensen',
+            priority: 1,
         },
         {
             type: 'talk',
             title: 'Speaker',
-            topic: '',
-            value: 'Josh Dyreng',
-            priority: 4,
+            value: 'Sister Taryn Kadri',
+            priority: 2,
         },
     ],
-    closing_hymn: 'csb_202',
-    benediction: 'Kenny Frasure',
+    // intermediant_hymn: ,
+    closing_hymn: 249,
+    benediction: 'Jason Schick',
 };
 
 function getHymn(hymnRaw) {
     const isCSB = typeof hymnRaw === 'string' && hymnRaw.includes('csb');
 
+    if (!hymnRaw)
+        return {
+            number: 'TBA',
+        };
+
     if (isCSB) {
         const number = Number(hymnRaw.split('_')[1]);
         const csbHymn = csbHymns.find((item) => item.number === number);
-        console.log('csbHymn:', csbHymn, csbHymns, number);
+
         return {
             ...csbHymn,
             number: `CSB #${number}`,
@@ -85,7 +79,7 @@ function getHymn(hymnRaw) {
     const hymn = hymns.find((item) => item.number === hymnRaw);
     return {
         ...hymn,
-        number: `#${hymn.number}`,
+        number: hymn.number,
     };
 }
 
@@ -109,9 +103,12 @@ function updateWithHymns(program) {
     };
 }
 
-function updateDate(program) {
-    const parseDate = moment(programDate, 'YYMMDD_hhmm');
-    const date = moment.utc(parseDate).format();
+function updateDate(program, dateTime = '09:00') {
+    const { fbDocId_long } = dateFormats;
+    const dateValue = programDate ?? fbDocId;
+
+    const parseDate = moment(`${dateValue}_${dateTime}`, fbDocId_long);
+    const date = moment.parseZone(parseDate).utc().format();
 
     return {
         ...program,
@@ -119,13 +116,39 @@ function updateDate(program) {
     };
 }
 
+async function doesProgramExist(date) {
+    const program = await store.collection('program').where('date', '==', date).get();
+    const doc = docs(program)[0];
+
+    if (doc?.id) return doc;
+    return false;
+}
+
 async function makeProgramData() {
+    const uid = shortId.generate();
+    const time = meetingTimes[0];
     let program = updateWithHymns(programConfig);
-    program = updateDate(program);
+    program = updateDate(program, time);
 
-    await db.ref(`/program/${programDate}`).set(program);
+    const collection = await store.collection('program');
+    const doc = await doesProgramExist(program.date);
 
-    console.log('Program', color.yellow(programDate), color.green('uploaded successfully'));
+    if (doc) {
+        await collection.doc(doc.uid).update({
+            ...doc,
+            ...program,
+        });
+    } else {
+        await collection.doc(uid).set({
+            ...program,
+            time,
+            id: programDate ?? fbDocId,
+            year: utc(program.date, 'YYYY'),
+            uid,
+        });
+    }
+
+    console.log('Program', color.yellow(fbDocId), color.green('uploaded successfully'));
     process.exit(0);
 }
 

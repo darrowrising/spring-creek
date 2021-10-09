@@ -46,7 +46,6 @@ function QuestionsAdmin() {
         return () => unsubscribe();
     }, []);
 
-    console.log('data:', data);
     return (
         <Layout>
             <PageHeader>Question List</PageHeader>

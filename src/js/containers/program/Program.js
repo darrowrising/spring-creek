@@ -3,32 +3,24 @@ import moment from 'moment';
 import Loading from 'react-loading';
 import { NavLink } from 'react-router-dom';
 import { shape } from 'prop-types';
-import { Divider } from '@blueprintjs/core';
 
 // components
 import Leaders from '../../components/leaders/Leaders';
 import * as CSB from '../../../client/static/csb';
 import PDF from '../../../client/components/PDF/PDF';
 // utils
-import { fbDocId, comingSunday } from '../../utils/date';
-import db from '../../utils/fireDB';
-import { sessionLinks, isSessionActive } from './Program.utils';
+import { fbDocId } from '../../utils/date';
+import { sessionLinks, isSessionActive, getProgramData, unsubscribe } from './Program.utils';
+import { handleState } from '../../../client/utils/state.utils';
 // configs
 import dateFormats from '../../configs/dateFormats';
+import { meetingTimes } from '../../../configs/unit.config';
 // styles
 import './program.less';
 
 const initialState = {
-    date: comingSunday,
+    date: moment(`${fbDocId}_${meetingTimes[0]}`, dateFormats.fbDocId_long).format(dateFormats.dateTime),
     presiding: 'Bishop Vaughn Kinghorn',
-    conducting: '',
-    chorister: '',
-    organist: '',
-    opening_hymn: '',
-    invocation: '',
-    sacrament_hymn: '',
-    closing_hymn: '',
-    benediction: '',
     program: [
         {
             type: 'talk',
@@ -36,7 +28,9 @@ const initialState = {
             value: 'TBA',
         },
     ],
+    time: '00:00',
     loading: true,
+    errorMessage: '',
 };
 
 function Program({ history }) {
@@ -45,25 +39,19 @@ function Program({ history }) {
     // data
     const { program = [], loading } = state;
     const { pathname } = history.location;
-    const { dateTime, fbDocId_long } = dateFormats;
     // handlers
-    const date = state?.date ? moment(state?.date).format(dateTime) : moment(fbDocId, fbDocId_long).format(dateTime);
-    const onstate = (snap) => {
-        if (snap.exists()) return setState({ ...snap.val(), loading: false });
-        return setState({ ...state, loading: false });
-    };
+    const set = (update) => handleState(update, setState);
     const csbHymns = Object.keys(state)
         .filter((item) => item.includes('fileName'))
         .filter((item) => state[item])
         .map((item) => state[item]);
 
     useEffect(() => {
-        const param = pathname.split('program/')[1];
-        const stateRef = db.ref(`program/${param || fbDocId}`);
+        const programDate = pathname.split('program/')[1];
 
-        stateRef.on('value', onstate);
+        getProgramData(set, programDate);
 
-        return () => stateRef.off('value', onstate);
+        return () => unsubscribe();
     }, [pathname]);
 
     return (
@@ -90,25 +78,43 @@ function Program({ history }) {
                     )}
                     <div className="center">
                         <h1 className="page-header">Sacrament Meeting</h1>
-                        <div className="date">{date}</div>
+                        <div className="date">{state.date}</div>
                     </div>
 
-                    <Leaders title="Presiding" value={state?.presiding || 'TBA'} />
-                    <Leaders title="Conducting" value={state?.conducting || 'TBA'} />
-                    <Leaders title="Chorister" value={state?.chorister || 'TBA'} />
-                    <Leaders title="Organist" value={state?.organist || 'TBA'} />
+                    <Leaders title="Presiding" value={state?.presiding} />
+                    <Leaders title="Conducting" value={state?.conducting} />
+                    <Leaders title="Chorister" value={state?.chorister} />
+                    <Leaders title="Organist" value={state?.organist} />
 
                     <h3 className="center">Welcome</h3>
 
                     <Leaders
                         title="Opening Hymn"
-                        value={state?.opening_hymn || 'TBA'}
+                        value={state?.opening_hymn && `#${state?.opening_hymn}`}
                         subValue={state.opening_hymn_title}
                     />
 
-                    <Leaders title="Invocation" value={state?.invocation || 'TBA'} />
+                    <Leaders title="Invocation" value={state?.invocation} />
 
                     <h3 className="center">Ward and Stake Business</h3>
+
+                    <Leaders
+                        title="Sacrament Hymn"
+                        value={state?.sacrament_hymn && `#${state?.sacrament_hymn}`}
+                        subValue={state.sacrament_hymn_title}
+                        style={{ marginTop: '40px' }}
+                    />
+
+                    <h3 className="center bold sacrament">Administration of the Sacrament</h3>
+                    {/* eslint-disable react/jsx-indent, indent */}
+                    {csbHymns.length !== 0
+                        ? csbHymns.map((csbHymn) => (
+                              <div className="csb-wrapper">
+                                  <PDF file={CSB[csbHymn]} />
+                              </div>
+                          ))
+                        : null}
+                    {/* eslint-enable react/jsx-indent, indent */}
 
                     {program
                         .sort((a, b) => a.priority - b.priority)
@@ -133,32 +139,12 @@ function Program({ history }) {
 
                     <Leaders
                         title="Closing Hymn"
-                        value={state?.closing_hymn || 'TBA'}
+                        value={state?.closing_hymn && `#${state?.closing_hymn}`}
                         subValue={state.closing_hymn_title}
                         className="closing-hymn"
                     />
 
                     <Leaders title="Benediction" value={state?.benediction || 'TBA'} style={{ marginBottom: '40px' }} />
-
-                    <Divider />
-
-                    <Leaders
-                        title="Sacrament Hymn"
-                        value={state?.sacrament_hymn || 'TBA'}
-                        subValue={state.sacrament_hymn_title}
-                        style={{ marginTop: '40px' }}
-                    />
-
-                    <h3 className="center bold sacrament">Administration of the Sacrament</h3>
-                    {/* eslint-disable react/jsx-indent, indent */}
-                    {csbHymns.length !== 0
-                        ? csbHymns.map((csbHymn) => (
-                              <div className="csb-wrapper">
-                                  <PDF file={CSB[csbHymn]} />
-                              </div>
-                          ))
-                        : null}
-                    {/* eslint-enable react/jsx-indent, indent */}
                 </div>
             )}
         </div>

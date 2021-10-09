@@ -12,6 +12,7 @@ import Announcements from '../announcements/Announcements';
 import Moderate from '../moderate/Moderate';
 import SingleEvent from '../singleEvent/SingleEvent';
 import Questions from '../../../client/pages/Questions/Questions';
+import YouthConferenceSignUp from '../../../client/pages/Forms/YouthConferenceSignUp';
 // import SacramentSignup from '../../../client/pages/SacramentSignup/SacramentSignup';
 // Utilities
 import { handleURLParams } from '../../utils/qrCodes';
@@ -47,6 +48,7 @@ function PageWrapper({ history, location }) {
                 <Route path="/announcements" component={Announcements} />
                 <Route path="/moderate" component={Moderate} />
                 <Route path="/question/:category" component={Questions} />
+                <Route path="/signup/youth-conference" component={YouthConferenceSignUp} />
                 {/* <Route path="/sacrament-signup/:date" component={SacramentSignup} />
                 <Route path="/sacrament-signup" component={SacramentSignup} /> */}
                 <Route path="*" component={Home} />

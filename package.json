@@ -16,7 +16,7 @@
     "make:files": "node -r @babel/register src/server/scripts/buildFiles.js",
     "make:program": "DB_ENV=production node -r @babel/register src/server/scripts/program.js",
     "att": "DB_ENV=production node -r @babel/register src/server/scripts/addAttendance.js",
-    "migrate": "DB_ENV=test node -r @babel/register src/server/scripts/migration.script.js",
+    "migrate": "DB_ENV=production node -r @babel/register src/server/scripts/migration.script.js",
     "test": "jest",
     "test:coverage": "jest --coverage"
   },
