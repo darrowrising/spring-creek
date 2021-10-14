@@ -15,6 +15,7 @@ import Speakers from './Speakers/Speakers';
 import Login from '../Login/Login';
 import SignUp from '../SignUp/SignUp';
 import NotFoundPage from '../NotFound/NotFound';
+import YouthConference from './YouthConference';
 // import Login from './pages/Login/Login';
 // components
 import PrivateRoute from '../../components/PrivateRoute/PrivateRoute';
@@ -27,6 +28,7 @@ const list = {
     Members,
     ProgramMaker,
     Questions,
+    YouthConference,
 };
 
 function IndexRoutes() {

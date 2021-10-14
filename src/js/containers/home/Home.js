@@ -32,28 +32,11 @@ function Home() {
     return (
         <div className="homepage-container page center container">
             <div className="content-width">
-                {/* <div className="main-message bishopric-message">
-                    <h2>Message From the Bishopric</h2>
-                    <p>Brothers and Sisters,</p>
-                    <p>
-                        As we have brainstormed topics for our 5th Sunday lessons for January 31st, we have decided we
-                        would like to have you submit questions and we will then structure the lesson around answering
-                        these questions. We have done this with the youth on a couple of occasions and this has been
-                        well received. We are excited to try this approach with the adults as well.
-                    </p>
-                    <p>Please use the respective links below to submit questions.</p>
-                    <p>
-                        <Link className="block sign-up" to="/question/adult" onClick={handleClick}>
-                            Adult
-                        </Link>
-                        <Link className="block sign-up" to="/question/youth" onClick={handleClick}>
-                            Youth
-                        </Link>
-                    </p>
-                    <p>
-                        <strong>- Spring Creek Bishopric</strong>
-                    </p>
-                </div> */}
+                <div className="main-message bishopric-message">
+                    <h2>Youth Conference Signup</h2>
+                    <p>Oct 31st to Nov 6th</p>
+                    <Link to="/signup/youth-conference">Youth Conference Signup</Link>
+                </div>
                 <SpecialAnnouncement />
                 <div className="link-blocks row">
                     <Link className="block program col-xs-12 col-sm" to="/program" onClick={handleClick}>

@@ -25,36 +25,24 @@ const programDate = null;
  */
 const programConfig = {
     presiding: 'Bishop Vaughn Kinghorn',
-    conducting: 'Bishop Vaughn Kinghorn',
+    conducting: 'Tim Crowther',
     chorister: 'Brandon Andersen',
-    organist: 'Erin Dangerfield',
-    opening_hymn: 105,
-    invocation: 'Lyndsey Grimm',
-    sacrament_hymn: 190,
-    topic: "Sister Tayrn Kadri's Fairwell",
+    organist: 'Shawn Petersen',
+    opening_hymn: 259,
+    invocation: 'Charles Andersen',
+    sacrament_hymn: 176,
+    topic: '',
     program: [
         {
-            type: 'talk',
-            title: 'Youth Speaker',
-            value: 'Hailey Dangerfield',
-            priority: 0,
-        },
-        {
-            type: 'music',
+            type: 'meeting',
             title: '',
-            value: '"Savior Redeemer of My Soul", Sung by Kate and Sadie Stevenson, accompanied by Marianne Torbensen',
-            priority: 1,
-        },
-        {
-            type: 'talk',
-            title: 'Speaker',
-            value: 'Sister Taryn Kadri',
-            priority: 2,
+            value: 'Bearing of Testimonies',
+            priority: 0,
         },
     ],
     // intermediant_hymn: ,
-    closing_hymn: 249,
-    benediction: 'Jason Schick',
+    closing_hymn: 220,
+    benediction: 'Taryn Lichfield',
 };
 
 function getHymn(hymnRaw) {

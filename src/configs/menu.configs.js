@@ -37,6 +37,12 @@ export const adminMenu = [
         permissions: ['org:Bishopric'],
     },
     {
+        text: 'Youth Conference',
+        path: '/admin/youth-conference',
+        component: 'YouthConference',
+        permissions: ['org:Bishopric'],
+    },
+    {
         text: 'Main Site',
         path: '/',
         type: 'external', // default is a nav link
