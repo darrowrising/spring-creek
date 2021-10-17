@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Table } from 'antd';
-import { theme } from 'theme';
 // import {} from 'prop-types';
 // components
 import Layout from '../../../layouts/Main/Main';
@@ -32,7 +31,7 @@ const YouthConference = () => {
     const {
         data,
         loading,
-        totals: { devotionalTotal, activityTotal, overnightTotal, grandTotal },
+        totals: { devotionalTotal, activityTotal, overnightTotal },
     } = state;
     // handlers
     const set = (update) => handleState(update, setState);
@@ -44,29 +43,28 @@ const YouthConference = () => {
 
     return (
         <Layout>
-            <PageHeader>Question List</PageHeader>
+            <PageHeader>Youth Conference Attendance</PageHeader>
             <TotalRow>
                 <TotalColumn>
-                    <Title as="h3">Devotional</Title>
+                    <Title as="h3">
+                        Devotional
+                        <div>Oct 31</div>
+                    </Title>
                     <Total>{devotionalTotal}</Total>
                 </TotalColumn>
                 <TotalColumn>
-                    <Title as="h3">Wednesday Activity</Title>
+                    <Title as="h3">
+                        Wed Activity
+                        <div>Nov 3</div>
+                    </Title>
                     <Total>{activityTotal}</Total>
                 </TotalColumn>
                 <TotalColumn>
-                    <Title as="h3">Overnight</Title>
+                    <Title as="h3">
+                        Overnight
+                        <div>Nov 5 & 6</div>
+                    </Title>
                     <Total>{overnightTotal}</Total>
-                </TotalColumn>
-                <TotalColumn
-                    style={{
-                        marginLeft: '20px',
-                        backgroundColor: theme('color_white_1'),
-                        boxShadow: `-2px 2px 4px ${theme('color_grey_3')}`,
-                    }}
-                >
-                    <Title as="h3">Grand Total</Title>
-                    <Total>{grandTotal}</Total>
                 </TotalColumn>
             </TotalRow>
             <Wrapper>

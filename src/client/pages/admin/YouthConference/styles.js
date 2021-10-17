@@ -25,4 +25,9 @@ export const Total = styled.span`
 export const Title = styled.h3`
     font-size: 1.8rem;
     font-weight: 300;
+
+    & > div {
+        font-size: 1.2rem;
+        margin-top: -5px;
+    }
 `;

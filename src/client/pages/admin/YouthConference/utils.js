@@ -10,13 +10,6 @@ const totalEvents = (allEvents) =>
                 devotionalTotal: acc.devotional.length + curr.devotional.length,
                 activityTotal: acc.activity.length + curr.activity.length,
                 overnightTotal: acc.overnight.length + curr.overnight.length,
-                grandTotal:
-                    acc.devotional.length +
-                    curr.devotional.length +
-                    acc.activity.length +
-                    curr.activity.length +
-                    acc.overnight.length +
-                    curr.overnight.length,
             };
 
         return {
@@ -24,13 +17,6 @@ const totalEvents = (allEvents) =>
             devotionalTotal: acc.devotionalTotal + curr.devotional.length,
             activityTotal: acc.activityTotal + curr.activity.length,
             overnightTotal: acc.overnightTotal + curr.overnight.length,
-            grandTotal:
-                acc.devotionalTotal +
-                curr.devotional.length +
-                acc.activityTotal +
-                curr.activity.length +
-                acc.overnightTotal +
-                curr.overnight.length,
         };
     });
 

@@ -26,23 +26,35 @@ const programDate = null;
 const programConfig = {
     presiding: 'Bishop Vaughn Kinghorn',
     conducting: 'Tim Crowther',
-    chorister: 'Brandon Andersen',
-    organist: 'Shawn Petersen',
-    opening_hymn: 259,
-    invocation: 'Charles Andersen',
-    sacrament_hymn: 176,
+    chorister: 'Lydia York',
+    organist: 'Emily Hinchey',
+    opening_hymn: 92,
+    invocation: 'Jonny Anderson',
+    sacrament_hymn: 192,
     topic: '',
     program: [
         {
-            type: 'meeting',
-            title: '',
-            value: 'Bearing of Testimonies',
+            type: 'talk',
+            title: 'Youth Speaker',
+            value: 'Mitch Milne',
             priority: 0,
+        },
+        {
+            type: 'talk',
+            title: 'Speaker',
+            value: 'Vanessa Taylor',
+            priority: 1,
+        },
+        {
+            type: 'talk',
+            title: 'Speaker',
+            value: 'Rob Wiser',
+            priority: 2,
         },
     ],
     // intermediant_hymn: ,
-    closing_hymn: 220,
-    benediction: 'Taryn Lichfield',
+    closing_hymn: 299,
+    benediction: 'Megan Rolfson',
 };
 
 function getHymn(hymnRaw) {
