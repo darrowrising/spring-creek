@@ -31,7 +31,7 @@ const YouthConference = () => {
     const {
         data,
         loading,
-        totals: { devotionalTotal, activityTotal, overnightTotal },
+        totals: { devotionalTotal = 0, activityTotal = 0, overnightTotal = 0 },
     } = state;
     // handlers
     const set = (update) => handleState(update, setState);

@@ -5,8 +5,10 @@ import { lighten } from 'polished';
 
 const PLACEHOLDER = 'name of child';
 
-export const Description = styled.p`
+export const Description = styled.div`
     color: ${theme('color_grey_1')};
+    padding-bottom: 20px;
+    text-align: left;
 `;
 
 export const EventContainer = styled.div`

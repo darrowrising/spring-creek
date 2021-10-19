@@ -33,8 +33,40 @@ function Home() {
         <div className="homepage-container page center container">
             <div className="content-width">
                 <div className="main-message bishopric-message">
-                    <h2>Youth Conference Signup</h2>
-                    <p>Oct 31st to Nov 6th</p>
+                    <h2>Youth Conference</h2>
+                    <p>
+                        We are excited for our upcoming Youth Conference for the Spring Creek ward. All youth who turn
+                        14 in 2021 or are 14 and older are invited to join us. Please fill out the{' '}
+                        <Link to="/signup/youth-conference">form</Link> to allow for planning for food and
+                        transportation
+                    </p>
+                    <h4>Sunday, October 31st</h4>
+                    <p>
+                        Kickoff Fireside @ 4 p.m. in the Chapel (Sunday dress) Youth and leaders are invited.
+                        Refreshments will be served
+                    </p>
+                    <h4>Wednesday, Nov 3rd</h4>
+                    <p>Glow in the dark volleyball and dodgeball at 7 p.m. Gym</p>
+                    <h4>Friday, Nov 5th</h4>
+                    <p>
+                        Overnight at{' '}
+                        <a
+                            href="https://camping.churchofjesuschrist.org/property/561215"
+                            target="_blank"
+                            rel="noreferrer"
+                        >
+                            Snydermill Recreation Camp
+                        </a>{' '}
+                        (in Kimball Junction, near Park City)
+                    </p>
+                    <ul>
+                        <li>Indoor sleeping areas (separate for young women and young men)</li>
+                        <li>Food, outdoor and indoor games, service project and lots of fun</li>
+                        <li>Meet at the church at 4 p.m. on Friday</li>
+                        <li>Home by 4 p.m. on Saturday</li>
+                    </ul>
+
+                    <p>Questions? Please contact Bro or Sis Dangerfield</p>
                     <Link to="/signup/youth-conference">Youth Conference Signup</Link>
                 </div>
                 <SpecialAnnouncement />

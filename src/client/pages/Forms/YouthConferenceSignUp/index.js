@@ -48,13 +48,36 @@ function YouthConferenceSignUp() {
             {errorMessage && <Alert type="error" message={errorMessage} />}
             <Heading>Youth Conference 2021 Signup</Heading>
             <Description>
-                We would love to have you take a few minutes and let us know which days your children will be attending
+                <h4>Sunday, October 31st</h4>
+                <p>
+                    Kickoff Fireside @ 4 p.m. in the Chapel (Sunday dress) Youth and leaders are invited. Refreshments
+                    will be served
+                </p>
+                <h4>Wednesday, Nov 3rd</h4>
+                <p>Glow in the dark volleyball and dodgeball at 7 p.m. Gym</p>
+                <h4>Friday, Nov 5th</h4>
+                <p>
+                    Overnight at{' '}
+                    <a href="https://camping.churchofjesuschrist.org/property/561215" target="_blank" rel="noreferrer">
+                        Snydermill Recreation Camp
+                    </a>{' '}
+                    (in Kimball Junction, near Park City)
+                </p>
+                <ul>
+                    <li>Indoor sleeping areas (separate for young women and young men)</li>
+                    <li>Food, outdoor and indoor games, service project and lots of fun</li>
+                    <li>Meet at the church at 4 p.m. on Friday</li>
+                    <li>Home by 4 p.m. on Saturday</li>
+                </ul>
             </Description>
+            <Heading as="h3" style={{ textAlign: 'left', fontSize: '1.3rem' }}>
+                Please sign up for the days your child can attend
+            </Heading>
             <EventContainer>
                 <Column>
                     <div>
                         <Label>Sunday Devotional</Label>
-                        <Date>October 31st @ 7 PM</Date>
+                        <Date>October 31st @ 4 p.m.</Date>
                     </div>
                     {devotional.map((name, index) => (
                         <StyledInput
@@ -69,7 +92,7 @@ function YouthConferenceSignUp() {
                 <Column>
                     <div>
                         <Label>Wednesday Night Activity</Label>
-                        <Date>Nov 3 @ 7 PM</Date>
+                        <Date>Nov 3 @ 7 p.m.</Date>
                     </div>
                     {activity.map((name, index) => (
                         <StyledInput
@@ -84,7 +107,16 @@ function YouthConferenceSignUp() {
                 <Column>
                     <div>
                         <Label>Friday Overnight</Label>
-                        <Date>Nov 5th & 6th</Date>
+                        <Date>
+                            Nov 5th & 6th @{' '}
+                            <a
+                                href="https://camping.churchofjesuschrist.org/property/561215"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                Snyder Mill
+                            </a>
+                        </Date>
                     </div>
                     {overnight.map((name, index) => (
                         <LastWrapper key={`overnight-${index}`}>
@@ -108,7 +140,7 @@ function YouthConferenceSignUp() {
             <Button onClick={addChild} style={{ float: 'left', margin: '10px 0 20px' }}>
                 add another child
             </Button>
-            <Label style={{ clear: 'both' }}>Extra instructions</Label>
+            <Label style={{ clear: 'both' }}>Additional instructions needed for your child? (optional)</Label>
             <StyledTextArea
                 autoSize
                 placeholder="additional instructions..."

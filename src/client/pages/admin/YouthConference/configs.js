@@ -8,10 +8,7 @@ export const tableHeaders = () => [
         title: 'Devotional',
         dataIndex: 'devotional',
         key: 'devotional',
-        render: (record) => {
-            console.log('record:', record);
-            return record.join(', ');
-        },
+        render: (record) => record.join(', '),
     },
     {
         title: 'Activity',
