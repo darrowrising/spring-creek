@@ -9,26 +9,26 @@ import { comingSunday } from '../../utils/date';
 const initialState = {};
 
 export const special_entity = (state = initialState, action) => {
-    const { result, type } = action;
+  const { result, type } = action;
 
-    switch (type) {
-        case ActionTypes.GET_SPECIAL_ANNOUNCEMENT_SUCCESS: {
-            const data = result.find((item) => moment(item.endDate).isBefore(comingSunday) && !item.moderate);
+  switch (type) {
+    case ActionTypes.GET_SPECIAL_ANNOUNCEMENT_SUCCESS: {
+      const data = result.find((item) => moment(item.endDate).isBefore(comingSunday) && !item.moderate);
 
-            // data.general = true;
+      // data.general = true;
 
-            const actionState = {
-                assignment: data,
-            };
+      const actionState = {
+        assignment: data,
+      };
 
-            return { ...state, ...actionState };
-        }
-        default:
-            return state;
+      return { ...state, ...actionState };
     }
+    default:
+      return state;
+  }
 };
 
 export const getAssignments = createSelector(
-    (state) => getEntities(state),
-    (entities) => entities?.special?.assignment
+  (state) => getEntities(state),
+  (entities) => entities?.special?.assignment
 );

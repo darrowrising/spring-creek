@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Ward program and announcement manager",
   "scripts": {
-    "start": "NODE_ENV=development DB_ENV=test run-p start:local make:EnvConfig",
+    "start": "NODE_ENV=development DB_ENV=production run-p start:local make:EnvConfig",
     "start:local": "node -r @babel/register server",
     "build": "run-s make:EnvConfig test build:client",
     "build:client": "webpack -p -r @babel/register",
@@ -17,6 +17,7 @@
     "make:program": "DB_ENV=production node -r @babel/register src/server/scripts/program.js",
     "att": "DB_ENV=production node -r @babel/register src/server/scripts/addAttendance.js",
     "migrate": "DB_ENV=production node -r @babel/register src/server/scripts/migration.script.js",
+    "updateMembers": "DB_ENV=production node -r @babel/register src/server/scripts/buildMembers/updateMembers.js",
     "test": "jest",
     "test:coverage": "jest --coverage"
   },

@@ -1,3 +1,3 @@
 export function idLink(value) {
-    return `#${value.replace(' #', '')}`;
+  return `#${value.replace(' #', '')}`;
 }

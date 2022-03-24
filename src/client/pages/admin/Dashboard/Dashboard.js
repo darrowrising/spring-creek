@@ -7,11 +7,11 @@ import Layout from '../../../layouts/Main/Main';
 // import {} from './Dashboard.styles';
 
 function Dashboard() {
-    return (
-        <Layout>
-            <div>Welcome</div>
-        </Layout>
-    );
+  return (
+    <Layout>
+      <div>Welcome</div>
+    </Layout>
+  );
 }
 
 // Dashboard.propTypes = {

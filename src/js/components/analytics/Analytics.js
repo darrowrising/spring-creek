@@ -3,19 +3,19 @@ import ReactGA from 'react-ga';
 import env from '../../utils/envHandler';
 
 export function GAInitialize() {
-    const gaTrackingId = env().analytics;
+  const gaTrackingId = env().analytics;
 
-    ReactGA.initialize(gaTrackingId, {
-        debug: false,
-        gaOptions: {
-            siteSpeedSampleRate: 50,
-            alwaysSendReferrer: true,
-        },
-    });
+  ReactGA.initialize(gaTrackingId, {
+    debug: false,
+    gaOptions: {
+      siteSpeedSampleRate: 50,
+      alwaysSendReferrer: true,
+    },
+  });
 }
 
 export function GAPageView(path) {
-    ReactGA.pageview(path);
+  ReactGA.pageview(path);
 }
 
 /* ***** EVENTS *******
@@ -37,5 +37,5 @@ export function GAPageView(path) {
    - Optional. This specifies the transport mechanism with which hits will be sent. Valid values include 'beacon', 'xhr', or 'image'.
 */
 export function GAEvent(options) {
-    ReactGA.event(options);
+  ReactGA.event(options);
 }

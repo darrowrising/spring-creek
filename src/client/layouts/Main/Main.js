@@ -15,38 +15,38 @@ import { updateMemberStats } from '../../utils/analytics.utils';
 import { Container, Page, PageWrapper, Title, MenuStyled } from './Main.styles';
 
 function Main({ children, title }) {
-    // hooks
-    const { user } = useContext(UserContext);
-    const { pathname } = useLocation();
+  // hooks
+  const { user } = useContext(UserContext);
+  const { pathname } = useLocation();
 
-    useEffect(() => {
-        if (user?.email) {
-            const { stats } = user;
-            updateMemberStats(user.uid, stats, pathname);
-        }
-    }, [pathname]);
+  useEffect(() => {
+    if (user?.email) {
+      const { stats } = user;
+      updateMemberStats(user.uid, stats, pathname);
+    }
+  }, [pathname]);
 
-    return (
-        <Container>
-            <Header />
-            <PageWrapper>
-                <MenuStyled />
-                <Page>
-                    {title && <Title>{title}</Title>}
-                    {children}
-                </Page>
-            </PageWrapper>
-        </Container>
-    );
+  return (
+    <Container>
+      <Header />
+      <PageWrapper>
+        <MenuStyled />
+        <Page>
+          {title && <Title>{title}</Title>}
+          {children}
+        </Page>
+      </PageWrapper>
+    </Container>
+  );
 }
 
 Main.propTypes = {
-    children: oneOfType([any]).isRequired,
-    title: string,
+  children: oneOfType([any]).isRequired,
+  title: string,
 };
 
 Main.defaultProps = {
-    title: '',
+  title: '',
 };
 
 export default Main;

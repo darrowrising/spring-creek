@@ -1,15 +1,26 @@
-import React from 'react';
-import { node } from 'prop-types';
+import React, { memo } from 'react';
+import { node, bool } from 'prop-types';
 
 // styles
 import { StyleHeading } from './styles';
 
-function Heading({ children, ...rest }) {
-    return <StyleHeading {...rest}>{children}</StyleHeading>;
+function Heading({ children, secondary, ...rest }) {
+  const color = secondary ? 'secondary' : 'primary';
+
+  return (
+    <StyleHeading {...rest} color={color}>
+      {children}
+    </StyleHeading>
+  );
 }
 
 Heading.propTypes = {
-    children: node.isRequired,
+  children: node.isRequired,
+  secondary: bool,
 };
 
-export default Heading;
+Heading.defaultProps = {
+  secondary: false,
+};
+
+export default memo(Heading);

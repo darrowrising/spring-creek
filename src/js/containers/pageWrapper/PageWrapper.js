@@ -20,46 +20,46 @@ import { handleURLParams } from '../../utils/qrCodes';
 import './pageWrapper.less';
 
 function PageWrapper({ history, location }) {
-    useEffect(() => {
-        const isQR = handleURLParams(location.search);
+  useEffect(() => {
+    const isQR = handleURLParams(location.search);
 
-        if (isQR) {
-            history.push(location.pathname);
-        }
-    }, []);
-    useEffect(() => {
-        let pathName = location.pathname;
+    if (isQR) {
+      history.push(location.pathname);
+    }
+  }, []);
+  useEffect(() => {
+    let pathName = location.pathname;
 
-        if (pathName === '/') pathName = 'home';
+    if (pathName === '/') pathName = 'home';
 
-        GAPageView(pathName);
+    GAPageView(pathName);
 
-        if (pathName.includes('/admin')) window.location.href = `${window.location.origin}/admin`;
-    }, [location.pathname]);
+    if (pathName.includes('/admin')) window.location.href = `${window.location.origin}/admin`;
+  }, [location.pathname]);
 
-    return (
-        <div id="pageWrapper">
-            <Header />
-            <Switch>
-                <Route path="/" exact component={Home} />
-                <Route path="/program/:date" component={Program} />
-                <Route path="/program" component={Program} />
-                <Route path="/announcements/:event" component={SingleEvent} />
-                <Route path="/announcements" component={Announcements} />
-                <Route path="/moderate" component={Moderate} />
-                <Route path="/question/:category" component={Questions} />
-                <Route path="/signup/youth-conference" component={YouthConferenceSignUp} />
-                {/* <Route path="/sacrament-signup/:date" component={SacramentSignup} />
+  return (
+    <div id="pageWrapper">
+      <Header />
+      <Switch>
+        <Route path="/" exact component={Home} />
+        <Route path="/program/:date" component={Program} />
+        <Route path="/program" component={Program} />
+        <Route path="/announcements/:event" component={SingleEvent} />
+        <Route path="/announcements" component={Announcements} />
+        <Route path="/moderate" component={Moderate} />
+        <Route path="/question/:category" component={Questions} />
+        <Route path="/signup/youth-conference" component={YouthConferenceSignUp} />
+        {/* <Route path="/sacrament-signup/:date" component={SacramentSignup} />
                 <Route path="/sacrament-signup" component={SacramentSignup} /> */}
-                <Route path="*" component={Home} />
-            </Switch>
-        </div>
-    );
+        <Route path="*" component={Home} />
+      </Switch>
+    </div>
+  );
 }
 
 PageWrapper.propTypes = {
-    history: shape().isRequired,
-    location: shape().isRequired,
+  history: shape().isRequired,
+  location: shape().isRequired,
 };
 
 export default withRouter(PageWrapper);

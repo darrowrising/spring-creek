@@ -23,37 +23,32 @@ import PrivateRoute from '../../components/PrivateRoute/PrivateRoute';
 import { adminMenu } from '../../../configs/menu.configs';
 
 const list = {
-    Attendance,
-    Speakers,
-    Members,
-    ProgramMaker,
-    Questions,
-    YouthConference,
+  Attendance,
+  Speakers,
+  Members,
+  ProgramMaker,
+  Questions,
+  YouthConference,
 };
 
 function IndexRoutes() {
-    return (
-        <BrowserRouter>
-            <>
-                <Analytics />
-                <Switch>
-                    {/* main */}
-                    {adminMenu.map((item) => (
-                        <PrivateRoute
-                            exact
-                            permissions={item.permissions}
-                            path={item.path}
-                            component={list[item.component]}
-                        />
-                    ))}
-                    <Route exact path="/admin/login" component={Login} />
-                    <Route exact path="/admin/sign-up" component={SignUp} />
-                    <PrivateRoute path="/admin" component={Dashboard} />
-                    <PrivateRoute path="*" component={NotFoundPage} status={404} />
-                </Switch>
-            </>
-        </BrowserRouter>
-    );
+  return (
+    <BrowserRouter>
+      <>
+        <Analytics />
+        <Switch>
+          {/* main */}
+          {adminMenu.map((item) => (
+            <PrivateRoute exact permissions={item.permissions} path={item.path} component={list[item.component]} />
+          ))}
+          <Route exact path="/admin/login" component={Login} />
+          <Route exact path="/admin/sign-up" component={SignUp} />
+          <PrivateRoute path="/admin" component={Dashboard} />
+          <PrivateRoute path="*" component={NotFoundPage} status={404} />
+        </Switch>
+      </>
+    </BrowserRouter>
+  );
 }
 
 export default IndexRoutes;

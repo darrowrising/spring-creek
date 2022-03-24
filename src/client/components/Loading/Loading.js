@@ -6,11 +6,11 @@ import { theme } from 'theme';
 import { Container } from './Loading.styles';
 
 function Loading() {
-    return (
-        <Container>
-            <ReactLoader type="bars" color={theme('color_blue_3')} />
-        </Container>
-    );
+  return (
+    <Container>
+      <ReactLoader type="bars" color={theme('color_blue_3')} />
+    </Container>
+  );
 }
 
 export default Loading;

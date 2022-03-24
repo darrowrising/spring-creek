@@ -9,8 +9,8 @@ export const searchList = (list, value) => search(list, value, searchKeyAllowLis
 export let unsubscribe = null; // eslint-disable-line
 
 export function getQuestions(set) {
-    unsubscribe = db.collection('questions').onSnapshot((snap) => {
-        const values = docs(snap);
-        set({ list: values, questions: values, loading: false });
-    });
+  unsubscribe = db.collection('questions').onSnapshot((snap) => {
+    const values = docs(snap);
+    set({ list: values, questions: values, loading: false });
+  });
 }

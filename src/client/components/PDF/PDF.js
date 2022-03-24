@@ -5,18 +5,18 @@ import { string } from 'prop-types';
 import { Container } from './PDF.styles';
 
 function PDF({ file }) {
-    const id = file.split('/').pop().split('.')[0];
-    return (
-        <Container id={id}>
-            <Document file={file}>
-                <Page pageNumber={1} />
-            </Document>
-        </Container>
-    );
+  const id = file.split('/').pop().split('.')[0];
+  return (
+    <Container id={id}>
+      <Document file={file}>
+        <Page pageNumber={1} />
+      </Document>
+    </Container>
+  );
 }
 
 PDF.propTypes = {
-    file: string.isRequired,
+  file: string.isRequired,
 };
 
 export default PDF;

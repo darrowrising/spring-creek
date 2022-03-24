@@ -6,6 +6,7 @@ import shortId from 'shortid';
 import { db, store, docs } from '../utils/firebase.utils';
 import { fbDocId } from '../../js/utils/date';
 import { utc } from '../../client/utils/date.utils';
+import catchify from '../../client/utils/catchify.util';
 // configs
 import hymns from '../../configs/hymns.config.json';
 import csbHymns from '../../configs/csbHymns.config.json';
@@ -18,6 +19,7 @@ const programDate = null;
  * talk
  * music
  * meeting
+ * hymn
  */
 /* Hymn Options
  * [number] = reqular hymns
@@ -25,36 +27,37 @@ const programDate = null;
  */
 const programConfig = {
     presiding: 'Bishop Vaughn Kinghorn',
-    conducting: 'Tim Crowther',
+    conducting: 'Bishop Vaughn Kinghorn',
     chorister: 'Lydia York',
-    organist: 'Emily Hinchey',
-    opening_hymn: 92,
-    invocation: 'Jonny Anderson',
-    sacrament_hymn: 192,
+    organist: 'Shawn Petersen',
+    opening_hymn: 264,
+    invocation: 'Valerie Coxey',
+    sacrament_hymn: 171,
     topic: '',
     program: [
         {
             type: 'talk',
             title: 'Youth Speaker',
-            value: 'Mitch Milne',
+            value: 'Gage Rivers',
             priority: 0,
         },
         {
             type: 'talk',
             title: 'Speaker',
-            value: 'Vanessa Taylor',
+            value: 'James Wiser',
             priority: 1,
         },
         {
             type: 'talk',
             title: 'Speaker',
-            value: 'Rob Wiser',
+            value: 'Marcus Arroyo',
             priority: 2,
         },
     ],
-    // intermediant_hymn: ,
-    closing_hymn: 299,
-    benediction: 'Megan Rolfson',
+    // intermediate_hymn: ,
+    closing_hymn: 267,
+    // closing_hymn_extra: '',
+    benediction: 'Matt Grimm',
 };
 
 function getHymn(hymnRaw) {
@@ -84,9 +87,10 @@ function getHymn(hymnRaw) {
 }
 
 function updateWithHymns(program) {
-    const { opening_hymn, sacrament_hymn, closing_hymn } = program;
+    const { opening_hymn, sacrament_hymn, closing_hymn, intermediate_hymn = null } = program;
     const open = getHymn(opening_hymn);
     const sacrament = getHymn(sacrament_hymn);
+    const intermediate = getHymn(intermediate_hymn);
     const close = getHymn(closing_hymn);
 
     return {
@@ -97,6 +101,7 @@ function updateWithHymns(program) {
         sacrament_hymn: sacrament?.number || '',
         sacrament_hymn_title: sacrament?.title || '',
         sacrament_hymn_fileName: sacrament?.fileName || '',
+        intermediate_hymn_title: intermediate?.title || null,
         closing_hymn: close?.number || '',
         closing_hymn_title: close?.title || '',
         closing_hymn_fileName: close?.fileName || '',
@@ -124,6 +129,30 @@ async function doesProgramExist(date) {
     return false;
 }
 
+async function saveLastSpokeInSacrament(data) {
+    for (let index = 0; index < data.program.length; index += 1) {
+        const { type, value } = data.program[index];
+
+        if (type === 'talk') {
+            const [firstName, lastName] = value.split(' ');
+
+            await store
+                .collection('members')
+                .where('firstName', '==', firstName)
+                .where('lastName', '==', lastName)
+                .get()
+                .then((snap) => {
+                    const [member] = docs(snap);
+
+                    if (member) {
+                        store.collection('members').doc(member.uid).update({ lastSpokeInSacrament: data.date });
+                        console.log('member', member);
+                    }
+                });
+        }
+    }
+}
+
 async function makeProgramData() {
     const uid = shortId.generate();
     const time = meetingTimes[0];
@@ -147,6 +176,7 @@ async function makeProgramData() {
             uid,
         });
     }
+    // await saveLastSpokeInSacrament(program);
 
     console.log('Program', color.yellow(fbDocId), color.green('uploaded successfully'));
     process.exit(0);

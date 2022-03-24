@@ -12,7 +12,7 @@ const timestamp = dayjs.utc().local().format('MMM DD, YYY hh:mm A');
 console.info(`${colors.green(message)} | ${colors.yellow(timestamp)}`);
 
 app.get('/health', (req, res) => {
-    res.send(`${message} at ${timestamp}`);
+  res.send(`${message} at ${timestamp}`);
 });
 
 export default app;

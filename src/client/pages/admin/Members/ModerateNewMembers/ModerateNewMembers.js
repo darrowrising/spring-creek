@@ -10,23 +10,23 @@ import { dateTime } from '../../../../../configs/dateFormats.configs';
 // import {} from './ModerateNewMembers.styles';
 
 function ModerateNewMembers({ member }) {
-    return (
-        <tr>
-            <td>{`${member?.firstName} ${member?.lastName}`}</td>
-            <td>{member?.email}</td>
-            <td>{utc(member.createdOn, dateTime)}</td>
-            <td style={{ float: 'right' }}>
-                <Button onClick={() => activateNewMember(member)}>Welcome</Button>
-                <Button danger ghost onClick={() => denyRequest(member)}>
-                    Deny
-                </Button>
-            </td>
-        </tr>
-    );
+  return (
+    <tr>
+      <td>{`${member?.firstName} ${member?.lastName}`}</td>
+      <td>{member?.email}</td>
+      <td>{utc(member.createdOn, dateTime)}</td>
+      <td style={{ float: 'right' }}>
+        <Button onClick={() => activateNewMember(member)}>Welcome</Button>
+        <Button danger ghost onClick={() => denyRequest(member)}>
+          Deny
+        </Button>
+      </td>
+    </tr>
+  );
 }
 
 ModerateNewMembers.propTypes = {
-    member: shape().isRequired,
+  member: shape().isRequired,
 };
 
 // ModerateNewMembers.defaultProps = {

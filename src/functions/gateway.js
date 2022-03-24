@@ -5,7 +5,6 @@ import calendly from './api/calendly.api';
 
 const app = new Express();
 
-app.use(health)
-    .use(calendly);
+app.use(health).use(calendly);
 
 export default app;

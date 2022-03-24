@@ -5,11 +5,11 @@ import { node } from 'prop-types';
 import { Header } from './PageHeader.styles';
 
 function PageHeader({ children, ...rest }) {
-    return <Header {...rest}>{children}</Header>;
+  return <Header {...rest}>{children}</Header>;
 }
 
 PageHeader.propTypes = {
-    children: node.isRequired,
+  children: node.isRequired,
 };
 
 // PageHeader.defaultProps = {

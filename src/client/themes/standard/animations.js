@@ -1,9 +1,9 @@
 export const animations = {
-    animation_slow: '0.5s',
-    animation_medium: '0.35s',
-    animation_fast: '0.2s',
+  animation_slow: '0.5s',
+  animation_medium: '0.35s',
+  animation_fast: '0.2s',
 
-    animation_fadeIn: `{
+  animation_fadeIn: `{
         from {
             opacity: 0;
         }
@@ -12,7 +12,7 @@ export const animations = {
         }
     }`,
 
-    transition_slow: '0.5s ease',
-    transition_medium: '0.35s ease',
-    transition_fast: '0.2s ease',
+  transition_slow: '0.5s ease',
+  transition_medium: '0.35s ease',
+  transition_fast: '0.2s ease',
 };

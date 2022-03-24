@@ -5,10 +5,10 @@ import { dimensions } from './dimensions';
 import { mediaQueries } from './mediaQueries';
 
 export default {
-    ...animations,
-    ...colors,
-    ...core,
-    ...fonts,
-    ...dimensions,
-    ...mediaQueries,
+  ...animations,
+  ...colors,
+  ...core,
+  ...fonts,
+  ...dimensions,
+  ...mediaQueries,
 };

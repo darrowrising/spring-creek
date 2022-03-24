@@ -19,15 +19,15 @@ import 'antd/dist/antd.less';
 const themeVariables = theme.variables[theme.name];
 
 render(
-    <ThemeProvider theme={themeVariables}>
-        <UserProvider>
-            <NotificationsProvider>
-                <>
-                    <GlobalStyle />
-                    <Routes />
-                </>
-            </NotificationsProvider>
-        </UserProvider>
-    </ThemeProvider>,
-    document.getElementById('app')
+  <ThemeProvider theme={themeVariables}>
+    <UserProvider>
+      <NotificationsProvider>
+        <>
+          <GlobalStyle />
+          <Routes />
+        </>
+      </NotificationsProvider>
+    </UserProvider>
+  </ThemeProvider>,
+  document.getElementById('app')
 );

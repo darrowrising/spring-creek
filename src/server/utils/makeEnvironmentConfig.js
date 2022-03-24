@@ -9,19 +9,19 @@ import firebaseConfig from '../../configs/firebase.configs';
 const generatedFilePath = path.resolve('./src/generatedFiles');
 
 function createGeneratedFileDirectory() {
-    if (!fs.existsSync(generatedFilePath)) fs.mkdirSync(generatedFilePath);
+  if (!fs.existsSync(generatedFilePath)) fs.mkdirSync(generatedFilePath);
 }
 
 export default function writeClientEnvJson() {
-    const filePath = path.join(generatedFilePath, 'envConfig.json');
-    const configObject = {
-        ...envHandler(),
-        firebaseConfig: firebaseConfig[envHandler().dbEnv]
-    };
+  const filePath = path.join(generatedFilePath, 'envConfig.json');
+  const configObject = {
+    ...envHandler(),
+    firebaseConfig: firebaseConfig[envHandler().dbEnv],
+  };
 
-    createGeneratedFileDirectory();
+  createGeneratedFileDirectory();
 
-    fs.writeFileSync(filePath, JSON.stringify(configObject, null, '\t'));
+  fs.writeFileSync(filePath, JSON.stringify(configObject, null, '\t'));
 }
 
 writeClientEnvJson();

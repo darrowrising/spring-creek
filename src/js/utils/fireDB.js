@@ -16,8 +16,8 @@ export const auth = firebase.auth();
 // firebase data handling
 /* single return of firebase doc */
 export const docs = (snapshot) => {
-    if (snapshot?.docs) return snapshot?.docs.map((doc) => doc.data());
-    return snapshot.data();
+  if (snapshot?.docs) return snapshot?.docs.map((doc) => doc.data());
+  return snapshot.data();
 };
 /* multilpe from a promise all */
 export const allDocs = (snapshots) => snapshots.map((snap) => docs(snap));
@@ -25,40 +25,40 @@ export const allDocs = (snapshots) => snapshots.map((snap) => docs(snap));
 export default fireDB;
 
 function addKeyToObjectValue(obj) {
-    const keys = Object.keys(obj);
+  const keys = Object.keys(obj);
 
-    return keys.map((key) => {
-        const data = obj[key];
-        data.id = key;
+  return keys.map((key) => {
+    const data = obj[key];
+    data.id = key;
 
-        return data;
-    });
+    return data;
+  });
 }
 
 export function fbRef(options, success, err) {
-    const type = options?.type;
-    const docId = options?.docId;
-    const ref = fireDB.ref(docId);
-    // const child = options?.key;
-    const data = options?.data;
-    let successFunc = () => {};
-    let errorFunc = () => {};
+  const type = options?.type;
+  const docId = options?.docId;
+  const ref = fireDB.ref(docId);
+  // const child = options?.key;
+  const data = options?.data;
+  let successFunc = () => {};
+  let errorFunc = () => {};
 
-    if (success) {
-        successFunc = success;
-    }
+  if (success) {
+    successFunc = success;
+  }
 
-    if (err) {
-        errorFunc = err;
-    }
+  if (err) {
+    errorFunc = err;
+  }
 
-    switch (type) {
-        case 'push':
-            return ref.push(options?.data, () => {
-                successFunc('success');
-            });
-        case 'query': {
-            /* eslint-disable */ /* TODO: Remove this eslint disable */
+  switch (type) {
+    case 'push':
+      return ref.push(options?.data, () => {
+        successFunc('success');
+      });
+    case 'query': {
+      /* eslint-disable */ /* TODO: Remove this eslint disable */
             const queries = options?.queries;
             const promises = queries.map(
                 (query) =>

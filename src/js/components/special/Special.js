@@ -2,7 +2,6 @@
 /* eslint-disable */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-//import {} from 'prop-types';
 
 import { getAssignments } from './special_entity';
 import { callAssignment } from './special_action';
@@ -13,14 +12,6 @@ import messaging from '../../configs/messaging';
 import './special.less';
 
 class Special extends Component {
-    //static propTypes = {
-    //
-    //};
-
-    //static defaultProps = {
-    //
-    //}
-
     constructor(props) {
         super(props);
     }
@@ -35,28 +26,23 @@ class Special extends Component {
 
         return (
             <div className="special-wrapper">
-                {
-                    assignment && (
-                        <div className="special">
-                            <MonthHeader title={messaging.announcements.special} />
-                            <AnnouncementItem data={assignment} />
-                        </div>
-                    )
-                }
+                {assignment && (
+                    <div className="special">
+                        <MonthHeader title={messaging.announcements.special} />
+                        <AnnouncementItem data={assignment} />
+                    </div>
+                )}
             </div>
         );
     }
 }
 
-const mapStateToProps = state => ({
-    assignment: getAssignments(state)
+const mapStateToProps = (state) => ({
+    assignment: getAssignments(state),
 });
 
 const mapDispatchToProps = {
-    call: callAssignment
+    call: callAssignment,
 };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(Special);
+export default connect(mapStateToProps, mapDispatchToProps)(Special);

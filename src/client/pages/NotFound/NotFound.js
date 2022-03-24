@@ -6,13 +6,13 @@ import Layout from '../../layouts/Main/Main';
 import { Wrapper, Message } from './NotFound.styles';
 
 function NotFound() {
-    return (
-        <Layout>
-            <Wrapper>
-                <Message>404 Error - Page not found!</Message>
-            </Wrapper>
-        </Layout>
-    );
+  return (
+    <Layout>
+      <Wrapper>
+        <Message>404 Error - Page not found!</Message>
+      </Wrapper>
+    </Layout>
+  );
 }
 
 export default NotFound;

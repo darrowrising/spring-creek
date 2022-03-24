@@ -33,6 +33,8 @@ export async function saveMember(record, set, setParent) {
                 uid,
                 createdOn: utc(),
                 status: 'inactive',
+                lastSpokeInSacrament: '',
+                lastPrayedInSacrament: '',
             });
             message = 'Member Created';
         }

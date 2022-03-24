@@ -12,40 +12,40 @@ import { getData, unsubscribe } from './OverLimit.utils';
 import { Container, Wrapper } from '../List/List.styles';
 
 const initialState = {
-    loading: true,
-    data: [],
+  loading: true,
+  data: [],
 };
 
 function OverLimit() {
-    // hooks
-    const [state, setState] = useState(initialState);
-    // data
-    const { loading, data } = state;
+  // hooks
+  const [state, setState] = useState(initialState);
+  // data
+  const { loading, data } = state;
 
-    useEffect(() => {
-        getData(setState);
+  useEffect(() => {
+    getData(setState);
 
-        return () => unsubscribe();
-    }, []);
+    return () => unsubscribe();
+  }, []);
 
-    return (
-        <Container>
-            <p>Families that have been asked to watch broadcast due to the meeting being over limit.</p>
-            {loading ? (
-                <Loading />
-            ) : (
-                <Wrapper>
-                    <Table
-                        columns={tableColumns}
-                        dataSource={data}
-                        rowKey={(record) => record.uid}
-                        pagination={false}
-                        style={{ width: '100%' }}
-                    />
-                </Wrapper>
-            )}
-        </Container>
-    );
+  return (
+    <Container>
+      <p>Families that have been asked to watch broadcast due to the meeting being over limit.</p>
+      {loading ? (
+        <Loading />
+      ) : (
+        <Wrapper>
+          <Table
+            columns={tableColumns}
+            dataSource={data}
+            rowKey={(record) => record.uid}
+            pagination={false}
+            style={{ width: '100%' }}
+          />
+        </Wrapper>
+      )}
+    </Container>
+  );
 }
 
 export default OverLimit;

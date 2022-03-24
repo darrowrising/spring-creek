@@ -10,11 +10,11 @@ import { ButtonGroup } from './HeadcountForm.styles';
 
 const { Option } = Select;
 const buildOptions = (members) =>
-    members.map((member) => (
-        <Option key={member.uid} value={member?.uid || member.id}>
-            {`${member?.firstName} ${member?.lastName}`.trim()}
-        </Option>
-    )); /* TODO: Remove this eslint disable */
+  members.map((member) => (
+    <Option key={member.uid} value={member?.uid || member.id}>
+      {`${member?.firstName} ${member?.lastName}`.trim()}
+    </Option>
+  )); /* TODO: Remove this eslint disable */
 /* eslint-disable */ function HeadcountForm({ data, onSubmit, onCancel }) {
     const [form] = Form.useForm();
     const [{ members, filteredMembers }, setMembers] = useState({

@@ -4,8 +4,8 @@ import entities from './entities';
 import viewStates from './viewStates';
 
 export default (history) =>
-    combineReducers({
-        entities,
-        router: connectRouter(history),
-        viewStates,
-    });
+  combineReducers({
+    entities,
+    router: connectRouter(history),
+    viewStates,
+  });

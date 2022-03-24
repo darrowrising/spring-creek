@@ -13,9 +13,9 @@ const app = new Express();
 app.use(gateway);
 
 console.info(
+  colors.green('\n********************************************************\n') +
+    colors.yellow(`   [${process.env.NODE_ENV || 'production'}] Server Running`) +
     colors.green('\n********************************************************\n')
-    + colors.yellow(`   [${process.env.NODE_ENV || 'production'}] Server Running`)
-    + colors.green('\n********************************************************\n')
 );
 
 module.exports.services = functions.https.onRequest(app);

@@ -5,23 +5,23 @@ import { useLocation } from 'react-router-dom';
 import env from '../../../generatedFiles/envConfig.json';
 
 export default function GAInitialize() {
-    const gaTrackingId = env.analytics;
-    const { pathname } = useLocation();
+  const gaTrackingId = env.analytics;
+  const { pathname } = useLocation();
 
-    useEffect(() => {
-        initialize(gaTrackingId, {
-            debug: false,
-            gaOptions: {
-                siteSpeedSampleRate: 50,
-                alwaysSendReferrer: true,
-            },
-        });
-    }, []);
-    useEffect(() => {
-        if (pathname) pageview(pathname);
-    }, [pathname]);
+  useEffect(() => {
+    initialize(gaTrackingId, {
+      debug: false,
+      gaOptions: {
+        siteSpeedSampleRate: 50,
+        alwaysSendReferrer: true,
+      },
+    });
+  }, []);
+  useEffect(() => {
+    if (pathname) pageview(pathname);
+  }, [pathname]);
 
-    return null;
+  return null;
 }
 
 /* ***** EVENTS *******
@@ -43,5 +43,5 @@ export default function GAInitialize() {
    - Optional. This specifies the transport mechanism with which hits will be sent. Valid values include 'beacon', 'xhr', or 'image'.
 */
 export function GAEvent(options) {
-    event(options);
+  event(options);
 }

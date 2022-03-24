@@ -9,32 +9,32 @@ import { updateMemberStatsOld } from '../../../js/utils/analytics.old.utils';
 // import {} from './OldLayout.styles';
 
 function OldLayout({ responsive, children, ...rest }) {
-    const { user } = useContext(UserContext);
-    const { pathname } = useLocation();
+  const { user } = useContext(UserContext);
+  const { pathname } = useLocation();
 
-    useEffect(() => {
-        if (user) {
-            const { stats } = user;
-            updateMemberStatsOld(user.uid, stats, pathname);
-        }
-    }, [pathname]);
+  useEffect(() => {
+    if (user) {
+      const { stats } = user;
+      updateMemberStatsOld(user.uid, stats, pathname);
+    }
+  }, [pathname]);
 
-    return (
-        <div className="page center container" {...rest}>
-            <div className="content-width" style={{ maxWidth: responsive ? '100%' : '960px' }}>
-                {children}
-            </div>
-        </div>
-    );
+  return (
+    <div className="page center container" {...rest}>
+      <div className="content-width" style={{ maxWidth: responsive ? '100%' : '960px' }}>
+        {children}
+      </div>
+    </div>
+  );
 }
 
 OldLayout.propTypes = {
-    children: node.isRequired,
-    responsive: boolean,
+  children: node.isRequired,
+  responsive: boolean,
 };
 
 OldLayout.defaultProps = {
-    responsive: false,
+  responsive: false,
 };
 
 export default OldLayout;
