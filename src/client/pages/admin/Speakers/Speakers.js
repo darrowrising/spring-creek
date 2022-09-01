@@ -6,7 +6,7 @@ import PageHeader from '../../../components/PageHeader/PageHeader';
 import SpeakerTable from './Table/Table';
 import UpToSpeak from './UpToSpeak';
 // styles
-// import {} from './Speakers.styles';
+// import { TableWrapper } from './Speakers.styles';
 
 function Speakers() {
   return (

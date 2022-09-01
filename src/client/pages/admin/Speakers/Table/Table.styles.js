@@ -2,7 +2,19 @@ import styled from 'styled-components';
 import theme from 'theme';
 import { lighten } from 'polished';
 
-export const Container = styled.section``;
+export const Container = styled.section`
+  &.editable > textarea {
+    padding: 0;
+  }
+
+  & tr td.editable {
+    cursor: pointer;
+
+    &:hover {
+      background-color: #d99e3621;
+    }
+  }
+`;
 
 export const Wrapper = styled.div`
   height: 560px;
@@ -14,6 +26,9 @@ export const Wrapper = styled.div`
     & td:first-child {
       background-color: ${(props) => lighten(0.03, theme('color_grey_3')(props))};
     }
+  }
+  .cell {
+    min-width: 75px;
   }
 `;
 

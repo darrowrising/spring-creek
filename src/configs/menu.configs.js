@@ -36,12 +36,12 @@ export const adminMenu = [
     component: 'Questions',
     permissions: ['org:Bishopric'],
   },
-  {
-    text: 'Youth Conference',
-    path: '/admin/youth-conference',
-    component: 'YouthConference',
-    permissions: ['org:Bishopric'],
-  },
+  // {
+  //   text: 'Youth Conference',
+  //   path: '/admin/youth-conference',
+  //   component: 'YouthConference',
+  //   permissions: ['org:Bishopric'],
+  // },
   {
     text: 'Main Site',
     path: '/',

@@ -1,10 +1,11 @@
 // configs
-import { dateShortNoYear } from '../../../../../configs/dateFormats.configs';
+import { dateShortNoYear, MONTHS } from '../../../../../configs/dateFormats.configs';
 import { firstSacramentCollectionDate } from '../../../../../configs/unit.config';
 // utils
 import { search } from '../../../../utils/search.util';
 import { store, docs } from '../../../../utils/firebase.utils';
 import { utc, dayjs, currentYear, comingSunday, dateIdMaker } from '../../../../utils/date.utils';
+import { createProgram } from '../../../../factories/program.factory';
 
 const searchKeyAllowList = ['Topic', 'Youth Speaker', 'Speaker', 'Testimony'];
 
@@ -55,7 +56,7 @@ function buildSpeakerList(program) {
 
 function handleTopic(program) {
   const isMeeting = program.program.some(({ type }) => type === 'meeting');
-    let topic = program.topic; // eslint-disable-line
+  let topic = program.topic; // eslint-disable-line
 
   if (isMeeting && !program.topic) {
     const { value } = program.program[0];
@@ -92,6 +93,11 @@ const makeRowClassName = (date) => {
   return 'row-odd';
 };
 
+function buildSundayDate(monthDay, year) {
+  const [month, day] = monthDay.split(' ');
+  return `${year}-${MONTHS[month]}-${day}`;
+}
+
 export let unsubscribe = null; // eslint-disable-line
 
 export const getSpeakers = async (set, year) => {
@@ -107,12 +113,16 @@ export const getSpeakers = async (set, year) => {
         displayDate: utc(program.date, dateShortNoYear),
         topic: handleTopic(program),
       }));
+
       const speakers = allSundays.map((sunday) => {
         const program = programs.find((programObj) => programObj.displayDate === sunday);
         if (program) return program;
+        const date = buildSundayDate(sunday, year);
+
         return {
           displayDate: sunday,
-          uid: sunday,
+          date: utc(date),
+          year: `${year}`,
         };
       });
 
@@ -149,3 +159,20 @@ export const scrollToDate = (scrollAreaElement) => {
 };
 
 export const handleRowClass = (record) => makeRowClassName(record.displayDate);
+
+const updateMember = (displayName) => {};
+
+export const saveCell = (record) => {
+  const ref = store.collection('program');
+  const { uid } = record;
+  const updatedRecord = { ...record };
+
+  if (!uid) {
+    const newRecord = createProgram(updatedRecord);
+    ref.doc(newRecord.uid).set(newRecord);
+  } else {
+    ref.doc(uid).update({
+      ...updatedRecord,
+    });
+  }
+};

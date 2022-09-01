@@ -85,20 +85,20 @@ function Home() {
                         <Link className="block sign-up" to="/sacrament-signup" onClick={handleClick}>
                             Sign Up
                         </Link> */}
-            <h4>Broadcast Information</h4>
-            <div>Zoom link to the broadcast.</div>
-            <a href={broadcastLink} target="_blank" rel="noreferrer">
+            {/* <h4>Broadcast Information</h4> */}
+            {/* <div>Zoom link to the broadcast.</div> */}
+            {/* <a href={broadcastLink} target="_blank" rel="noreferrer">
               {broadcastLink}
-            </a>
+            </a> */}
             <h3>Adult/Youth Second Hour Classes</h3>
-            <div>{`${moment(sundaySchoolTime, 'hh:mm').format(time)} (Zoom)`}</div>
+            <div>{`${moment(sundaySchoolTime, 'hh:mm').format(time)}`}</div>
             <h3>Stake Website</h3>
             <a href="https://farmingtonwest.org/" target="_blank" rel="noreferrer">
               Farmington West Stake
             </a>
           </div>
           <div id="map" className="col-xs-12 col-sm">
-            <h3>Map to New Building</h3>
+            <h3>Map to Building</h3>
             <div className="address">79 S 1525 W</div>
             <img
               className="map"
