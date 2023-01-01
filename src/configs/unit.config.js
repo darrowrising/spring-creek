@@ -1,5 +1,5 @@
-export const meetingTimes = ['10:30'];
-export const sundaySchoolTime = '11:30';
+export const meetingTimes = ['12:00'];
+export const sundaySchoolTime = '13:00';
 export const broadcastLink = 'https://farmingtonwest.org/ward/spring_creek';
 export const firstSacramentCollectionDate = '2016-11-13';
 

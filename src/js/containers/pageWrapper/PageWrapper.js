@@ -8,6 +8,7 @@ import Header from '../../components/header/Header';
 // Views
 import Home from '../home/Home';
 import Program from '../program/Program';
+import PrintProgram from '../../../client/pages/Program/PrintProgram';
 import Announcements from '../announcements/Announcements';
 import Moderate from '../moderate/Moderate';
 import SingleEvent from '../singleEvent/SingleEvent';
@@ -42,6 +43,8 @@ function PageWrapper({ history, location }) {
       <Header />
       <Switch>
         <Route path="/" exact component={Home} />
+        <Route path="/program/print/:date" component={PrintProgram} />
+        <Route path="/program/print" component={PrintProgram} />
         <Route path="/program/:date" component={Program} />
         <Route path="/program" component={Program} />
         <Route path="/announcements/:event" component={SingleEvent} />

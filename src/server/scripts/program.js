@@ -26,56 +26,48 @@ const programDate = null;
  * csb_[number] = children song book
  */
 const programConfig = {
+  printLayout: 'simple',
+  coverImage: '',
   presiding: 'Bishop Vaughn Kinghorn',
-  conducting: 'Shay Rolfson',
+  conducting: 'Tim Crowther',
   chorister: 'Brandon Andersen',
   organist: 'Shawn Petersen',
-  opening_hymn: 64,
-  invocation: 'Jason Wessman',
-  sacrament_hymn: 185,
+  opening_hymn: 211,
+  invocation: 'Keri Kadri',
+  sacrament_hymn: 176,
   topic: '',
   program: [
-    // {
-    //   type: 'meeting',
-    //   title: '',
-    //   value: 'Bearing of Testimonies',
-    //   priority: 0,
-    // },
     {
-      type: 'talk',
-      title: 'Speaker',
-      value: 'Kim Rivers',
+      type: 'meeting',
+      title: '',
+      value: 'Bearing of Testimonies',
       priority: 0,
     },
-    {
-      type: 'talk',
-      title: 'Speaker',
-      value: 'Matt Grimm',
-      priority: 2,
-    },
     // {
     //   type: 'talk',
     //   title: 'Speaker',
-    //   value: 'Ben Ellis',
-    //   priority: 3,
+    //   value: 'Clara Fife',
+    //   priority: 0,
     // },
     // {
-    //   type: 'talk',
-    //   title: 'Speaker',
-    //   value: 'Kathy Robbins',
-    //   priority: 4,
+    //   type: 'hymn',
+    //   priority: 1,
     // },
-    {
-      type: 'music',
-      title: 'I Love to See the Temple',
-      value: 'Performed by Lydia York on the piano.',
-      priority: 1,
-    },
+    // {
+    //   type: 'music',
+    //   title: 'O Little Town of Bethlehem',
+    //   value: 'Vocal solo by Grace Johnson, cousin to sister Caitlin Stewart. Accompanied by Janna Ence',
+    //   priority: 1,
+    // },
   ],
-  // intermediate_hymn: 239,
-  closing_hymn: 158,
-  // closing_hymn_extra: '',
-  benediction: 'Kristen Milne',
+  // intermediate_hymn: 241,
+  closing_hymn: 215,
+  // closing_hymn: {
+  //   title: 'I Will Walk With Jesus',
+  //   number: '',
+  // },
+  // closing_hymn_extra: 'Congregation please stand to sing. Accompanied by Nicholas Whipple and Shawn Petersen.',
+  benediction: 'Brent Carroll',
 };
 
 function getHymn(hymnRaw) {
@@ -85,6 +77,8 @@ function getHymn(hymnRaw) {
     return {
       number: 'TBA',
     };
+
+  if (hymnRaw?.title) return hymnRaw;
 
   if (isCSB) {
     const number = Number(hymnRaw.split('_')[1]);
@@ -98,6 +92,7 @@ function getHymn(hymnRaw) {
   }
 
   const hymn = hymns.find((item) => item.number === hymnRaw);
+
   return {
     ...hymn,
     number: hymn.number,

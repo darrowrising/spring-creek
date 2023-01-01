@@ -1,5 +1,6 @@
-import React, { memo } from 'react';
+import React from 'react';
 import { node, bool } from 'prop-types';
+import styled from 'styled-components';
 
 // styles
 import { StyleHeading } from './styles';
@@ -23,4 +24,4 @@ Heading.defaultProps = {
   secondary: false,
 };
 
-export default memo(Heading);
+export default styled(Heading)``;

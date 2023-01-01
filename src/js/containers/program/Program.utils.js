@@ -7,7 +7,7 @@ import dateFormats from '../../configs/dateFormats';
 import { comingSunday, fbDocId as sudayId } from '../../utils/date';
 import { store, docs } from '../../utils/fireDB';
 
-const { fbDocId, fbDocId_long, dateTime } = dateFormats;
+const { fbDocId, fbDocId_long, dateTime, longDate } = dateFormats;
 const timeFormat = 'h:mm A';
 
 export let unsubscribe = null; // eslint-disable-line
@@ -41,7 +41,12 @@ export function getProgramData(set, programDate) {
       let state = {};
 
       if (program) {
-        return set({ ...program, date: moment.utc(program.date).format(dateTime), loading: false });
+        return set({
+          ...program,
+          dateTime: moment.utc(program.date).format(dateTime),
+          date: moment.utc(program.date).format(longDate),
+          loading: false,
+        });
       }
 
       if (programDate) {

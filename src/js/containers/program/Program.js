@@ -19,7 +19,8 @@ import { meetingTimes } from '../../../configs/unit.config';
 import './program.less';
 
 const initialState = {
-  date: moment(`${fbDocId}_${meetingTimes[0]}`, dateFormats.fbDocId_long).format(dateFormats.dateTime),
+  dateTime: moment(`${fbDocId}_${meetingTimes[0]}`, dateFormats.fbDocId_long).format(dateFormats.dateTime),
+  date: moment(`${fbDocId}_${meetingTimes[0]}`, dateFormats.fbDocId_long).format(dateFormats.longDate),
   presiding: 'Bishop Vaughn Kinghorn',
   program: [
     {
@@ -78,7 +79,7 @@ function Program({ history }) {
           )}
           <div className="center">
             <h1 className="page-header">Sacrament Meeting</h1>
-            <div className="date">{state.date}</div>
+            <div className="date">{state.dateTime}</div>
           </div>
 
           <Leaders title="Presiding" value={state?.presiding} />

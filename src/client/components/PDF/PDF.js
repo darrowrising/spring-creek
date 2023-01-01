@@ -6,6 +6,7 @@ import { Container } from './PDF.styles';
 
 function PDF({ file }) {
   const id = file.split('/').pop().split('.')[0];
+
   return (
     <Container id={id}>
       <Document file={file}>
