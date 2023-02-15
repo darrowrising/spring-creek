@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import dayjs from 'dayjs';
 import { Table, Tabs } from 'antd';
 // components
 import Heading from '../../../../components/Heading';
@@ -20,6 +21,7 @@ import { createTalk } from '../../../../factories/program.factory';
 // configs
 import { tableHeaders } from './Table.config';
 import { TOPIC_SELECT } from '../enums';
+import { dateKey } from '../../../../../configs/dateFormats.configs';
 // styles
 import { Container, Wrapper } from './Table.styles';
 
@@ -43,15 +45,7 @@ function MembersList() {
   const handleChange = (pagination, antFilters, sorter) => {
     set({ filters: antFilters, sort: sorter });
   };
-  // const handleClear = () => {
-  //   set({ filters: {}, sort: {}, searchValue: '' });
-  // };
-  // const handleSearch = (event) => {
-  //   const { value } = event?.target;
-  //   set({ filterSpeakers: searchList(speakers, value) });
-  // };
 
-  // const data = speakers.map((items) => ({ ...items, set }));
   const onTabChange = (tabIndex) => {
     const year = listOfYearsForTabs()[tabIndex - 1];
     set({ loading: true, activeTab: tabIndex.toString() });
@@ -97,13 +91,15 @@ function MembersList() {
 
   const onCellSave = (record, value = '', column, rowIndex) => {
     const newSpeakers = [...speakers];
-    const { displayDate } = record;
+    const { displayDate, date } = record;
     const currentSpeaker = newSpeakers.find((speaker) => speaker.displayDate === displayDate) ?? {};
     const newRecord = {
       uid: currentSpeaker?.uid,
       program: currentSpeaker?.program ?? [],
+      date,
+      id: dayjs(date).format(dateKey),
     };
-
+    console.log('newRecord:', newRecord);
     if (column === 'topic') {
       const isMeeting = TOPIC_SELECT.some((item) => item === value);
       newRecord.topic = value;
@@ -130,11 +126,24 @@ function MembersList() {
         type: 'talk',
         priority,
         value,
+        title: 'Speaker',
       };
 
-      newRecord[column] = value;
-
-      newSpeakers.splice(rowIndex, 1, newRecord);
+      // add values
+      for (let i = 0; i < newRecord.program.length; i += 1) {
+        if (!newRecord.program[i]) {
+          newRecord.program[i] = {
+            type: 'talk',
+            priority: i,
+            value: '',
+            title: 'Speaker',
+          };
+        }
+      }
+      // eslint-disable-next-line
+      const newProgram = structuredClone(newRecord);
+      newProgram[column] = value;
+      newSpeakers.splice(rowIndex, 1, newProgram);
 
       set({
         speakers: newSpeakers,
@@ -145,17 +154,14 @@ function MembersList() {
   };
 
   const onCellClear = (record, programIndex, rowIndex) => {
-    console.log('record', record);
-    console.log('programIndex', programIndex);
     const newRecord = { ...record };
-    const newSpeakers = { ...speakers };
+    const newSpeakers = [...speakers];
 
     const programToRemove = newRecord?.program[programIndex];
     delete newRecord[`speaker_${programIndex + 1}`];
 
     newSpeakers.splice(rowIndex, 1, newRecord);
-    console.log('newSpeakers', newSpeakers);
-    console.log('newRecord', newRecord);
+
     set({
       speakers: newSpeakers,
     });
@@ -170,20 +176,6 @@ function MembersList() {
     getSpeakers(set, speakerYear);
     return () => unsubscribe();
   }, []);
-
-  // useLayoutEffect(() => {
-  //   // const tableElement = document.getElementById('speakerTable');
-  //   scrollToDate(tableRef.current);
-  // }, []);
-  // useEffect(() => {
-  //     if (searchValue) {
-  //         /* if they have searched and made an edit to a member's record
-  //          * reestablish the user's search state with the updated member list */
-  //         setList(searchList(members, searchValue));
-  //     } else {
-  //         setList(members);
-  //     }
-  // }, [members]);
 
   const columns = tableHeaders(
     searchValue,

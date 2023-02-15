@@ -6,6 +6,7 @@ import { search } from '../../../../utils/search.util';
 import { store, docs } from '../../../../utils/firebase.utils';
 import { utc, dayjs, currentYear, comingSunday, dateIdMaker } from '../../../../utils/date.utils';
 import { createProgram } from '../../../../factories/program.factory';
+import { shortId } from '../../../../utils/data.utils';
 
 const searchKeyAllowList = ['Topic', 'Youth Speaker', 'Speaker', 'Testimony'];
 
@@ -165,14 +166,14 @@ const updateMember = (displayName) => {};
 export const saveCell = (record) => {
   const ref = store.collection('program');
   const { uid } = record;
-  const updatedRecord = { ...record };
 
   if (!uid) {
-    const newRecord = createProgram(updatedRecord);
+    const newRecord = createProgram(record);
+    newRecord.uid = shortId();
     ref.doc(newRecord.uid).set(newRecord);
   } else {
     ref.doc(uid).update({
-      ...updatedRecord,
+      ...record,
     });
   }
 };

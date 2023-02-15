@@ -1,3 +1,4 @@
+import shortid from 'shortid';
 import { isObject } from './object.utils';
 
 export const isEmpty = (data) => {
@@ -11,3 +12,5 @@ export const isEmpty = (data) => {
 
   return value.length === 0;
 };
+
+export const shortId = () => shortid.generate();

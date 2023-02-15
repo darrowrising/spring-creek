@@ -31,7 +31,7 @@ const EditableCell = ({ defaultValue = '', onSave, onRemove, type, column, ...re
     const isNoOptions = !options.filter(
       (option) => !cellValue || option.toLowerCase().includes(cellValue.toLowerCase())
     ).length;
-    console.info('input');
+
     if (isNoOptions) {
       return (
         <Input
@@ -39,16 +39,16 @@ const EditableCell = ({ defaultValue = '', onSave, onRemove, type, column, ...re
           autoFocus
           allowClear
           onChange={({ target: { value } }) => {
-            console.info('input on change');
             setCellValue(value);
           }}
           onPressEnter={({ target: { value } }) => {
-            console.info('input on press enter');
             onSave(value);
           }}
           onBlur={() => {
-            console.info('input on blur');
             onSave(cellValue);
+          }}
+          style={{
+            minWidth: '100px',
           }}
         />
       );
@@ -62,22 +62,25 @@ const EditableCell = ({ defaultValue = '', onSave, onRemove, type, column, ...re
         searchValue={cellValue}
         showSearch
         onSearch={(value) => {
-          console.info('on search');
+          // console.info('select on search');
           setCellValue(value);
         }}
-        onChange={() => {
-          console.info('on change');
-          return onSave;
+        onChange={(value) => {
+          // console.info('select on change', cellValue);
+          onSave(value);
         }}
         onClear={() => {
-          console.info('on clear');
-          return onRemove;
+          // console.info('select on clear');
+          onRemove();
         }}
         value={cellValue}
         style={{
           width: '100%',
         }}
-        onBlur={() => onSave(cellValue)}
+        onBlur={() => {
+          if (!cellValue) onRemove();
+          // onSave(cellValue)
+        }}
       >
         {options.map((option, index) => (
           <Option key={`${option}_${index}`} value={option}>

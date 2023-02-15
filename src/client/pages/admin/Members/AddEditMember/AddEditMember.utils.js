@@ -33,6 +33,8 @@ export async function saveMember(record, set, setParent) {
         uid,
         createdOn: utc(),
         status: 'inactive',
+        delayInPraying: '',
+        delayInSpeaking: '',
         lastSpokeInSacrament: '',
         lastPrayedInSacrament: '',
         ageGroup: obj.ageGroup ?? 'adult',

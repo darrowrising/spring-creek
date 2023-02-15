@@ -2,7 +2,7 @@ import React from 'react';
 // components
 import EditableCell from '../EditableCell';
 // utils
-import { markSearchValue } from '../../../../utils/search.util';
+// import { markSearchValue } from '../../../../utils/search.util';
 import { dateIdMaker } from '../../../../utils/date.utils';
 
 export const tableHeaders = (searchValue, totalSpeakers, onCellSave, onCellClick, onCellClear) => {

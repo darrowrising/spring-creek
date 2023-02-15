@@ -36,6 +36,7 @@ const UpToSpeak = () => {
   const { speakers = [], isLoading, isSearch, isError } = state;
 
   const set = (update) => handleState(update, setState);
+
   const handleMoreOnClick = (record, type) => {
     switch (type) {
       case SET_TO_SPEAK:

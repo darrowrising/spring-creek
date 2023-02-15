@@ -29,45 +29,57 @@ const programConfig = {
   printLayout: 'simple',
   coverImage: '',
   presiding: 'Bishop Vaughn Kinghorn',
-  conducting: 'Tim Crowther',
+  conducting: 'Shay Rolfson',
   chorister: 'Brandon Andersen',
   organist: 'Shawn Petersen',
-  opening_hymn: 211,
-  invocation: 'Keri Kadri',
-  sacrament_hymn: 176,
+  opening_hymn: 226,
+  invocation: 'Grace Clegg',
+  sacrament_hymn: 169,
   topic: '',
   program: [
-    {
-      type: 'meeting',
-      title: '',
-      value: 'Bearing of Testimonies',
-      priority: 0,
-    },
     // {
-    //   type: 'talk',
-    //   title: 'Speaker',
-    //   value: 'Clara Fife',
+    //   type: 'meeting',
+    //   title: '',
+    //   value: 'Bearing of Testimonies',
     //   priority: 0,
     // },
-    // {
-    //   type: 'hymn',
-    //   priority: 1,
-    // },
+    {
+      type: 'talk',
+      title: 'Speaker',
+      value: 'Claire Hinchey',
+      priority: 0,
+    },
+    {
+      type: 'talk',
+      title: 'Speaker',
+      value: 'Jen Empey',
+      priority: 1,
+    },
+    {
+      type: 'talk',
+      title: 'Speaker',
+      value: 'Kristi von Neiderhausern',
+      priority: 4,
+    },
+    {
+      type: 'hymn',
+      priority: 3,
+    },
     // {
     //   type: 'music',
-    //   title: 'O Little Town of Bethlehem',
-    //   value: 'Vocal solo by Grace Johnson, cousin to sister Caitlin Stewart. Accompanied by Janna Ence',
+    //   title: 'Faith',
+    //   value: 'Performed by the Primary',
     //   priority: 1,
     // },
   ],
-  // intermediate_hymn: 241,
-  closing_hymn: 215,
+  intermediate_hymn: 223,
+  closing_hymn: 251,
   // closing_hymn: {
   //   title: 'I Will Walk With Jesus',
   //   number: '',
   // },
   // closing_hymn_extra: 'Congregation please stand to sing. Accompanied by Nicholas Whipple and Shawn Petersen.',
-  benediction: 'Brent Carroll',
+  benediction: 'Brody Rolfson',
 };
 
 function getHymn(hymnRaw) {
@@ -151,7 +163,9 @@ async function getMember(name, lastName) {
 }
 
 function getName(displayName) {
-  return displayName.split(' ');
+  const names = displayName.split(' ');
+  const firstName = names.shift();
+  return [firstName, names.join(' ')];
 }
 
 async function saveLastSpokedInSacrament(data) {
