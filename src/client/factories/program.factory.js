@@ -1,6 +1,6 @@
 import { generate as uid } from 'shortid';
 // configs
-import { meetingTimes } from '../../configs/unit.config';
+import { meetingTimes, bishop } from '../../configs/unit.config';
 // utils
 import { utc, dayjs } from '../utils/date.utils';
 import { dateKey, year } from '../../configs/dateFormats.configs';
@@ -18,7 +18,7 @@ export const createProgram = (program = {}) => ({
   opening_hymn_fileName: '',
   opening_hymn_title: '',
   organist: '',
-  presiding: '',
+  presiding: bishop,
   program: [],
   sacrament_hymn: 0,
   sacrament_hymn_fileName: '',

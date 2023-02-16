@@ -73,7 +73,7 @@ async function addLastSpokeToMember() {
   process.exit(0);
 }
 
-addLastSpokeToMember();
+// addLastSpokeToMember();
 
 // async function addNewFields() {
 //   const memberSnapshots = await store.collection('members').get();

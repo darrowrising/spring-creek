@@ -15,7 +15,7 @@ function Leaders(props) {
         <div className="leaders-wrapper">
           <span className="leaders-title left">{title}</span>
           <span className="dot-leaders" />
-          <span className="leaders-value right">{isCSB ? <a href={idLink(value)}>{value}</a> : value}</span>
+          <span className="leaders-value right">{isCSB ? <a href={idLink(value)}>{value}</a> : value || 'TBA'}</span>
         </div>
         {subValue && (
           <div className="row subValue-wrapper">

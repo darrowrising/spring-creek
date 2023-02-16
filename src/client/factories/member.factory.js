@@ -8,13 +8,15 @@ export const createMember = (member) => ({
   lastName: '',
   lastPrayedInSacrament: '',
   lastSpokeInSacrament: '',
+  delayInSpeaking: '',
+  delayInPraying: '',
   preferredName: '',
   speakingHistory: [],
   prayerHistory: [],
-  ...member,
   status: 'inactive',
   uid: uid(),
   createdOn: utc(),
+  ...member,
 });
 
 export const createMemberName = ({ preferredName = '', firstName = '', lastName = '' }) =>

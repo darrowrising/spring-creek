@@ -2,6 +2,7 @@ export const meetingTimes = ['12:00'];
 export const sundaySchoolTime = '13:00';
 export const broadcastLink = 'https://farmingtonwest.org/ward/spring_creek';
 export const firstSacramentCollectionDate = '2016-11-13';
+export const bishop = 'Bishop Vaughn Kinghorn';
 
 export const covidMaxCount = 150;
 
