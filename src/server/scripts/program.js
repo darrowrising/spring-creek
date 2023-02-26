@@ -28,14 +28,14 @@ const programDate = null;
 const programConfig = {
   printLayout: 'simple',
   coverImage: '',
-  presiding: 'Bishop Vaughn Kinghorn',
+  presiding: 'President Darin Hammond',
   conducting: 'Shay Rolfson',
   chorister: 'Brandon Andersen',
   organist: 'Shawn Petersen',
-  opening_hymn: 226,
-  invocation: 'Grace Clegg',
-  sacrament_hymn: 169,
-  topic: '',
+  opening_hymn: 237,
+  invocation: 'Lydia York',
+  sacrament_hymn: 174,
+  topic: 'Ward Conference',
   program: [
     // {
     //   type: 'meeting',
@@ -46,40 +46,82 @@ const programConfig = {
     {
       type: 'talk',
       title: 'Speaker',
-      value: 'Claire Hinchey',
-      priority: 0,
-    },
-    {
-      type: 'talk',
-      title: 'Speaker',
-      value: 'Jen Empey',
+      value: 'Bishop Vaughn Kinghorn',
       priority: 1,
     },
     {
       type: 'talk',
       title: 'Speaker',
-      value: 'Kristi von Neiderhausern',
-      priority: 4,
-    },
-    {
-      type: 'hymn',
-      priority: 3,
+      value: 'President Darin Hammond',
+      priority: 2,
     },
     // {
-    //   type: 'music',
-    //   title: 'Faith',
-    //   value: 'Performed by the Primary',
-    //   priority: 1,
+    //   type: 'talk',
+    //   title: 'Speaker',
+    //   value: 'Kristi von Neiderhausern',
+    //   priority: 4,
     // },
+    // {
+    //   type: 'hymn',
+    //   priority: 3,
+    // },
+    {
+      type: 'music',
+      title: 'In Christ Alone',
+      value:
+        'Performed by the Ward Choir. Grace Clegg (flute soloist), Lilian Kirby (soloist). Accompanied by Shawn Petersen (piano).',
+      priority: 0,
+      lyrics: true,
+    },
   ],
-  intermediate_hymn: 223,
-  closing_hymn: 251,
+  // intermediate_hymn: 223,
+  closing_hymn: 220,
   // closing_hymn: {
   //   title: 'I Will Walk With Jesus',
   //   number: '',
   // },
   // closing_hymn_extra: 'Congregation please stand to sing. Accompanied by Nicholas Whipple and Shawn Petersen.',
-  benediction: 'Brody Rolfson',
+  benediction: 'Tyler Bennett',
+  lyrics: {
+    title: 'In Christ Alone',
+    words: `
+    In Christ alone my hope is found
+    He is my light, my strength, my song
+    This cornerstone, this solid ground
+    Firm through the fiercest drought and storm
+    What heights of love, what depths of peace
+    When fears are stilled, when strivings cease
+    My comforter, my all in all
+    Here in the love of Christ I stand
+    
+    In Christ alone who took on flesh
+    Fullness of God in helpless babe
+    This gift of love and righteousness
+    Scorned by the ones He came to save
+    Till on that cross as Jesus died
+    The wrath of God was satisfied
+    For every sin on Him was laid
+    Here in the death of Christ I live
+    
+    There in the ground His body lay
+    Light of the world by darkness slain
+    Then bursting forth in glorious day
+    Up from the grave He rose again
+    And as He stands in victory
+    Sin's curse has lost its grip on me
+    For I am His and He is mine
+    Bought with the precious blood of Christ
+    
+    No guilt in life, no fear in death
+    This is the power of Christ in me
+    From life's first cry to final breath
+    Jesus commands my destiny
+    No power of hell, no scheme of man
+    Can ever pluck me from His hand
+    Till He returns or calls me home
+    Here in the power of Christ I'll stand
+    `,
+  },
 };
 
 function getHymn(hymnRaw) {

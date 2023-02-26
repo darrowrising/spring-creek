@@ -8,6 +8,7 @@ import { shape } from 'prop-types';
 import Leaders from '../../components/leaders/Leaders';
 import * as CSB from '../../../client/static/csb';
 import PDF from '../../../client/components/PDF/PDF';
+import Lyrics from './Lyrics';
 // utils
 import { fbDocId } from '../../utils/date';
 import { sessionLinks, isSessionActive, getProgramData, unsubscribe } from './Program.utils';
@@ -128,6 +129,11 @@ function Program({ history }) {
                     <div className="center musical-number-wrapper">
                       <div className="musical-title">{item.title}</div>
                       <div className="musical-number">{item.value}</div>
+                      {item.lyrics && (
+                        <a href="#lyrics">
+                          <em>see lyrics below</em>
+                        </a>
+                      )}
                     </div>
                   );
                 }
@@ -161,6 +167,7 @@ function Program({ history }) {
           <Leaders title="Benediction" value={state?.benediction || 'TBA'} style={{ marginBottom: '40px' }} />
         </div>
       )}
+      <Lyrics title={state?.lyrics?.title} lyrics={state?.lyrics?.words} />
     </div>
   );
 }
