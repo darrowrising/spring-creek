@@ -31,11 +31,17 @@ export const adminMenu = [
     notification: 'newMembers',
   },
   {
-    text: 'Questions List',
-    path: '/admin/questions',
-    component: 'Questions',
-    permissions: ['org:Bishopric'],
+    text: 'Parenting Questions',
+    path: '/admin/parenting',
+    component: 'Parenting',
+    permissions: [],
   },
+  // {
+  //   text: 'Questions List',
+  //   path: '/admin/questions',
+  //   component: 'Questions',
+  //   permissions: ['org:Bishopric'],
+  // },
   // {
   //   text: 'Youth Conference',
   //   path: '/admin/youth-conference',

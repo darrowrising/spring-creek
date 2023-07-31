@@ -26,6 +26,7 @@ function MenuComponent(props) {
       <MenuItem text="Sacrament Program" onClick={() => onClick(history, '/program')} />
       {/* <MenuItem text="Sacrament Signup" onClick={() => onClick(history, '/sacrament-signup')} /> */}
       <MenuItem text="Announcements" onClick={() => onClick(history, '/announcements')} />
+      <MenuItem text="Parenting" onClick={() => onClick(history, '/parenting')} />
       {/* <MenuItem text="Youth Conference" onClick={() => onClick(history, '/signup/youth-conference')} /> */}
     </Menu>
   );
