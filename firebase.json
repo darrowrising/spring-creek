@@ -5,27 +5,25 @@
   "hosting": [
     {
       "target": "test",
-      "public": "public",
-      "ignore": [
-        "firebase.json",
-        "**/.*",
-        "**/node_modules/**"
-      ],
+      "public": "dist",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
       "rewrites": [
         {
           "source": "**",
           "destination": "/index.html"
         }
-      ]
+      ],
+      "frameworksBackend": {
+        "region": "us-west1"
+      }
     },
     {
       "target": "production",
-      "public": "public",
-      "ignore": [
-        "firebase.json",
-        "**/.*",
-        "**/node_modules/**"
-      ],
+      "public": "dist",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "frameworksBackend": {
+        "region": "us-west1"
+      },
       "rewrites": [
         {
           "source": "**",
@@ -36,10 +34,5 @@
   ],
   "storage": {
     "rules": "storage.rules"
-  },
-  "functions": {
-    "predeploy": [
-      "npm --prefix \"$RESOURCE_DIR\" run lint"
-    ]
   }
 }
