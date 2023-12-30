@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="./assets/favicon.png" />
+    <title>Spring Creek Ward</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://springcreekward.com" />
+    <meta property="og:title" content="Spring Creek Ward" />
+    <meta property="og:description" content="" />
+    <meta name="description" content="" />
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Pattaya&display=swap" rel="stylesheet" />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      html {
+        font-size: 10px;
+      }
+      body {
+        overflow-y: scroll;
+        background-color: var(--color-primary);
+        color: var(--color-text);
+        font-family: var(--font-text);
+        -webkit-font-smoothing: antialiased;
+        -moz-font-smoothing: antialiased;
+        -o-font-smoothing: antialiased;
+        height: 100%;
+        font-size: 1.6rem;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        margin: 0;
+      }
+
+      ul,
+      dl,
+      dd {
+        margin: 0;
+        padding: 0;
+      }
+
+      a,
+      a:hover {
+        text-decoration: none;
+      }
+
+      mark {
+        background-color: var(--color-yellow-1);
+      }
+
+      @media print {
+        body {
+          background-color: transparent;
+          color: var(--color-black-1);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script>
+      // fix an issue with "react-draft-wysiwyg" throwing global undefined error
+      const global = globalThis;
+    </script>
+    <script type="module" src="./index.jsx"></script>
+  </body>
+</html>
