@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { node, string } from 'prop-types';
 
 const base = `
-  color: var(--color-blue-1);
+  color: var(--color-link);
   transition: all 0.3s ease;
 
   &&:hover {

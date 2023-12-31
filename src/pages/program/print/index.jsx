@@ -17,10 +17,9 @@ let unsubscribe = null; // eslint-disable-line
 const Layout = styled.div`
   background-color: var(--color-white-1);
   width: 100%;
-  /* height: 100vh; */
 `;
 
-const programLayout = (layoutName) => {
+const programLayout = (layoutName = 'events') => {
   // if (layoutName === 'events') return EventsLayout;
   if (layoutName === 'colorPage') return CoverLayout;
   if (layoutName === 'programOnly') return ProgramOnlyLayout;

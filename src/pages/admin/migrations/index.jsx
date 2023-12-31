@@ -89,31 +89,31 @@ Task.propTypes = {
 };
 
 const MIGRATIONS = [
-  {
-    label: 'Remove Last Spoke In Sacrament',
-    action: removeSpokeLast,
-    collection: 'members',
-  },
+  // {
+  //   label: 'Remove Last Spoke In Sacrament',
+  //   action: removeSpokeLast,
+  //   collection: 'members',
+  // },
   // {
   //   label: 'Add Year to Members',
   //   action: addYear,
   //   collection: 'members',
   // },
-  {
-    label: 'Add Member Uid to Program Speakers',
-    action: addMemberUid,
-    collection: 'program',
-  },
-  {
-    label: 'Add UID to program speakers',
-    action: addUidToSpeaker,
-    collection: 'program',
-  },
-  {
-    label: 'Transfer Events',
-    action: transferEvents,
-    collection: 'announcements',
-  },
+  // {
+  //   label: 'Add Member Uid to Program Speakers',
+  //   action: addMemberUid,
+  //   collection: 'program',
+  // },
+  // {
+  //   label: 'Add UID to program speakers',
+  //   action: addUidToSpeaker,
+  //   collection: 'program',
+  // },
+  // {
+  //   label: 'Transfer Events',
+  //   action: transferEvents,
+  //   collection: 'announcements',
+  // },
   {
     label: 'Create Program',
     action: makeProgram,

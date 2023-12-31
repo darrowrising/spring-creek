@@ -22,7 +22,7 @@ export const listOfYearsForTabs = () => {
   };
   getYearValue(firstYear);
 
-  if (weeksInTheYear === 51) {
+  if (weeksInTheYear >= 51) {
     const nextYear = dayjs().add(5, 'week').year();
     listOfYears.push(nextYear);
   }

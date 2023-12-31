@@ -1,23 +1,21 @@
 import dayjsLib from 'dayjs';
 import utcPlugin from 'dayjs/plugin/utc';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
+import isBetweenPlugin from 'dayjs/plugin/isBetween';
 
 import { meetingTime } from '../configs/unit';
 import { time, programIdShort } from '../configs/dateFormats';
 
 dayjsLib.extend(utcPlugin);
 dayjsLib.extend(customParseFormat);
-
-// export function utc(date, format = '') {
-//   if (!date) return dayjsLib().utc().local().format(format);
-//   if (format && date) return dayjsLib(date).utc().local().format(format);
-
-//   return dayjsLib(date).utc().local().format();
-// }
+dayjsLib.extend(isBetweenPlugin);
 
 export function utc({ date, format } = {}) {
   return dayjsLib(date).utc().local().format(format);
 }
+
+export const isBetween = ({ start, end }) => dayjsLib().isBetween(start, end, 'day', '[]');
+export const isAfter = (endDate) => dayjs().isAfter(endDate, 'day');
 
 export const dateIdMaker = (dateStr = '') => dateStr.split(' ').join('');
 
