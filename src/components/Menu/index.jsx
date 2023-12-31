@@ -8,6 +8,7 @@ import { lighten } from 'polished';
 import { useAdminContext } from '../../providers/admin.provider';
 import { signOut } from '../../utils/firebase.utils';
 import { hasPermission } from '../../utils/permissions.utils';
+import { adminMenu } from '../../configs/menu';
 import { colorBlue5 } from '../../styles/variables';
 
 const Wrapper = styled.div`
@@ -67,28 +68,6 @@ ListItem.propTypes = {
   count: number,
 };
 
-const items = ({ members, moderation }) => [
-  {
-    label: 'members',
-    count: members,
-    permissions: ['org:bishopric'],
-  },
-  {
-    label: 'migrations',
-    permissions: [],
-  },
-  {
-    label: 'moderation',
-    count: moderation,
-    permissions: ['org:bishopric'],
-  },
-  {
-    label: 'sacrament speakers',
-    path: 'sacrament-speakers',
-    permissions: ['org:bishopric'],
-  },
-];
-
 function Menu() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
@@ -103,7 +82,7 @@ function Menu() {
   return (
     <Wrapper>
       <List>
-        {items(notifications).map(
+        {adminMenu(notifications).map(
           ({ path, label, permissions, ...rest }) =>
             hasPermission(permissions) && (
               <ListItem

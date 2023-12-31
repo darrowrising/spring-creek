@@ -7,8 +7,11 @@ import { bool } from 'prop-types';
 import Link from '../Link';
 import { GAEvent } from '../Analytics';
 import { useUser } from '../../providers/user.provider';
-import { wardName } from '../../configs/unit';
 import { hasData } from '../../utils/data.utils';
+import { dayjs } from '../../utils/date.utils';
+import { wardName } from '../../configs/unit';
+import { headerNav } from '../../configs/menu';
+import { dateSimple } from '../../configs/dateFormats';
 import { colorPrimary, colorBlue5, mobileMaxWidth } from '../../styles/variables';
 
 const HeaderContainer = styled.div`
@@ -50,32 +53,22 @@ function handleClick() {
   });
 }
 
-const nav = [
-  {
-    label: <Link to="/">Home</Link>,
-    key: 0,
-  },
-  {
-    label: <Link to="/program">Sacrament Program</Link>,
-    key: 1,
-  },
-  {
-    label: <Link to="/announcements">Announcements</Link>,
-    key: 2,
-  },
-  {
-    label: <Link to="/admin">Admin</Link>,
-    authenticate: true,
-    key: 3,
-  },
-];
-
 function Header({ hideMenu = false }) {
   const { pathname } = useLocation();
   const { user } = useUser();
   const isAdmin = pathname.includes('admin');
 
-  const items = hasData(user) ? nav : nav.filter(({ authenticate }) => !authenticate);
+  const items = headerNav
+    .filter(({ authenticate }) => {
+      const isUserLoggedIn = hasData(user);
+      if (authenticate && isUserLoggedIn) return true;
+      if (authenticate) return false;
+      return true;
+    })
+    .flatMap(({ path, text, expire, ...rest }) => {
+      const isExpired = expire && dayjs(expire, dateSimple) < dayjs();
+      return isExpired ? [] : { label: <Link to={path}>{text}</Link>, ...rest };
+    });
 
   return (
     <HeaderContainer $isAdmin={isAdmin}>

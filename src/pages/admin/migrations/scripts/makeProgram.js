@@ -59,7 +59,7 @@ export function updateWithHymns({ opening_hymn = '', sacrament_hymn = '', closin
       const { type, value } = item;
       return type === 'hymn' ? { ...item, title: Result(getHymn(value))?.title } : item;
     }),
-    ...buildHymns(program.find(({ type }) => type === 'hymn').value, 'intermediate_hymn'),
+    ...buildHymns(program.find(({ type }) => type === 'hymn')?.value, 'intermediate_hymn'),
     ...buildHymns(closing_hymn, 'closing_hymn'),
   };
 }

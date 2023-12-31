@@ -8,6 +8,8 @@ import Print from './pages/program/print';
 import Announcements from './pages/announcements';
 import SingleAnnouncement from './pages/announcements/SingleAnnouncement';
 import NotFound from './pages/notFound';
+// temp routes
+import Initiative from './pages/temp/initiative';
 // auth
 import Login from './pages/login';
 import SignUp from './pages/signUp';
@@ -59,6 +61,8 @@ function RoutesComp() {
           <Route path="program/print/:programId" element={<Print />} />
           <Route path="announcements" element={<Announcements />} />
           <Route path="announcements/:id" element={<SingleAnnouncement />} />
+          {/* Temp Routes */}
+          <Route path="temple-family-history-initiative" element={<Initiative />} />
         </Route>
         <Route path="program/print" element={<Print />} />
         <Route

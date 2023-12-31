@@ -2,9 +2,9 @@ import shortId from 'shortid';
 
 import { isObject } from './object.utils';
 import { utc, getMonth } from './date.utils';
-import { dateSimple } from '../configs/dateFormats';
 
 export const isEmpty = (data) => {
+  if (!data) return true;
   if (typeof data === 'string') return !data;
   if (isObject(data)) return !Object.keys(data).length;
   return !data.length;

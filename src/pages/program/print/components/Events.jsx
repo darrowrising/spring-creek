@@ -1,15 +1,16 @@
 import { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import { shape, string } from 'prop-types';
+import styled, { css } from 'styled-components';
+import { shape, string, oneOfType } from 'prop-types';
 import { QRCode } from 'antd';
 
 import Heading, { SubHeading } from '../../../../components/Heading';
 import { db, docs } from '../../../../utils/firebase.utils';
 import { groupByDate, sortEvents, hasData } from '../../../../utils/data.utils';
-import { utc, dayjs, comingSunday } from '../../../../utils/date.utils';
+import { utc, dayjs, comingSunday, isBetween } from '../../../../utils/date.utils';
 import { transferEvents } from './temp';
 // import { getOrganizationColor } from '../../../../utils/organizations.utils';
 import { dateLong, dateLongTime, time as timeFormat, programIdShort } from '../../../../configs/dateFormats';
+import config from '../../../temp/initiative/config';
 
 const TRANSFER_EVENTS = false;
 
@@ -29,8 +30,9 @@ const Group = styled.h5`
 `;
 
 const Content = styled.div`
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  /* justify-content: space-between; */
+  grid-template-columns: auto 40px;
   padding: var(--space-3);
   text-align: left;
 `;
@@ -49,12 +51,14 @@ const QRGroup = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  position: relative;
-  height: 30px;
-  top: -10px;
 
   .ant-qrcode {
-    position: absolute;
+    padding: 0;
+
+    ${({ $qrSize }) => css`
+      width: calc(${$qrSize}px - 20px) !important;
+      height: calc(${$qrSize}px - 20px) !important;
+    `}
   }
 `;
 const QRTitle = styled.span`
@@ -62,20 +66,26 @@ const QRTitle = styled.span`
   color: var(--color-black-2);
 `;
 
-function Details({ group, title, time, qrLink, qrTitle }) {
+const PrintMessage = styled.div`
+  font-size: 0.6em;
+  max-width: 300px;
+  padding-top: var(--space-1);
+`;
+
+function Details({ group, title, time, qrLink, qrTitle, qrSize = 60, printMessage }) {
   return (
     <DetailsLayout>
-      {/* <Group $color={getOrganizationColor(group)}>{group}</Group> */}
       <Group>{group}</Group>
       <Content>
         <div>
           <Title>{title}</Title>
           {time && <Time>@ {utc({ date: time, format: timeFormat })}</Time>}
+          {printMessage && <PrintMessage>{printMessage}</PrintMessage>}
         </div>
-        {qrLink && qrTitle && (
-          <QRGroup>
-            <QRTitle>{qrTitle}</QRTitle>
-            <QRCode size={60} value={qrLink} />
+        {qrLink && (
+          <QRGroup $qrSize={qrSize}>
+            {qrTitle && <QRTitle>{qrTitle}</QRTitle>}
+            <QRCode size={qrSize} value={qrLink} />
           </QRGroup>
         )}
       </Content>
@@ -89,6 +99,7 @@ Details.propTypes = {
   time: string,
   qrLink: string,
   qrTitle: string,
+  printMessage: oneOfType(string, shape()),
 };
 // #endregion Details
 
@@ -172,12 +183,20 @@ const CardLayout = styled.div`
 `;
 
 function Card({ event }) {
-  const { startDate, endDate, time, group, title, qrLink, qrTitle } = event;
+  const { startDate, endDate, time, group, title, qrLink, qrTitle, qrSize, printMessage } = event;
 
   return (
     <CardLayout>
       <DateGroup startDate={startDate} endDate={endDate} time={time} />
-      <Details group={group} title={title} time={time} qrLink={qrLink} qrTitle={qrTitle} />
+      <Details
+        group={group}
+        title={title}
+        time={time}
+        qrLink={qrLink}
+        qrTitle={qrTitle}
+        qrSize={qrSize}
+        printMessage={printMessage}
+      />
     </CardLayout>
   );
 }
@@ -276,7 +295,7 @@ function Events({ data }) {
 
             return eventDate >= sunday;
           })
-          .map((event) => {
+          .flatMap((event) => {
             if (event.title === 'Ward Christmas Party') {
               return {
                 ...event,
@@ -297,6 +316,63 @@ function Events({ data }) {
                 qrTitle: 'sign up',
               };
             }
+            if (event.title === 'Temple and Family History 2024 Initiative') {
+              const currentWeekIndex = 0;
+              // const currentWeekIndex = config.findIndex(({ startDate, endDate }) =>
+              //   isBetween({ start: startDate, end: endDate })
+              // );
+
+              const currentWeek = config[currentWeekIndex];
+              const nextWeek = config[currentWeekIndex + 1];
+              const thirdWeek = config[currentWeekIndex + 2];
+
+              return [
+                {
+                  ...event,
+                  qrLink: `https://www.springcreekward.com/temple-family-history-initiative#week-${currentWeek.weekNumber}`,
+                  qrTitle: 'For Info',
+                  qrSize: 65,
+                  printMessage: (
+                    <div>
+                      <span>Week {currentWeek.weekNumber}: </span>
+                      {currentWeek.objective}
+                    </div>
+                  ),
+                  startDate: '',
+                  endDate: utc({ date: currentWeek.endDate }),
+                },
+                {
+                  ...event,
+                  qrLink: `https://www.springcreekward.com/temple-family-history-initiative#week-${nextWeek.weekNumber}`,
+                  qrTitle: 'For Info',
+                  qrSize: 65,
+                  printMessage: (
+                    <div>
+                      <span>Week {nextWeek.weekNumber}: </span>
+                      {nextWeek.objective}
+                    </div>
+                  ),
+                  startDate: '',
+                  endDate: utc({ date: nextWeek.endDate }),
+                  uid: `2-${event.uid}`,
+                },
+                {
+                  ...event,
+                  qrLink: `https://www.springcreekward.com/temple-family-history-initiative#week-${thirdWeek.weekNumber}`,
+                  qrTitle: 'For Info',
+                  qrSize: 65,
+                  printMessage: (
+                    <div>
+                      <span>Week {thirdWeek.weekNumber}: </span>
+                      {thirdWeek.objective}
+                    </div>
+                  ),
+                  startDate: '',
+                  endDate: utc({ date: thirdWeek.endDate }),
+                  uid: `3-${event.uid}`,
+                },
+              ];
+            }
             return event;
           });
 
@@ -313,12 +389,6 @@ function Events({ data }) {
       </Header>
       <div>
         <EventsHeading>Upcoming Events</EventsHeading>
-        {/* {Object.entries(events).map(([month, monthEvents]) => (
-          <div key={month}>
-            <MonthHeading>{month}</MonthHeading>
-            <EventsGrid>{monthEvents && monthEvents.map((event) => <Card key={event.uid} event={event} />)}</EventsGrid>
-          </div>
-        ))} */}
         <EventsGrid>{hasData(events) && events.map((event) => <Card key={event.uid} event={event} />)}</EventsGrid>
       </div>
       <SubmitInfo>

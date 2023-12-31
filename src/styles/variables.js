@@ -107,6 +107,10 @@ const rootCss = () => css`
     --color-brown-1: ${colorBrown1};
     /* greens */
     --color-green-1: ${colorGreen1};
+    --color-green-2: ${colorGreen2};
+    --color-green-3: ${colorGreen3};
+    --color-green-4: ${colorGreen4};
+    --color-green-5: ${colorGreen5};
     /* blues */
     --color-blue-1: ${colorBlue1};
     --color-blue-2: ${colorBlue2};
@@ -116,10 +120,14 @@ const rootCss = () => css`
     --color-blue-6: ${colorBlue6};
     /* yellows */
     --color-yellow-1: ${colorYellow1};
+    --color-yellow-2: ${colorYellow2};
+    --color-yellow-3: ${colorYellow3};
     /* oranges */
     --color-orange-1: ${colorOrange1};
+    --color-orange-2: ${colorOrange2};
     /* reds */
     --color-red-1: ${colorRed1};
+    --color-red-2: ${colorRed2};
     /* pinks */
     --color-pink-1: ${colorPink1};
     --color-pink-2: ${colorPink2};

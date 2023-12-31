@@ -83,7 +83,7 @@ export const StatusColor = styled.span`
 `;
 
 const listOfYears = listOfYearsForTabs();
-
+console.log('listOfYears:', listOfYears);
 const initialState = {
   speakers: [],
   searchValue: '',

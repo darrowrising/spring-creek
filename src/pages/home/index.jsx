@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 import Link from '../../components/Link';
 import { GAEvent } from '../../components/Analytics';
+import InitiativeSample from '../temp/initiative/Sample';
 import { sacramentMeetingTime } from '../../utils/date.utils';
 
 const HomeContainer = styled.div`
@@ -97,6 +98,7 @@ function Home() {
             /> */}
         </Col>
       </Row>
+      <InitiativeSample />
     </HomeContainer>
   );
 }
