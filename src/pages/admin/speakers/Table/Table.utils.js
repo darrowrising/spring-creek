@@ -12,7 +12,7 @@ export const searchList = (list, value) => search(list, value, searchKeyAllowLis
 
 export const listOfYearsForTabs = () => {
   const firstYear = dayjs(firstSacramentCollectionDate).year();
-  const weeksInTheYear = dayjs().week();
+  const weeksInTheYear = dayjs().local().week();
   const listOfYears = [firstYear];
   const getYearValue = (pastYear) => {
     if (currentYear === pastYear) return false;
@@ -22,7 +22,7 @@ export const listOfYearsForTabs = () => {
   };
   getYearValue(firstYear);
 
-  if (weeksInTheYear >= 51) {
+  if (weeksInTheYear >= 49) {
     const nextYear = dayjs().add(5, 'week').year();
     listOfYears.push(nextYear);
   }

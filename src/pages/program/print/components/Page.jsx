@@ -18,8 +18,8 @@ export const Page = styled.div`
 
   & > ${Program} {
     background-color: var(--color-white-2);
-    padding: 0 var(--space-4) 0 var(--space-8);
-    border-left: 1px solid var(--color-white-2);
+    padding: 0 var(--space-6) 0 var(--space-12);
+    /* border-left: 1px solid var(--color-grey-2); */
 
     .heading {
       font-size: 1.2em;
@@ -36,6 +36,10 @@ export const Page = styled.div`
 
     & > ${Program} {
       background: none;
+    }
+
+    h2 {
+      color: var(--color-black-2);
     }
   }
 `;

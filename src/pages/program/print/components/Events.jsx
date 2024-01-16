@@ -68,7 +68,7 @@ const QRTitle = styled.span`
 
 const PrintMessage = styled.div`
   font-size: 0.6em;
-  max-width: 300px;
+  max-width: 250px;
   padding-top: var(--space-1);
 `;
 
@@ -79,7 +79,7 @@ function Details({ group, title, time, qrLink, qrTitle, qrSize = 60, printMessag
       <Content>
         <div>
           <Title>{title}</Title>
-          {time && <Time>@ {utc({ date: time, format: timeFormat })}</Time>}
+          {time && <Time>@ {time}</Time>}
           {printMessage && <PrintMessage>{printMessage}</PrintMessage>}
         </div>
         {qrLink && (
@@ -283,6 +283,7 @@ function Events({ data }) {
   useEffect(() => {
     unsubscribe = db
       .collection('announcements')
+      .where('moderate', '==', false)
       .orderBy('endDate')
       .limit(7)
       .onSnapshot((snap) => {
@@ -324,7 +325,7 @@ function Events({ data }) {
 
               const currentWeek = config[currentWeekIndex];
               const nextWeek = config[currentWeekIndex + 1];
-              const thirdWeek = config[currentWeekIndex + 2];
+              // const thirdWeek = config[currentWeekIndex + 2];
 
               return [
                 {
@@ -333,7 +334,7 @@ function Events({ data }) {
                   qrTitle: 'For Info',
                   qrSize: 65,
                   printMessage: (
-                    <div>
+                    <div style={{ paddingTop: '5px' }}>
                       <span>Week {currentWeek.weekNumber}: </span>
                       {currentWeek.objective}
                     </div>
@@ -347,7 +348,7 @@ function Events({ data }) {
                   qrTitle: 'For Info',
                   qrSize: 65,
                   printMessage: (
-                    <div>
+                    <div style={{ paddingTop: '5px' }}>
                       <span>Week {nextWeek.weekNumber}: </span>
                       {nextWeek.objective}
                     </div>
@@ -356,21 +357,21 @@ function Events({ data }) {
                   endDate: utc({ date: nextWeek.endDate }),
                   uid: `2-${event.uid}`,
                 },
-                {
-                  ...event,
-                  qrLink: `https://www.springcreekward.com/temple-family-history-initiative#week-${thirdWeek.weekNumber}`,
-                  qrTitle: 'For Info',
-                  qrSize: 65,
-                  printMessage: (
-                    <div>
-                      <span>Week {thirdWeek.weekNumber}: </span>
-                      {thirdWeek.objective}
-                    </div>
-                  ),
-                  startDate: '',
-                  endDate: utc({ date: thirdWeek.endDate }),
-                  uid: `3-${event.uid}`,
-                },
+                // {
+                //   ...event,
+                //   qrLink: `https://www.springcreekward.com/temple-family-history-initiative#week-${thirdWeek.weekNumber}`,
+                //   qrTitle: 'For Info',
+                //   qrSize: 65,
+                //   printMessage: (
+                //     <div>
+                //       <span>Week {thirdWeek.weekNumber}: </span>
+                //       {thirdWeek.objective}
+                //     </div>
+                //   ),
+                //   startDate: '',
+                //   endDate: utc({ date: thirdWeek.endDate }),
+                //   uid: `3-${event.uid}`,
+                // },
               ];
             }
             return event;
