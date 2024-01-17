@@ -11,6 +11,7 @@ import { db, docs } from '../../../utils/firebase.utils';
 import CoverLayout from './layouts/colorPage';
 import EventsLayout from './layouts/events';
 import ProgramOnlyLayout from './layouts/programOnly';
+import ClassesLayout from './layouts/classes';
 
 let unsubscribe = null; // eslint-disable-line
 
@@ -23,6 +24,7 @@ const programLayout = (layoutName = 'events') => {
   // if (layoutName === 'events') return EventsLayout;
   if (layoutName === 'colorPage') return CoverLayout;
   if (layoutName === 'programOnly') return ProgramOnlyLayout;
+  if (layoutName === 'classes') return ClassesLayout;
   return EventsLayout;
 };
 

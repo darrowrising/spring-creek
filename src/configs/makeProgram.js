@@ -15,18 +15,19 @@ export const programDate = null;
  * events
  * programOnly
  * colorPage
+ * classes
  */
 export const programConfig = {
-  printLayout: 'events',
+  printLayout: 'classes',
   coverImage: '',
   presiding: 'Bishop Jake York',
-  conducting: 'Jonny Anderson',
-  chorister: 'Gage Lichfield',
+  conducting: 'Bishop Jake York',
+  chorister: 'Libby Anderson',
   organist: 'Vaughn Kinghorn',
-  opening_hymn: 3,
-  invocation: 'Laura York',
-  sacrament_hymn: 180,
-  topic: 'Joseph Smith, Christ-centered Lives',
+  opening_hymn: 14,
+  invocation: 'Taylor Norseth',
+  sacrament_hymn: 171,
+  topic: '',
   program: [
     // {
     //   type: 'meeting',
@@ -37,20 +38,26 @@ export const programConfig = {
     {
       type: 'talk',
       title: 'Speaker',
-      value: 'Bryan Carroll',
+      value: 'Ayla Kadri',
       priority: 0,
     },
     {
       type: 'talk',
       title: 'Speaker',
-      value: 'Lyndsey Grimm',
+      value: 'Isaac York',
       priority: 1,
     },
     {
       type: 'talk',
       title: 'Speaker',
-      value: 'Julie Monroe',
+      value: 'Erin Dangerfield',
       priority: 2,
+    },
+    {
+      type: 'talk',
+      title: 'Speaker',
+      value: 'Garrett Clegg',
+      priority: 3,
     },
     // {
     //   type: 'hymn',
@@ -63,13 +70,13 @@ export const programConfig = {
     //   priority: 1,
     // },
   ],
-  closing_hymn: 239,
+  closing_hymn: 142,
   // closing_hymn: {
   //   title: 'I Will Walk With Jesus',
   //   number: '',
   // },
   // closing_hymn_extra: 'Congregation will join on verse 2 and 3',
-  benediction: 'Josh Dyreng',
+  benediction: 'Missy Fox',
   lyrics: {
     title: '',
     words: '',
