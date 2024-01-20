@@ -64,6 +64,23 @@
         body {
           background-color: transparent;
           color: var(--color-black-1);
+
+          .header,
+          .heading,
+          .footer,
+          .menu,
+          .print-button {
+            display: none;
+          }
+
+          .admin-body {
+            grid-template-columns: 1fr;
+          }
+
+          main {
+            background-color: white !important;
+            height: 100vh;
+          }
         }
       }
     </style>

@@ -80,7 +80,7 @@ function Menu() {
   };
 
   return (
-    <Wrapper>
+    <Wrapper className="menu">
       <List>
         {adminMenu(notifications).map(
           ({ path, label, permissions, ...rest }) =>

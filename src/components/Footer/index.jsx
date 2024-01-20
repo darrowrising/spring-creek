@@ -27,7 +27,7 @@ const FooterContainer = styled.footer`
 
 function Footer({ ...rest }) {
   return (
-    <FooterContainer {...rest}>
+    <FooterContainer {...rest} className="footer">
       This is not an official website of{' '}
       <Link href="https://www.churchofjesuschrist.org">The Church of Jesus Christ of Latter-day Saints</Link>
       <br />

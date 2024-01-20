@@ -19,6 +19,7 @@ import Moderation from './pages/admin/moderation';
 import Members from './pages/admin/members';
 import Speakers from './pages/admin/speakers';
 import Migrations from './pages/admin/migrations';
+import Conducting from './pages/admin/conducting';
 // layouts
 import AdminLayout from './layouts/admin';
 import AuthLayout from './layouts/auth';
@@ -74,6 +75,7 @@ function RoutesComp() {
           }
         >
           <Route index element={<Admin />} />
+          <Route path="conducting" element={<Conducting />} />
           <Route path="moderation" element={<Moderation />} />
           <Route path="members" element={<Members />} />
           <Route path="sacrament-speakers" element={<Speakers />} />

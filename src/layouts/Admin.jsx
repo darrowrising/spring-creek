@@ -57,7 +57,7 @@ function AdminLayout() {
     <AdminProvider>
       <AdminContainer>
         <Header />
-        <Body>
+        <Body className="admin-body">
           <Menu />
           <Main>
             {heading && <PageHeading>{heading}</PageHeading>}
