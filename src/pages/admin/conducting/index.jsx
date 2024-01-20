@@ -1,7 +1,7 @@
 // #region imports
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { number } from 'prop-types';
+import { number, string, node, oneOfType } from 'prop-types';
 import { Button } from 'antd';
 
 import { db, docs } from '../../../utils/firebase.utils';
@@ -9,6 +9,19 @@ import { dateLongTime, programIdShort } from '../../../configs/dateFormats';
 import { utc, comingSunday } from '../../../utils/date.utils';
 import { bishop } from '../../../configs/unit';
 // #endregion imports
+// #region Values
+// #region component
+function Values({ value, children }) {
+  if (!value) return 'TBD';
+  return children;
+}
+
+Values.propTypes = {
+  value: oneOfType([string, number]),
+  children: node,
+};
+// #endregion component
+// #endregion Values
 // #region Lines
 // #region styles
 const LinesLayout = styled.div`
@@ -134,10 +147,11 @@ const initialState = {
 // #region component
 function Conducting() {
   const [program, setProgram] = useState(initialState);
-  const [errorMessage, setErrorMessage] = useState('');
 
   const {
     presiding,
+    organist,
+    chorister,
     opening_hymn,
     opening_hymn_title,
     invocation,
@@ -150,16 +164,7 @@ function Conducting() {
     benediction,
   } = program;
 
-  const onPrint = () => {
-    // var prtContent = document.getElementById('conductingPage');
-    // var WinPrint = window.open('', '', 'left=0,top=0,width=100%,height=900,toolbar=0,scrollbars=0,status=0');
-    // WinPrint.document.write(prtContent.innerHTML);
-    // WinPrint.document.close();
-    // WinPrint.focus();
-    // prtContent.print();
-    // WinPrint.close();
-    window.print();
-  };
+  const onPrint = () => window.print();
 
   useEffect(() => {
     const id = utc({ date: comingSunday(), format: programIdShort });
@@ -175,10 +180,6 @@ function Conducting() {
             ...data,
             date: utc({ date: data.date, format: dateLongTime }),
           });
-        }
-
-        if (!data) {
-          setErrorMessage('A program can not be found for that data. Please try a different date.');
         }
       });
 
@@ -198,15 +199,26 @@ function Conducting() {
           <div>
             <strong>Presiding:</strong> {presiding}
           </div>
+          <div style={{ display: 'flex', gap: 'var(--space-4)' }}>
+            <span>
+              <strong>Chorister:</strong> <Values value={chorister}>{chorister}</Values>
+            </span>
+            <span>
+              <strong>Organist:</strong> <Values value={organist}>{organist}</Values>
+            </span>
+          </div>
           <div>
             <strong>Announcements:</strong>
             <Lines />
           </div>
           <div>
-            <strong>Opening Hymn:</strong> #{opening_hymn} - {opening_hymn_title}
+            <strong>Opening Hymn:</strong>{' '}
+            <Values value={opening_hymn}>
+              #{opening_hymn} - {opening_hymn_title}
+            </Values>
           </div>
           <div>
-            <strong>Invocation:</strong> {invocation}
+            <strong>Invocation:</strong> <Values value={invocation}>{invocation}</Values>
           </div>
           <div>
             <SubHeading>RELEASING</SubHeading>
@@ -234,7 +246,10 @@ function Conducting() {
         <Col>
           <h3>We Will Now Prepare For The Sacrament</h3>
           <div>
-            <strong>Sacrament Hymn:</strong> #{sacrament_hymn} - {sacrament_hymn_title}
+            <strong>Sacrament Hymn:</strong>{' '}
+            <Values value={sacrament_hymn}>
+              #{sacrament_hymn} - {sacrament_hymn_title}
+            </Values>
           </div>
           <Words>
             <strong>BREAD DC 20:77</strong> O God, the Eternal Father, we ask thee in the name of thy Son, Jesus Christ,
@@ -252,19 +267,24 @@ function Conducting() {
           <h3>Thank Everyone For Their Reverence</h3>
           <h4>PROGRAM</h4>
           <div>
-            {speakers.map((item) => (
-              <ProgramList>{buildProgramItem(item)}</ProgramList>
-            ))}
+            {speakers
+              .sort((a, b) => a.priority - b.priority)
+              .map(({ value, ...rest }, index) => (
+                <ProgramList key={`${value}-${index + 1}`}>{buildProgramItem({ ...rest, value })}</ProgramList>
+              ))}
           </div>
           <h3>Thank Those Who Spoke and Music</h3>
           <div>
             <div>
-              <strong>Closing Hymn:</strong> #{closing_hymn} - {closing_hymn_title}
+              <strong>Closing Hymn:</strong>{' '}
+              <Values value={closing_hymn}>
+                #{closing_hymn} - {closing_hymn_title}
+              </Values>
             </div>
             {closing_hymn_extra && <em>{closing_hymn_extra}</em>}
           </div>
           <div>
-            <strong>Closing Prayer:</strong> {benediction}
+            <strong>Benediction:</strong> <Values value={benediction}>{benediction}</Values>
           </div>
         </Col>
       </Page>

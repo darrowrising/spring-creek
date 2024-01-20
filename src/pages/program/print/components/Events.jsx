@@ -297,35 +297,24 @@ function Events({ data }) {
             return eventDate >= sunday;
           })
           .flatMap((event) => {
-            if (event.title === 'Ward Christmas Party') {
-              return {
-                ...event,
-                time: '1899-12-31T17:00:00-08:00',
-              };
-            }
-            if (event.title === 'Neighborhood Nativity Night') {
-              return {
-                ...event,
-                qrLink: 'https://www.signupgenius.com/go/20F0E4AAFAB2FABFF2-46093761-neighborhood#/',
-                qrTitle: 'sign up',
-              };
-            }
-            if (event.title === 'Tithing Declaration') {
-              return {
-                ...event,
-                qrLink: 'https://calendly.com/springcreek/tithing-declaration',
-                qrTitle: 'sign up',
-              };
+            if (event.title === 'Church Cleaning Schedule') {
+              return [
+                {
+                  ...event,
+                  qrLink: 'https://drive.google.com/file/d/13vPkjzqzMpNgC-I_v9LMV2KCPQiT0Ypj/view',
+                  qrTitle: 'For Info',
+                  // qrSize: 65,
+                  printMessage: <span>Scan QR code to see your family's days</span>,
+                },
+              ];
             }
             if (event.title === 'Temple and Family History 2024 Initiative') {
-              const currentWeekIndex = 0;
-              // const currentWeekIndex = config.findIndex(({ startDate, endDate }) =>
-              //   isBetween({ start: startDate, end: endDate })
-              // );
+              const currentWeekIndex = config.findIndex(({ startDate, endDate }) =>
+                isBetween({ start: startDate, end: endDate })
+              );
 
               const currentWeek = config[currentWeekIndex];
               const nextWeek = config[currentWeekIndex + 1];
-              // const thirdWeek = config[currentWeekIndex + 2];
 
               return [
                 {
@@ -357,21 +346,6 @@ function Events({ data }) {
                   endDate: utc({ date: nextWeek.endDate }),
                   uid: `2-${event.uid}`,
                 },
-                // {
-                //   ...event,
-                //   qrLink: `https://www.springcreekward.com/temple-family-history-initiative#week-${thirdWeek.weekNumber}`,
-                //   qrTitle: 'For Info',
-                //   qrSize: 65,
-                //   printMessage: (
-                //     <div>
-                //       <span>Week {thirdWeek.weekNumber}: </span>
-                //       {thirdWeek.objective}
-                //     </div>
-                //   ),
-                //   startDate: '',
-                //   endDate: utc({ date: thirdWeek.endDate }),
-                //   uid: `3-${event.uid}`,
-                // },
               ];
             }
             return event;

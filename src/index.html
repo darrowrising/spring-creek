@@ -65,16 +65,19 @@
           background-color: transparent;
           color: var(--color-black-1);
 
-          .header,
-          .heading,
-          .footer,
-          .menu,
-          .print-button {
+          .header {
             display: none;
           }
 
           .admin-body {
             grid-template-columns: 1fr;
+
+            .heading,
+            .footer,
+            .menu,
+            .print-button {
+              display: none;
+            }
           }
 
           main {
