@@ -71,7 +71,7 @@ function Header({ hideMenu = false }) {
     });
 
   return (
-    <HeaderContainer $isAdmin={isAdmin}>
+    <HeaderContainer $isAdmin={isAdmin} className="header">
       <Logo to="/" onClick={handleClick}>
         {wardName}
       </Logo>

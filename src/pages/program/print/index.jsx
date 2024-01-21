@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 
 import Loader from '../../../components/Loader';
+import Header from '../../../components/Header';
 import { bishop } from '../../../configs/unit';
 import { programIdShort, dateLongTime } from '../../../configs/dateFormats';
 import { comingSunday, utc } from '../../../utils/date.utils';
@@ -18,10 +19,10 @@ let unsubscribe = null; // eslint-disable-line
 const Layout = styled.div`
   background-color: var(--color-white-1);
   width: 100%;
+  min-height: 100vh;
 `;
 
 const programLayout = (layoutName = 'events') => {
-  // if (layoutName === 'events') return EventsLayout;
   if (layoutName === 'colorPage') return CoverLayout;
   if (layoutName === 'programOnly') return ProgramOnlyLayout;
   if (layoutName === 'classes') return ClassesLayout;
@@ -78,12 +79,18 @@ function ProgramPrint() {
   if (errorMessage) {
     return (
       <Layout>
+        <Header />
         <div>{errorMessage}</div>
       </Layout>
     );
   }
 
-  return <Layout>{loading ? <Loader /> : <Content data={programData} />}</Layout>;
+  return (
+    <Layout>
+      <Header />
+      {loading ? <Loader /> : <Content data={programData} />}
+    </Layout>
+  );
 }
 
 export default ProgramPrint;

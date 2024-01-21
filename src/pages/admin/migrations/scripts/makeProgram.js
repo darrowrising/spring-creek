@@ -57,7 +57,7 @@ export function updateWithHymns({ opening_hymn = '', sacrament_hymn = '', closin
     ...buildHymns(sacrament_hymn, 'sacrament_hymn'),
     program: program.map((item) => {
       const { type, value } = item;
-      return type === 'hymn' ? { ...item, title: Result(getHymn(value))?.title } : item;
+      return type === 'hymn' ? { ...item, title: Result(getHymn(value))?.title ?? 'TBA' } : item;
     }),
     ...buildHymns(program.find(({ type }) => type === 'hymn')?.value, 'intermediate_hymn'),
     ...buildHymns(closing_hymn, 'closing_hymn'),

@@ -31,6 +31,7 @@ export const sortEvents = (events = []) => {
 
     if (utc({ date: aDate, format: NUM }) > utc({ date: bDate, format: NUM })) return 1;
     if (utc({ date: aDate, format: NUM }) < utc({ date: bDate, format: NUM })) return -1;
+
     return 0;
   });
 
