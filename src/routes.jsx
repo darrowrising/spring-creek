@@ -20,6 +20,7 @@ import Members from './pages/admin/members';
 import Speakers from './pages/admin/speakers';
 import Migrations from './pages/admin/migrations';
 import Conducting from './pages/admin/conducting';
+import MakeProgram from './pages/admin/makeProgram';
 // layouts
 import AdminLayout from './layouts/admin';
 import AuthLayout from './layouts/auth';
@@ -80,6 +81,7 @@ function RoutesComp() {
           <Route path="members" element={<Members />} />
           <Route path="sacrament-speakers" element={<Speakers />} />
           <Route path="migrations" element={<Migrations />} />
+          <Route path="build-program" element={<MakeProgram />} />
         </Route>
         <Route element={<AuthLayout />}>
           <Route path="/login" element={<Login />} />
