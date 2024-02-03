@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Modal, notification, Table, Button, Input } from 'antd';
-import { arrayOf, bool, func } from 'prop-types';
 import styled from 'styled-components';
 
 import NewMembers from './NewMembers';
@@ -28,14 +27,14 @@ const Bar = styled.div`
   }
 `;
 
-const StatusColor = styled.span`
-  color: ${(props) => {
-    const { status } = props;
-    if (status === 'deactivated') return `${theme('color_danger')(props)}`;
-    if (status === 'activated') return `${theme('color_success')(props)}`;
-    return 'inherit';
-  }};
-`;
+// const StatusColor = styled.span`
+//   color: ${(props) => {
+//     const { status } = props;
+//     if (status === 'deactivated') return `${theme('color_danger')(props)}`;
+//     if (status === 'activated') return `${theme('color_success')(props)}`;
+//     return 'inherit';
+//   }};
+// `;
 
 const removeMember = async (member) => {
   try {

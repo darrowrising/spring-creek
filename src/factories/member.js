@@ -2,7 +2,6 @@ import { uuid } from '../utils/data.utils';
 import { utc } from '../utils/date.utils';
 
 export const createMember = ({ ...rest } = {}) => ({
-  ageGroup: 'adult',
   callings: [],
   createdOn: utc(),
   delayInPraying: '',
