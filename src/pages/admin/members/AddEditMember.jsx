@@ -34,7 +34,7 @@ async function saveMember(record, setParent) {
       await ref.update(obj);
       message = 'Member Updated';
     } else {
-      await ref.set(createMember(obj));
+      await ref.set(createMember({ ...obj, uid }));
       message = 'Member Created';
     }
 
@@ -118,7 +118,7 @@ function AddEditMember({ content, setParentState }) {
         >
           <Input name="lastName" placeholder="Last Name" autoComplete="off" />
         </Form.Item>
-        <Form.Item label="Age Group" name="ageGroup">
+        {/* <Form.Item label="Age Group" name="ageGroup">
           <Select defaultValue="adult">
             {ageGroups.map(({ uid, name }) => (
               <Option key={uid} value={name}>
@@ -126,7 +126,7 @@ function AddEditMember({ content, setParentState }) {
               </Option>
             ))}
           </Select>
-        </Form.Item>
+        </Form.Item> */}
         <Form.Item label="Email" name="email">
           <Input disabled={content?.email} name="email" placeholder="Email" autoComplete="off" />
         </Form.Item>

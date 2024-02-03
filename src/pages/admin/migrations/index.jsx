@@ -9,12 +9,13 @@ import { dateShort } from '../../../configs/dateFormats';
 import { utc } from '../../../utils/date.utils';
 import { backup, remove, restore } from './scripts/utils';
 
-import { removeSpokeLast } from './scripts/removeSpokeLast';
+// import { removeSpokeLast } from './scripts/removeSpokeLast';
 // import { addYear } from './scripts/addYear';
-import { addMemberUid } from './scripts/addMemberUid';
-import { transferEvents } from './scripts/moveEvents';
+// import { addMemberUid } from './scripts/addMemberUid';
+// import { transferEvents } from './scripts/moveEvents';
+// import { addUidToSpeaker } from './scripts/addUidToSpeaker';
+import { uidNoMatch } from './scripts/uid-no-match';
 import { makeProgram } from './scripts/makeProgram';
-import { addUidToSpeaker } from './scripts/addUidToSpeaker';
 
 const { Ribbon } = Badge;
 
@@ -114,6 +115,11 @@ const MIGRATIONS = [
   //   action: transferEvents,
   //   collection: 'announcements',
   // },
+  {
+    label: 'Uid No Match Ref',
+    action: uidNoMatch,
+    collection: '',
+  },
   {
     label: 'Create Program',
     action: makeProgram,
