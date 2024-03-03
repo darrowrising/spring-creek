@@ -1,4 +1,4 @@
-let userPermissions;
+let userPermissions = [];
 
 export const hasPermission = (compare = []) => {
   if (userPermissions.includes('role:ultron')) return true;

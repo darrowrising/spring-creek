@@ -38,7 +38,13 @@ export const getOrganizationColor = (org) => {
 
 export const useFindMember =
   (members) =>
-  ({ name = '', id }) => {
+  ({ name = '', id, calling, callings }) => {
+    if (callings)
+      return members.filter(({ callings: memberCallings = [] }) =>
+        memberCallings.some((call) => callings.includes(call))
+      );
+    if (calling)
+      return members.find(({ callings: memberCallings = [] }) => memberCallings.some((call) => call === calling));
     if (id) return members.find(({ uid }) => uid === id);
     if (name)
       return members.find(({ preferredName, firstName, lastName }) => {

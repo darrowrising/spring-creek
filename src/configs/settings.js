@@ -20,7 +20,7 @@ export const ageGroups = [
 
 export const roles = [
   {
-    name: 'role:ultron',
+    name: 'ultron',
     description: 'Master Admin',
   },
 ];
@@ -48,5 +48,25 @@ export const callings = [
   {
     name: 'Ward Clerk',
     uid: 'call1',
+  },
+  {
+    name: 'Bishop',
+    uid: 'call2',
+  },
+  {
+    name: 'Bishopric First Counselor',
+    uid: 'call3',
+  },
+  {
+    name: 'Bishopric Second Counselor',
+    uid: 'call3',
+  },
+  {
+    name: 'Accompanist',
+    uid: 'call4',
+  },
+  {
+    name: 'Chorister',
+    uid: 'call5',
   },
 ];

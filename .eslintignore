@@ -1,0 +1,14 @@
+node_modules/
+dist/
+api/
+documentation/
+.vercel/
+src/public/
+src/client
+bun.lockb
+.stylelintrc.json
+.prettierrc.json
+.eslintrc.json
+.firebase/
+.husky/
+bin/

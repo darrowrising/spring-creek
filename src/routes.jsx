@@ -20,7 +20,7 @@ import Members from './pages/admin/members';
 import Speakers from './pages/admin/speakers';
 import Migrations from './pages/admin/migrations';
 import Conducting from './pages/admin/conducting';
-import MakeProgram from './pages/admin/makeProgram';
+import MakeProgram from './pages/admin/buildProgram';
 // layouts
 import AdminLayout from './layouts/admin';
 import AuthLayout from './layouts/auth';
@@ -31,11 +31,11 @@ import { isEmpty } from './utils/data.utils';
 import { useUser } from './providers/user.provider';
 
 const PrivateRoute = ({ children }) => {
-  const { user, loading } = useUser();
+  const { user, isUserLoading } = useUser();
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
-  if (loading) return null;
+  if (isUserLoading) return null;
   /* save current location user is trying to link to
    * after they log in, they will be redirected. */
   if (isEmpty(user) && pathname !== '/') {
@@ -77,11 +77,13 @@ function RoutesComp() {
         >
           <Route index element={<Admin />} />
           <Route path="conducting" element={<Conducting />} />
+          <Route path="conducting/:id" element={<Conducting />} />
           <Route path="moderation" element={<Moderation />} />
           <Route path="members" element={<Members />} />
           <Route path="sacrament-speakers" element={<Speakers />} />
           <Route path="migrations" element={<Migrations />} />
           <Route path="build-program" element={<MakeProgram />} />
+          <Route path="build-program/:id" element={<MakeProgram />} />
         </Route>
         <Route element={<AuthLayout />}>
           <Route path="/login" element={<Login />} />

@@ -84,7 +84,7 @@ Heading.propTypes = {
 };
 
 // #region PageHeading
-export const PageHeading = styled(Heading)`
+export const PageHeading = styled(Heading).attrs({ 'data-testid': 'page-heading' })`
   text-align: center;
   padding: var(--space-3) 0 var(--space-6);
   border-bottom: 1px solid var(--color-grey-2);

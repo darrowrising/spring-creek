@@ -103,21 +103,21 @@ function Login() {
     }
 
     const [, memberSnap] = results;
-    const { uid } = docs(memberSnap)[0];
+    const user = docs(memberSnap)[0] ?? {};
+    const redirectPath = getStorage('loginRedirect');
 
     db.collection('members')
-      .doc(uid)
+      .doc(user.uid)
       .update({ lastVisited: utc() })
       .then(() => {
-        const redirectPath = getStorage('loginRedirect');
-        if (redirectPath) removeStorage('loginRedirect');
-
         GAEvent({
           category: 'Login',
           action: 'Member logged in',
           label: `${email.split('@')[0]}`,
         });
-
+      })
+      .then(() => {
+        if (redirectPath) removeStorage('loginRedirect');
         navigate(redirectPath || LOGIN_REDIRECT);
       });
   };
@@ -172,7 +172,7 @@ function Login() {
               },
             ]}
           >
-            <Input placeholder="password" size="large" type="password" />
+            <Input placeholder="password" size="large" type="password" data-testid="password" />
           </Form.Item>
           <Form.Item>
             <Button color="primary" disabled={isDisabled} htmlType="submit" block size="large" loading={loading}>

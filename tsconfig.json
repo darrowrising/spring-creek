@@ -1,34 +1,22 @@
 {
   "compilerOptions": {
-    "target": "ES2016",
-    "lib": ["dom", "dom.iterable", "esnext", "es6"],
-    "allowJs": true,
-    "baseUrl": "./src",
-    "skipLibCheck": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "noEmit": true,
-    "esModuleInterop": true,
+    "lib": ["ESNext"],
     "module": "esnext",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "preserve",
-    "incremental": true,
-    "sourceMap": true,
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
-    "paths": {
-      // "src/utils/*": ["utils/*"],
-      // "@/components/*": ["components/*"],
-      // "@/pages/*": ["pages/*"],
-      // "styles/variables.ts": ["variables"],
-    }
-  },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/configs/hymns.js", "src/configs/unit.js", "src/configs/dateFormats.js", "src/utils/date.js", "src/configs/firebase.js", "src/pages/program/[programDate].page.jsx", "src/components/Header/index.jsx"],
-  "exclude": ["node_modules"],
-  "compileOnSave": false
+    "target": "esnext",
+    "moduleResolution": "bundler",
+    "moduleDetection": "force",
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "composite": true,
+    "strict": true,
+    "downlevelIteration": true,
+    "skipLibCheck": true,
+    "jsx": "react-jsx",
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "allowJs": true
+    // "types": [
+    //   "bun-types" // add Bun global
+    // ]
+  }
 }

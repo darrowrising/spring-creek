@@ -30,7 +30,7 @@ export const tableHeaders = ({ totalSpeakers, onCellSave, onCellClick, onCellCle
             onRemove={() => onCellClear({ rowData, column: 'topic' })}
           />
         ) : (
-          record
+          <span data-testid="topic-cell">{record}</span>
         );
       },
     },
