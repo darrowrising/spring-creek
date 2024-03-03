@@ -88,6 +88,11 @@ ButtonGroup.propTypes = {
   children: node.isRequired,
 };
 
+export const ButtonRow = styled(({ children, ...rest }) => <div {...rest}>{children}</div>)`
+  display: flex;
+  column-gap: var(--space-4);
+`;
+
 const StyledButton = styled(AntButton)`
   &&:not(:disabled) {
     background-color: ${({ color, ghost }) => handleColors(color, ghost).bg};

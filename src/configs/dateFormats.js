@@ -1,5 +1,5 @@
 export const dateLong = 'MMMM D, YYYY';
-export const dateLongTime = 'MMMM D, YYYY hh:mm A';
+export const dateLongTime = 'MMMM D, YYYY h:mm A';
 export const dateSimple = 'M/D/YY';
 export const dateShortYear = 'MMM D, YY';
 export const dateShort = 'MMM D, YYYY';

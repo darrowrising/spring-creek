@@ -285,7 +285,7 @@ function Events({ data }) {
       .collection('announcements')
       .where('moderate', '==', false)
       .orderBy('endDate')
-      .limit(7)
+      .limit(5)
       .onSnapshot((snap) => {
         const eventsData = docs(snap) || [];
 

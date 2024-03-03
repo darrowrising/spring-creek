@@ -37,6 +37,11 @@ export const headerNav = [
 
 export const adminMenu = ({ members, moderation }) => [
   {
+    label: 'build program',
+    path: 'build-program',
+    permissions: ['calling:ward_clerk'],
+  },
+  {
     label: 'conducting',
     permissions: ['org:bishopric'],
   },

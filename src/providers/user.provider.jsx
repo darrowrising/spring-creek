@@ -9,14 +9,16 @@ import { createDisplayName } from '../factories/member';
 
 const INITIAL_STATE = {
   user: {},
-  loading: true,
+  isUserLoading: true,
+  setUser: () => undefined,
 };
 
 const Context = createContext(INITIAL_STATE);
 export const useUser = () => useContext(Context);
 
 function UserProvider({ children }) {
-  const [user, setUser] = useState(INITIAL_STATE);
+  const [user, setUser] = useState(INITIAL_STATE.user);
+  const [isUserLoading, setIsUserLoading] = useState(INITIAL_STATE.isUserLoading);
 
   const filterUserData = (userAuth, userData = {}) => ({
     // pull out the values we want from the larger object and return them below.
@@ -33,7 +35,12 @@ function UserProvider({ children }) {
   useEffect(() => {
     auth.onIdTokenChanged(async (userAuth) => {
       // no user is returned.
-      if (!userAuth) return setUser({ user: {}, loading: false });
+      if (!userAuth) {
+        setUser({});
+        setIsUserLoading(false);
+
+        return false;
+      }
 
       // const [, { claims = {} }] = await catchify(userAuth.getIdTokenResult());
       const [error, dbInfoSnapshots] = await catchify(
@@ -42,15 +49,21 @@ function UserProvider({ children }) {
 
       if (error) {
         console.error(error?.code || error);
-        return setUser({ user: {}, loading: false });
+        setUser({});
+        setIsUserLoading(false);
+
+        return false;
       }
 
       const userData = docs(dbInfoSnapshots);
-      return setUser({ user: filterUserData(userAuth, userData[0]), loading: false });
+      setUser(filterUserData(userAuth, userData[0]));
+      setIsUserLoading(false);
+
+      return true;
     });
   }, []);
 
-  return <Context.Provider value={user}>{children}</Context.Provider>;
+  return <Context.Provider value={{ user, isUserLoading }}>{children}</Context.Provider>;
 }
 
 UserProvider.propTypes = {

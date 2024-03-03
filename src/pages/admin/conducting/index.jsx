@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { number, string, node, oneOfType } from 'prop-types';
 import { Button } from 'antd';
+import { useParams } from 'react-router-dom';
 
 import { db, docs } from '../../../utils/firebase.utils';
 import { dateLongTime, programIdShort } from '../../../configs/dateFormats';
@@ -95,12 +96,12 @@ const ProgramList = styled.div`
   line-height: 1.5;
 `;
 // #endregion styles
-// #region utils
+// #region buildProgramItem
 const buildProgramItem = ({ title, value, type }) => {
   if (type === 'meeting') return <strong>{value}</strong>;
   if (type === 'music')
     return (
-      <div style={{ padding: 'var(--space-2) 0' }}>
+      <div style={{ padding: 'var(--space-2) 0' }} data-testid="musical-number">
         <h5
           style={{
             borderBottom: '1px dashed var(--color-grey-1)',
@@ -118,18 +119,17 @@ const buildProgramItem = ({ title, value, type }) => {
     );
   if (type === 'hymn')
     return (
-      <div>
+      <div data-testid="hymn">
         <strong>Intermediate Hymn: </strong> #{value} - {title}
       </div>
     );
   return (
-    <div>
+    <div data-testid="speaker">
       <strong>{title}:</strong> {value}
     </div>
   );
-  console.log('type:', type);
 };
-// #endregion utils
+// #endregion buildProgramItem
 let unsubscribe = null; // eslint-disable-line
 
 const initialState = {
@@ -147,6 +147,7 @@ const initialState = {
 // #region component
 function Conducting() {
   const [program, setProgram] = useState(initialState);
+  const { id } = useParams();
 
   const {
     presiding,
@@ -167,11 +168,11 @@ function Conducting() {
   const onPrint = () => window.print();
 
   useEffect(() => {
-    const id = utc({ date: comingSunday(), format: programIdShort });
+    const conductingId = id ?? utc({ date: comingSunday(), format: programIdShort });
 
     unsubscribe = db
       .collection('program')
-      .where('id', '==', id)
+      .where('id', '==', conductingId)
       .onSnapshot((programSnap) => {
         const data = docs(programSnap)[0];
 
@@ -196,14 +197,14 @@ function Conducting() {
       <Page id="conductingPage">
         <Col>
           <h3>Welcome Everyone</h3>
-          <div>
+          <div data-testid="presiding">
             <strong>Presiding:</strong> {presiding}
           </div>
           <div style={{ display: 'flex', gap: 'var(--space-4)' }}>
-            <span>
+            <span data-testid="chorister">
               <strong>Chorister:</strong> <Values value={chorister}>{chorister}</Values>
             </span>
-            <span>
+            <span data-testid="organist">
               <strong>Organist:</strong> <Values value={organist}>{organist}</Values>
             </span>
           </div>
@@ -211,13 +212,13 @@ function Conducting() {
             <strong>Announcements:</strong>
             <Lines />
           </div>
-          <div>
+          <div data-testid="openingHymn">
             <strong>Opening Hymn:</strong>{' '}
             <Values value={opening_hymn}>
               #{opening_hymn} - {opening_hymn_title}
             </Values>
           </div>
-          <div>
+          <div data-testid="invocation">
             <strong>Invocation:</strong> <Values value={invocation}>{invocation}</Values>
           </div>
           <div>
@@ -240,12 +241,12 @@ function Conducting() {
           <h3>Stake Business:</h3>
           <div>
             <h3>Bishop Business:</h3>
-            <Lines lines={2} />
+            {/* <Lines lines={2} /> */}
           </div>
         </Col>
         <Col>
           <h3>We Will Now Prepare For The Sacrament</h3>
-          <div>
+          <div data-testid="sacramentHymn">
             <strong>Sacrament Hymn:</strong>{' '}
             <Values value={sacrament_hymn}>
               #{sacrament_hymn} - {sacrament_hymn_title}
@@ -266,7 +267,7 @@ function Conducting() {
           </Words>
           <h3>Thank Everyone For Their Reverence</h3>
           <h4>PROGRAM</h4>
-          <div>
+          <div data-testid="speakers">
             {speakers
               .sort((a, b) => a.priority - b.priority)
               .map(({ value, ...rest }, index) => (
@@ -275,7 +276,7 @@ function Conducting() {
           </div>
           <h3>Thank Those Who Spoke and Music</h3>
           <div>
-            <div>
+            <div data-testid="closingHymn">
               <strong>Closing Hymn:</strong>{' '}
               <Values value={closing_hymn}>
                 #{closing_hymn} - {closing_hymn_title}
@@ -283,7 +284,7 @@ function Conducting() {
             </div>
             {closing_hymn_extra && <em>{closing_hymn_extra}</em>}
           </div>
-          <div>
+          <div data-testid="benediction">
             <strong>Benediction:</strong> <Values value={benediction}>{benediction}</Values>
           </div>
         </Col>

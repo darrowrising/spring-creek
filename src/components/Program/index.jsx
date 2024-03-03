@@ -71,8 +71,10 @@ function Program({ data = { program: [] }, isPrint, ...rest }) {
   //   .filter((item) => item.includes('fileName'))
   //   .filter((item) => data[item])
   //   .map((item) => data[item]);
+  const program = (data.program ?? [{}]).filter((obj) => obj);
+
   return (
-    <ProgramWrapper {...rest} $speakerCount={data.program.length} $isPrint={isPrint}>
+    <ProgramWrapper {...rest} $speakerCount={program.length} $isPrint={isPrint} data-testid="program-component">
       <PageHeading>Sacrament Meeting</PageHeading>
       <Date className="date">{data.date}</Date>
 
@@ -119,9 +121,9 @@ function Program({ data = { program: [] }, isPrint, ...rest }) {
       {/* eslint-enable react/jsx-indent, indent */}
 
       <SpeakerContainer>
-        {data.program
+        {program
           .sort((a, b) => a.priority - b.priority)
-          .map(({ type, priority, value, title, lyrics }) => {
+          .map(({ type = '', priority, value, title, lyrics }) => {
             switch (type) {
               case 'music': {
                 return (
@@ -143,8 +145,8 @@ function Program({ data = { program: [] }, isPrint, ...rest }) {
                 return (
                   <Leaders
                     title="Intermediate Hymn"
-                    value={data?.intermediate_hymn && `#${data?.intermediate_hymn}`}
-                    subValue={data.intermediate_hymn_title}
+                    value={value && `#${value}`}
+                    subValue={title}
                     className="intermediate-hymn"
                     style={{
                       paddingTop: '16px',

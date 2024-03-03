@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { darken } from 'polished';
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet, useLocation, useParams } from 'react-router-dom';
 
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -51,7 +51,9 @@ const Main = styled.main`
 
 function AdminLayout() {
   const { pathname } = useLocation();
-  const heading = pathname.split('/').pop().replace('-', ' ');
+  const { id } = useParams();
+
+  const heading = pathname.replace(`/${id}`, '').split('/').pop().replace('-', ' ');
 
   return (
     <AdminProvider>
