@@ -88,7 +88,7 @@ const UpToSpeak = () => {
         return setModalState({
           isVisible: true,
           content: <RemoveFromSpeaking record={record} toggleModal={setModalState} />,
-          title: `Delay ${record?.preferredName || record.firstName} From The Speaking`,
+          title: `Delay ${record?.preferredName || record.firstName} From Speaking`,
         });
       default:
         return null;

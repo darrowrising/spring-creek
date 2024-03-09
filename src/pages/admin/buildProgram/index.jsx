@@ -601,7 +601,7 @@ function MakeProgram() {
             });
           });
       } catch (error) {
-        console.error('error', error);
+        console.error('error update', error);
         notification.error({
           message: 'Unable to Save',
           description: 'Due to bad data. Check the form and try again',
@@ -624,7 +624,7 @@ function MakeProgram() {
             });
           });
       } catch (error) {
-        console.error('error', error);
+        console.error('error new', error);
         notification.error({
           message: 'Unable to Save',
           description: 'Due to bad data. Check the form and try again.',

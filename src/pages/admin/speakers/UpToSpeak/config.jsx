@@ -2,6 +2,7 @@ import React from 'react';
 import { MoreOutlined } from '@ant-design/icons';
 import { Dropdown } from 'antd';
 
+import Button from '../../../../components/Button';
 import { utc } from '../../../../utils/date.utils';
 import { dateShort } from '../../../../configs/dateFormats';
 import { NotSpoken } from './styles';
@@ -44,13 +45,16 @@ export const columns = (onCellClick, onSave) => [
   },
   {
     title: '',
-    key: 'more',
+    key: 'delay',
     render: (record) => (
-      <Dropdown className="more" menu={{ items: menu(record) }}>
-        <MoreOutlined />
-      </Dropdown>
+      <Button size="small" onClick={() => record.onClick(record, REMOVE)}>
+        Delay Speaking
+      </Button>
+      // <Dropdown className="more" menu={{ items: menu(record) }}>
+      //   <MoreOutlined />
+      // </Dropdown>
     ),
-    width: '50px',
+    width: '100px',
     fixed: 'right',
   },
 ];
