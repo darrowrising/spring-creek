@@ -166,8 +166,11 @@ function Program({ data = { program: [] }, isPrint, ...rest }) {
         <Leaders
           title="Closing Hymn"
           value={data?.closing_hymn && `#${data?.closing_hymn}`}
+          // value=" "
           subValue={data.closing_hymn_title}
+          // subValue="I Will Be What I Believe"
           helperText={data.closing_hymn_extra}
+          // helperText="performed by the youth and primary"
           className="closing-hymn"
         />
 

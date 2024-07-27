@@ -271,14 +271,28 @@ const Instructions = styled.div`
   font-size: 0.8em;
 `;
 
+const Quote = styled.blockquote`
+  & > p {
+    background: red;
+
+    &::before {
+      content: '\201C';
+    }
+    &::after {
+      content: '\201D';
+    }
+  }
+`;
+
 // eslint-disable-next-line
 let unsubscribe;
 
-function Events({ data }) {
+function Events({ data = [] }) {
   const [events, setEvents] = useState([]);
 
   const { date } = data;
   const updatedDate = dayjs(date, dateLongTime).format(dateLong);
+  const [note, author] = data.note?.split('--') ?? [];
 
   useEffect(() => {
     unsubscribe = db
@@ -314,7 +328,7 @@ function Events({ data }) {
               );
 
               const currentWeek = config[currentWeekIndex];
-              const nextWeek = config[currentWeekIndex + 1];
+              // const nextWeek = config[currentWeekIndex + 1] ?? {};
 
               return [
                 {
@@ -331,21 +345,21 @@ function Events({ data }) {
                   startDate: '',
                   endDate: utc({ date: currentWeek.endDate }),
                 },
-                {
-                  ...event,
-                  qrLink: `https://www.springcreekward.com/temple-family-history-initiative#week-${nextWeek.weekNumber}`,
-                  qrTitle: 'For Info',
-                  qrSize: 65,
-                  printMessage: (
-                    <div style={{ paddingTop: '5px' }}>
-                      <span>Week {nextWeek.weekNumber}: </span>
-                      {nextWeek.objective}
-                    </div>
-                  ),
-                  startDate: '',
-                  endDate: utc({ date: nextWeek.endDate }),
-                  uid: `2-${event.uid}`,
-                },
+                // {
+                //   ...event,
+                //   qrLink: `https://www.springcreekward.com/temple-family-history-initiative#week-${nextWeek.weekNumber}`,
+                //   qrTitle: 'For Info',
+                //   qrSize: 65,
+                //   printMessage: (
+                //     <div style={{ paddingTop: '5px' }}>
+                //       <span>Week {nextWeek.weekNumber}: </span>
+                //       {nextWeek.objective}
+                //     </div>
+                //   ),
+                //   startDate: '',
+                //   endDate: utc({ date: nextWeek.endDate }),
+                //   uid: `2-${event.uid}`,
+                // },
               ];
             }
             return event;
@@ -366,6 +380,12 @@ function Events({ data }) {
         <EventsHeading>Upcoming Events</EventsHeading>
         <EventsGrid>{hasData(events) && events.map((event) => <Card key={event.uid} event={event} />)}</EventsGrid>
       </div>
+      {note && (
+        <Quote>
+          <p>{note}</p>
+          {author && <footer>-- {author}</footer>}
+        </Quote>
+      )}
       <SubmitInfo>
         <Instructions>
           Submit announcements at <em>springcreekward.com/announcements</em>

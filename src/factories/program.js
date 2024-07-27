@@ -14,6 +14,7 @@ export const createProgram = (program = {}, ...rest) => ({
   conducting: program.conducting ?? '',
   date: program.date ?? '',
   invocation: program.invocation ?? '',
+  note: program.note ?? '',
   print_layout: program.print_layout ?? 'events',
   opening_hymn: program.opening_hymn ?? '',
   opening_hymn_extra: program.opening_hymn_extra ?? '',

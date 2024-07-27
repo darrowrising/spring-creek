@@ -1,3 +1,5 @@
+import comeThouFontOfEveryBlessing from '../assets/pdf/come-thou-fount-of-every-blessing_eng.pdf';
+
 export const hymns = [
   {
     number: 1,
@@ -1362,6 +1364,60 @@ export const hymns = [
   {
     number: 341,
     title: 'God Save the King',
+  },
+  {
+    number: 1001,
+    title: 'Come, Thou Fount of Every Blessing',
+    link: 'https://assets.churchofjesuschrist.org/6e/4e/6e4ecd14ebb511ee863aeeeeac1eaa7887580260/come_thou_fount_of_every_blessing.pdf',
+    pdf: comeThouFontOfEveryBlessing,
+  },
+  {
+    number: 1002,
+    title: 'When the Savior Comes Again',
+    link: '',
+    pdf: null,
+  },
+  {
+    number: 1003,
+    title: 'It Is Well with My Soul',
+    link: '',
+    pdf: null,
+  },
+  {
+    number: 1004,
+    title: 'I Will Walk with Jesus',
+    link: '',
+    pdf: null,
+  },
+  {
+    number: 1005,
+    title: 'His Eye Is on the Sparrow',
+    link: '',
+    pdf: null,
+  },
+  {
+    number: 1006,
+    title: 'Think a Sacred Song',
+    link: '',
+    pdf: null,
+  },
+  {
+    number: 1007,
+    title: 'As Bread Is Broken',
+    link: '',
+    pdf: null,
+  },
+  {
+    number: 1008,
+    title: 'Bread of Life, Living Water',
+    link: '',
+    pdf: null,
+  },
+  {
+    number: 1009,
+    title: 'Gethsemane',
+    link: '',
+    pdf: null,
   },
 ];
 

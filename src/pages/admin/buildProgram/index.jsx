@@ -5,7 +5,7 @@ import { arrayOf, number, shape, string } from 'prop-types';
 import { Form, Input, InputNumber, notification, Popconfirm, Select } from 'antd';
 import { DownOutlined, MinusCircleOutlined, PlusOutlined, UpOutlined } from '@ant-design/icons';
 import { darken, lighten, rgba } from 'polished';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { useAdminContext } from '../../../providers/admin.provider';
 import InfoIcon from '../../../components/InfoIcon';
@@ -43,6 +43,11 @@ const Row = styled.div`
     width: 100%;
   }
 `;
+
+const ButtonLayout = styled.div`
+  text-align: right;
+  transform: translate(-20px, -50px);
+`;
 // #endregion styles
 // #endregion shared
 // #region Hymn
@@ -66,7 +71,10 @@ function Hymn({ type, form, 'data-testid': testId }) {
   const hymnTitle = `${type}_hymn_title`;
   const getHymn = (num) => {
     if (num) {
-      const { title } = hymns[num - 1];
+      const { title } = hymns.find(({ number }) => number === num);
+      if (num > 1000) {
+        form.setFieldValue(`${type}_hymn_extra`, 'Library App/Music/Hymns-For Home and Church');
+      }
       form.setFieldValue(hymnTitle, title);
       setShowTitle(true);
     } else {
@@ -445,12 +453,9 @@ function BuildProgram({ form }) {
     </ProgramList>
   );
 }
-
-// BuildProgram.propTypes = {
-
-// };
 // #endregion component
 // #endregion BuildProgram
+
 // #region MakeProgram
 // #region styles
 const Layout = styled.div`
@@ -475,7 +480,7 @@ const CALLINGS = {
   chorister: ['Chorister'],
   organist: ['Accompanist'],
 };
-const PRINT_LAYOUTS = ['events', 'programOnly', 'colorPage', 'classes'];
+const PRINT_LAYOUTS = ['events', 'programOnly', 'programNewHymn', 'colorPage', 'classes'];
 const TOPICS = [
   ...MEETINGS,
   'High Council',
@@ -513,10 +518,11 @@ const handleMembersInProgram = ({ findMember, program, prevProgram = [], date })
         const dateIndex = prevSpeakingDates.findIndex((d) => d === currDate);
         const removeDate = prevMember.speakingHistory[dateIndex];
 
-        saveMember({
-          uid: prevMember.uid,
-          speakingHistory: FieldValue().arrayRemove(removeDate),
-        });
+        if (removeDate)
+          saveMember({
+            uid: prevMember.uid,
+            speakingHistory: FieldValue().arrayRemove(removeDate),
+          });
       }
 
       saveMember({
@@ -534,6 +540,7 @@ function MakeProgram() {
   const [date, setDate] = useState(() => utc({ date: comingSunday() }));
   const [form] = Form.useForm();
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const store = Form.useWatch([], form) ?? {};
   const { members } = useAdminContext();
@@ -713,198 +720,208 @@ function MakeProgram() {
   }, [topic]);
 
   return (
-    <Layout>
-      <Form
-        name="program-builder"
-        layout="vertical"
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
-        autoComplete="off"
-        preserve
-        form={form}
-      >
-        <Row>
-          <Form.Item
-            label="Print Layout"
-            name="print_layout"
-            rules={[
-              {
-                required: true,
-                message: 'Please pick a print layout',
-              },
-            ]}
-          >
-            <Select placeholder="print layout" data-testid="print-layout">
-              {PRINT_LAYOUTS.map((layout) => (
-                <Option key={layout} value={layout}>
-                  {layout}
-                </Option>
-              ))}
-            </Select>
-          </Form.Item>
-          <SearchSelect label="Topic" name="topic" options={TOPICS} form={form} data-testid="topic" />
-        </Row>
-        <Row>
-          <Form.Item label="Presiding" name="presiding">
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label={
-              <span>
-                Conducting <InfoIcon text={`Callings for dropdown: ${CALLINGS.conducting.join(', ')}`} />
-              </span>
-            }
-            name="conducting"
-          >
+    <>
+      <ButtonLayout className="print-button">
+        <Button htmlType="button" onClick={() => navigate('/program/print')}>
+          To Print Page
+        </Button>
+      </ButtonLayout>
+      <Layout>
+        <Form
+          name="program-builder"
+          layout="vertical"
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
+          autoComplete="off"
+          preserve
+          form={form}
+        >
+          <Row>
+            <Form.Item
+              label="Print Layout"
+              name="print_layout"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please pick a print layout',
+                },
+              ]}
+            >
+              <Select placeholder="print layout" data-testid="print-layout">
+                {PRINT_LAYOUTS.map((layout) => (
+                  <Option key={layout} value={layout}>
+                    {layout}
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
+            <SearchSelect label="Topic" name="topic" options={TOPICS} form={form} data-testid="topic" />
+          </Row>
+          <Row>
+            <Form.Item label="Presiding" name="presiding">
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label={
+                <span>
+                  Conducting <InfoIcon text={`Callings for dropdown: ${CALLINGS.conducting.join(', ')}`} />
+                </span>
+              }
+              name="conducting"
+            >
+              <Select
+                showSearch
+                placeholder="who's conducting?"
+                data-testid="conducting"
+                onSearch={(value) => {
+                  form.setFieldValue('conducting', value);
+                }}
+                onBlur={({ target: { value } }) => {
+                  if (value) form.setFieldValue('conducting', value);
+                }}
+                onInputKeyDown={({ code, target: { value } }) => {
+                  if (code === 'Enter') form.setFieldValue('conducting', value);
+                }}
+              >
+                {fieldOptions('conducting').map((conductor) => (
+                  <Option key={conductor} value={conductor}>
+                    {conductor}
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
+          </Row>
+          <Row>
+            <Form.Item
+              label={
+                <span>
+                  Chorister <InfoIcon text={`Callings for dropdown: ${CALLINGS.chorister.join(', ')}`} />
+                </span>
+              }
+              name="chorister"
+            >
+              <Select
+                showSearch
+                placeholder="who's leading the music?"
+                data-testid="chorister"
+                onSearch={(value) => {
+                  form.setFieldValue('chorister', value);
+                }}
+                onBlur={({ target: { value } }) => {
+                  if (value) form.setFieldValue('chorister', value);
+                }}
+                onInputKeyDown={({ code, target: { value } }) => {
+                  if (code === 'Enter') form.setFieldValue('chorister', value);
+                }}
+              >
+                {fieldOptions('chorister').map((leadingMusic) => (
+                  <Option key={leadingMusic} value={leadingMusic}>
+                    {leadingMusic}
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
+            <Form.Item
+              label={
+                <span>
+                  Organist <InfoIcon text={`Callings for dropdown: ${CALLINGS.organist.join(', ')}`} />
+                </span>
+              }
+              name="organist"
+            >
+              <Select
+                showSearch
+                placeholder="who's organist?"
+                data-testid="organist"
+                onSearch={(value) => {
+                  form.setFieldValue('organist', value);
+                }}
+                onBlur={({ target: { value } }) => {
+                  if (value) form.setFieldValue('organist', value);
+                }}
+                onInputKeyDown={({ code, target: { value } }) => {
+                  if (code === 'Enter') form.setFieldValue('organist', value);
+                }}
+              >
+                {fieldOptions('organist').map((organistor) => (
+                  <Option key={organistor} value={organistor}>
+                    {organistor}
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
+          </Row>
+          <Hymn type="opening" form={form} data-testid="opening-hymn" />
+          <Form.Item label="Invocation" name="invocation">
             <Select
               showSearch
-              placeholder="who's conducting?"
-              data-testid="conducting"
-              onSearch={(value) => {
-                form.setFieldValue('conducting', value);
-              }}
+              placeholder="opening"
+              data-testid="invocation"
               onBlur={({ target: { value } }) => {
-                if (value) form.setFieldValue('conducting', value);
+                if (value) form.setFieldValue('invocation', value);
               }}
               onInputKeyDown={({ code, target: { value } }) => {
-                if (code === 'Enter') form.setFieldValue('conducting', value);
+                if (code === 'Enter') form.setFieldValue('invocation', value);
               }}
             >
-              {fieldOptions('conducting').map((conductor) => (
-                <Option key={conductor} value={conductor}>
-                  {conductor}
+              {members.map(({ displayName, uid }) => (
+                <Option key={uid} value={displayName}>
+                  {displayName}
                 </Option>
               ))}
             </Select>
           </Form.Item>
-        </Row>
-        <Row>
-          <Form.Item
-            label={
-              <span>
-                Chorister <InfoIcon text={`Callings for dropdown: ${CALLINGS.chorister.join(', ')}`} />
-              </span>
-            }
-            name="chorister"
-          >
+          <Hymn type="sacrament" form={form} data-testid="sacrament-hymn" />
+          <BuildProgram form={form} />
+          <Hymn type="closing" form={form} data-testid="closing-hymn" />
+          <Form.Item label="Benediction" name="benediction">
             <Select
               showSearch
-              placeholder="who's leading the music?"
-              data-testid="chorister"
-              onSearch={(value) => {
-                form.setFieldValue('chorister', value);
-              }}
+              placeholder="closing"
+              data-testid="benediction"
               onBlur={({ target: { value } }) => {
-                if (value) form.setFieldValue('chorister', value);
+                if (value) form.setFieldValue('benediction', value);
               }}
               onInputKeyDown={({ code, target: { value } }) => {
-                if (code === 'Enter') form.setFieldValue('chorister', value);
+                if (code === 'Enter') form.setFieldValue('benediction', value);
               }}
             >
-              {fieldOptions('chorister').map((leadingMusic) => (
-                <Option key={leadingMusic} value={leadingMusic}>
-                  {leadingMusic}
+              {members.map(({ displayName, uid }) => (
+                <Option key={uid} value={displayName}>
+                  {displayName}
                 </Option>
               ))}
             </Select>
           </Form.Item>
-          <Form.Item
-            label={
-              <span>
-                Organist <InfoIcon text={`Callings for dropdown: ${CALLINGS.organist.join(', ')}`} />
-              </span>
-            }
-            name="organist"
-          >
-            <Select
-              showSearch
-              placeholder="who's organist?"
-              data-testid="organist"
-              onSearch={(value) => {
-                form.setFieldValue('organist', value);
-              }}
-              onBlur={({ target: { value } }) => {
-                if (value) form.setFieldValue('organist', value);
-              }}
-              onInputKeyDown={({ code, target: { value } }) => {
-                if (code === 'Enter') form.setFieldValue('organist', value);
-              }}
-            >
-              {fieldOptions('organist').map((organistor) => (
-                <Option key={organistor} value={organistor}>
-                  {organistor}
-                </Option>
-              ))}
-            </Select>
+          <Form.Item label="Event Page Note" name="note">
+            <TextArea placeholder="Program Note" />
           </Form.Item>
-        </Row>
-        <Hymn type="opening" form={form} data-testid="opening-hymn" />
-        <Form.Item label="Invocation" name="invocation">
-          <Select
-            showSearch
-            placeholder="opening"
-            data-testid="invocation"
-            onBlur={({ target: { value } }) => {
-              if (value) form.setFieldValue('invocation', value);
-            }}
-            onInputKeyDown={({ code, target: { value } }) => {
-              if (code === 'Enter') form.setFieldValue('invocation', value);
-            }}
-          >
-            {members.map(({ displayName, uid }) => (
-              <Option key={uid} value={displayName}>
-                {displayName}
-              </Option>
-            ))}
-          </Select>
-        </Form.Item>
-        <Hymn type="sacrament" form={form} data-testid="sacrament-hymn" />
-        <BuildProgram form={form} />
-        <Hymn type="closing" form={form} data-testid="closing-hymn" />
-        <Form.Item label="Benediction" name="benediction">
-          <Select
-            showSearch
-            placeholder="closing"
-            data-testid="benediction"
-            onBlur={({ target: { value } }) => {
-              if (value) form.setFieldValue('benediction', value);
-            }}
-            onInputKeyDown={({ code, target: { value } }) => {
-              if (code === 'Enter') form.setFieldValue('benediction', value);
-            }}
-          >
-            {members.map(({ displayName, uid }) => (
-              <Option key={uid} value={displayName}>
-                {displayName}
-              </Option>
-            ))}
-          </Select>
-        </Form.Item>
-        <Form.Item>
-          <ButtonRow>
-            <Button color="primary" htmlType="submit">
-              Save
-            </Button>
-            <Button htmlType="reset" onClick={() => form.resetFields()}>
-              Reset
-            </Button>
-            <Popconfirm
-              title="Delete this program"
-              description="Are you sure to delete this program?"
-              onConfirm={onDelete}
-              // onCancel={cancel}
-              okText="Yes"
-              cancelText="No"
-            >
-              <Button color="red">Delete</Button>
-            </Popconfirm>
-          </ButtonRow>
-        </Form.Item>
-      </Form>
-      <ProgramLayout>
-        <Program data={store} />
-      </ProgramLayout>
-    </Layout>
+          <Form.Item>
+            <ButtonRow>
+              <Button color="primary" htmlType="submit">
+                Save
+              </Button>
+              <Button htmlType="reset" onClick={() => form.resetFields()}>
+                Reset
+              </Button>
+              <Popconfirm
+                title="Delete this program"
+                description="Are you sure to delete this program?"
+                onConfirm={onDelete}
+                // onCancel={cancel}
+                okText="Yes"
+                cancelText="No"
+              >
+                <Button color="red">Delete</Button>
+              </Popconfirm>
+            </ButtonRow>
+          </Form.Item>
+        </Form>
+        <ProgramLayout>
+          <Program data={store} />
+        </ProgramLayout>
+      </Layout>
+    </>
   );
 }
 
