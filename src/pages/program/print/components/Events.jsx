@@ -389,7 +389,7 @@ function Events({ data = [] }) {
       <SubmitInfo>
         <Instructions>
           Submit announcements at <em>springcreekward.com/announcements</em>
-          <br /> or text Ben Ellis 801-721-0844
+          <br /> or text Josh Dyreng (801) 859-2034
         </Instructions>
         <QRCode size={60} value="https://springcreekward.com/announcements" />
       </SubmitInfo>
