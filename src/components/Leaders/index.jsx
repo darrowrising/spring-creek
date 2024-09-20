@@ -48,10 +48,10 @@ const LeadersContainer = styled.div`
 
 const idLink = (value) => `#${value.replace(' #', '')}`;
 
-function Leaders({ title, value, subValue, helperText, ...rest }) {
+function Leaders({ title, value = '', subValue, helperText, ...rest }) {
   let newHymn;
-  const isCSB = (value || '').includes('CSB');
-  const newHymnNumber = Number(value.split('#')[1]);
+  const isCSB = value?.includes('CSB');
+  const newHymnNumber = Number(value?.split('#')[1]);
 
   if (newHymnNumber) newHymn = hymns.find(({ number }) => number === newHymnNumber) || {};
 

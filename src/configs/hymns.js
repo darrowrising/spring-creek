@@ -1419,6 +1419,84 @@ export const hymns = [
     link: '',
     pdf: null,
   },
+  {
+    number: 1010,
+    title: 'Amazing Grace',
+    link: '',
+    pdf: null,
+  },
+  {
+    number: 1011,
+    title: 'Holding Hands Around the World',
+    link: '',
+    pdf: null,
+  },
+  {
+    number: 1012,
+    title: 'Anytime, Anywhere',
+    link: '',
+    pdf: null,
+  },
+  {
+    number: 1013,
+    title: "God's Gracious Love",
+    link: '',
+    pdf: null,
+  },
+  {
+    number: 1014,
+    title: 'My Shepherd Will Supply My Need',
+    link: '',
+    pdf: null,
+  },
+  {
+    number: 1015,
+    title: 'Oh, the Deep, Deep Love of Jesus',
+    link: '',
+    pdf: null,
+  },
+  {
+    number: 1016,
+    title: "Behold the Wounds in Jesus' Hands",
+    link: '',
+    pdf: null,
+  },
+  {
+    number: 1017,
+    title: 'This Is the Christ',
+    link: '',
+    pdf: null,
+  },
+  {
+    number: 1018,
+    title: 'Come, Lord Jesus',
+    link: '',
+    pdf: null,
+  },
+  {
+    number: 1201,
+    title: 'Hail the Day That Sees Him Rise',
+    link: '',
+    pdf: null,
+  },
+  {
+    number: 1202,
+    title: 'He Is Born, the Divine Christ Child',
+    link: '',
+    pdf: null,
+  },
+  {
+    number: 1203,
+    title: 'What Child Is This?',
+    link: '',
+    pdf: null,
+  },
+  {
+    number: 1204,
+    title: 'Star Bright',
+    link: '',
+    pdf: null,
+  },
 ];
 
 export const csbHymns = [];
