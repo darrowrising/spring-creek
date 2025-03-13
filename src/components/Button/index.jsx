@@ -60,6 +60,7 @@ const handleColors = (color, ghost) => {
   }
 };
 
+// #region ButtonGroup
 const RADIUS = '6px';
 
 const Wrapper = styled.div`
@@ -87,11 +88,14 @@ export const ButtonGroup = styled(({ children, ...rest }) => <Wrapper {...rest}>
 ButtonGroup.propTypes = {
   children: node.isRequired,
 };
+// #endregion ButtonGroup
 
+// #region ButtonRow
 export const ButtonRow = styled(({ children, ...rest }) => <div {...rest}>{children}</div>)`
   display: flex;
-  column-gap: var(--space-4);
+  column-gap: var(--space-2);
 `;
+// #endregion ButtonRow
 
 const StyledButton = styled(AntButton)`
   &&:not(:disabled) {

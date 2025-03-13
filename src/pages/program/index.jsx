@@ -47,7 +47,7 @@ function ProgramPage() {
       .where('id', '==', id)
       .onSnapshot((programSnap) => {
         const data = docs(programSnap)[0];
-
+        console.log('data:', data);
         if (data) {
           setProgram({
             ...data,

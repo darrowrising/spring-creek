@@ -139,6 +139,11 @@ const UpToSpeak = () => {
       label: 'Youth',
       children: <MemberTable data={data} columns={columns(onCellClick, handleSaveField)} />,
     },
+    {
+      key: 'primary',
+      label: 'Primary',
+      children: <MemberTable data={data} columns={columns(onCellClick, handleSaveField)} />,
+    },
     activeTab === 'search' && {
       key: 'search',
       label: 'Search Results',

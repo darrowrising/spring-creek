@@ -3,24 +3,17 @@ import styled, { css } from 'styled-components';
 import { shape, string, oneOfType } from 'prop-types';
 import { QRCode } from 'antd';
 
-import Heading, { SubHeading } from '../../../../components/Heading';
+import Heading from '../../../../components/Heading';
 import { db, docs } from '../../../../utils/firebase.utils';
-import { groupByDate, sortEvents, hasData } from '../../../../utils/data.utils';
+import { sortEvents, hasData } from '../../../../utils/data.utils';
 import { utc, dayjs, comingSunday, isBetween } from '../../../../utils/date.utils';
-import { transferEvents } from './temp';
-// import { getOrganizationColor } from '../../../../utils/organizations.utils';
-import { dateLong, dateLongTime, time as timeFormat, programIdShort } from '../../../../configs/dateFormats';
+import { dateLong, dateLongTime, programIdShort } from '../../../../configs/dateFormats';
 import config from '../../../temp/initiative/config';
-
-const TRANSFER_EVENTS = false;
-
-if (TRANSFER_EVENTS) transferEvents();
 
 // #region Details
 const DetailsLayout = styled.div``;
 
 const Group = styled.h5`
-  /* background-color: ${({ $color }) => $color}; */
   background-color: var(--color-grey-2);
   padding: var(--space-1);
   font-size: 0.6em;
@@ -31,7 +24,6 @@ const Group = styled.h5`
 
 const Content = styled.div`
   display: grid;
-  /* justify-content: space-between; */
   grid-template-columns: auto 40px;
   padding: var(--space-3);
   text-align: left;

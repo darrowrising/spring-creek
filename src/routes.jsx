@@ -15,6 +15,7 @@ import Login from './pages/login';
 import SignUp from './pages/signUp';
 /* admin */
 import Admin from './pages/admin';
+import Hymns from './pages/admin/hymns';
 import Moderation from './pages/admin/moderation';
 import Members from './pages/admin/members';
 import Speakers from './pages/admin/speakers';
@@ -78,6 +79,7 @@ function RoutesComp() {
           <Route index element={<Admin />} />
           <Route path="conducting" element={<Conducting />} />
           <Route path="conducting/:id" element={<Conducting />} />
+          <Route path="hymns" element={<Hymns />} />
           <Route path="moderation" element={<Moderation />} />
           <Route path="members" element={<Members />} />
           <Route path="sacrament-speakers" element={<Speakers />} />

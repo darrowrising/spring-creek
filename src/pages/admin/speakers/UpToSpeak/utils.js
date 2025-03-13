@@ -1,8 +1,9 @@
 import { db } from '../../../../utils/firebase.utils';
-import { utc } from '../../../../utils/date.utils';
+import { dayjs, utc } from '../../../../utils/date.utils';
 import { programIdShort } from '../../../../configs/dateFormats';
 
 export const filterLastSpoke = (members, tab) => {
+  const eightYearsFromNow = dayjs().subtract(8, 'year').format('YYYY');
   const now = Number(utc({ format: programIdShort }));
   const sort = (list) =>
     list
@@ -23,6 +24,7 @@ export const filterLastSpoke = (members, tab) => {
 
         return true;
       })
+      .filter(({ year }) => year <= eightYearsFromNow)
       .sort((a, b) => {
         if (a.lastSpoke > b.lastSpoke) return 1;
         else if (a.lastSpoke < b.lastSpoke) return -1;

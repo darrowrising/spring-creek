@@ -71,12 +71,17 @@ function Hymn({ type, form, 'data-testid': testId }) {
   const hymnTitle = `${type}_hymn_title`;
   const getHymn = (num) => {
     if (num) {
-      const { title } = hymns.find(({ number }) => number === num);
-      if (num > 1000) {
-        form.setFieldValue(`${type}_hymn_extra`, 'Library App/Music/Hymns-For Home and Church');
-      }
-      form.setFieldValue(hymnTitle, title);
-      setShowTitle(true);
+      db.collection('hymns')
+        .where('number', '==', num)
+        .get()
+        .then((snap) => docs(snap)[0])
+        .then(({ title }) => {
+          if (num > 1000) {
+            form.setFieldValue(`${type}_hymn_extra`, 'Library App/Music/Hymns-For Home and Church');
+          }
+          form.setFieldValue(hymnTitle, title);
+          setShowTitle(true);
+        });
     } else {
       form.setFieldValue(hymnTitle, '');
       setShowTitle(false);
@@ -228,8 +233,7 @@ const RestHymnTitle = styled.div`
 function RestHymn({ name, restField, form }) {
   const program = form.getFieldValue('program');
 
-  const hymnNumber = program[name]?.value;
-  const { title = '' } = hymns[hymnNumber - 1] || {};
+  const { title } = program[name] || {};
 
   return (
     <>
@@ -238,13 +242,19 @@ function RestHymn({ name, restField, form }) {
         label="Hymn Number"
         name={[name, 'value']}
         onChange={({ target: { value } }) => {
-          program[name] = { ...program[name], value, title: hymns[value - 1].title };
-          form.setFieldValue('program', program);
+          db.collection('hymns')
+            .where('number', '==', Number(value))
+            .get()
+            .then((snap) => docs(snap)[0])
+            .then(({ title } = {}) => {
+              program[name] = { ...program[name], value, title };
+              form.setFieldValue('program', program);
+            });
         }}
       >
         <InputNumber data-testid="rest-hymn" />
       </Form.Item>
-      {<RestHymnTitle>{title}</RestHymnTitle>}
+      {<RestHymnTitle>{title === 'Speaker' ? '' : title}</RestHymnTitle>}
     </>
   );
 }
@@ -411,7 +421,7 @@ function BuildProgram({ form }) {
       <Form.List name="program">
         {(fields, { add, remove, move }) => (
           <>
-            {fields.map(({ key, name, ...restField }) => (
+            {fields.map(({ name, ...restField }) => (
               <div key={`program-item-${name + 1}`} className={`type type-${getType({ form, name })}`}>
                 <h4 className="program-title">Program Item {name + 1}</h4>
                 <ListRow>
