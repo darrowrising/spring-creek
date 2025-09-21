@@ -12,7 +12,7 @@ const FooterContainer = styled.footer`
   padding: var(--space-3);
   text-align: center;
   line-height: 1.5em;
-  font-size: 1.2rem;
+  font-size: 12px;
 
   @media screen and (max-width: 600px) {
     ${Link} {
