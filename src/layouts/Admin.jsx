@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 import { darken } from 'polished';
 import { Outlet, useLocation, useParams } from 'react-router-dom';
+import { useState } from 'react';
+import { MenuOutlined, CloseOutlined } from '@ant-design/icons';
 
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -9,6 +11,7 @@ import Menu from '../components/Menu';
 import { PageHeading } from '../components/Heading';
 import AdminProvider from '../providers/admin.provider';
 import { colorWhite2 } from '../styles/variables';
+import { media } from '../styles/variables';
 
 const AdminContainer = styled.div`
   display: flex;
@@ -28,6 +31,10 @@ const Body = styled.div`
   display: grid;
   grid-template-columns: max-content 1fr;
 
+  ${media.tablet} {
+    grid-template-columns: 1fr;
+  }
+
   ${Loader} {
     position: relative;
     top: 20%;
@@ -41,11 +48,27 @@ const Main = styled.main`
   border-bottom: 1px solid ${darken(0.05, colorWhite2)};
   overflow: auto;
 
+  ${media.tablet} {
+    border-left: none;
+    padding: var(--space-3) var(--space-2) var(--space-6);
+  }
+
   & > ${PageHeading} {
     text-align: left;
     border-bottom: none;
     color: var(--color-blue-5);
     text-transform: capitalize;
+
+    ${media.tablet} {
+      font-size: 2.2rem;
+      margin-bottom: var(--space-3);
+    }
+  }
+`;
+
+const DesktopMenu = styled(Menu)`
+  ${media.tablet} {
+    display: none;
   }
 `;
 
@@ -60,7 +83,7 @@ function AdminLayout() {
       <AdminContainer>
         <Header />
         <Body className="admin-body">
-          <Menu />
+          <DesktopMenu />
           <Main>
             {heading && <PageHeading>{heading}</PageHeading>}
             <Outlet />

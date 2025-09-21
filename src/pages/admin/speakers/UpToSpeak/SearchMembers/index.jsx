@@ -6,14 +6,18 @@ import { useAdminContext } from '../../../../../providers/admin.provider';
 import { debounce } from '../../../../../utils/data.utils';
 
 export const SearchContainer = styled.div`
-  position: absolute;
-  right: 0;
-  top: 0;
-  width: 210px;
-  z-index: 1;
+  display: flex;
 `;
 
-const { Search } = Input;
+const Search = styled(Input.Search)`
+  .ant-input-affix-wrapper {
+    height: 36px;
+
+    input {
+      height: 26px;
+    }
+  }
+`;
 
 const filterMembers = ({ members, searchValue }) => {
   const contains = (name) => name.toLowerCase().includes(searchValue.toLowerCase());

@@ -8,22 +8,63 @@ import EditMember from './AddEditMember';
 
 import { db } from '../../../utils/firebase.utils';
 import { handleState, hasData, search } from '../../../utils/data.utils';
+import { media } from '../../../styles/variables';
 
 import { tableHeaders } from './headers';
 
-const { Search } = Input;
+const Search = styled(Input.Search)`
+  .ant-input-affix-wrapper {
+    height: 36px;
+
+    input {
+      height: 26px;
+    }
+  }
+`;
 
 const Bar = styled.div`
   display: flex;
   justify-content: flex-end;
   margin-bottom: 15px;
+  gap: var(--space-3);
+  align-items: center;
+
+  ${media.tablet} {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-2);
+  }
 
   button {
     margin-right: 15px;
+
+    ${media.tablet} {
+      margin-right: 0;
+    }
   }
 
   .left {
     margin-right: auto;
+
+    ${media.tablet} {
+      margin-right: 0;
+    }
+  }
+`;
+
+const SearchContainer = styled.div`
+  ${media.tablet} {
+    width: 100%;
+  }
+`;
+
+const TableContainer = styled.div`
+  ${media.tablet} {
+    overflow-x: auto;
+
+    .ant-table {
+      min-width: 800px;
+    }
   }
 `;
 
@@ -135,17 +176,27 @@ function Members() {
             Add Member
           </Button>
           <Button onClick={handleClear}>Clear Filters and Sort</Button>
-          <Search placeholder="search" onChange={handleSearch} style={{ width: 200 }} value={searchValue} allowClear />
+          <SearchContainer>
+            <Search
+              placeholder="search"
+              onChange={handleSearch}
+              style={{ width: '100%' }}
+              value={searchValue}
+              allowClear
+            />
+          </SearchContainer>
         </Bar>
-        <Table
-          dataSource={data}
-          pagination
-          columns={columns}
-          loading={loading}
-          onChange={handleChange}
-          rowKey={(record) => record.uid}
-          scroll={{ x: 'max-content' }}
-        />
+        <TableContainer>
+          <Table
+            dataSource={data}
+            pagination
+            columns={columns}
+            loading={loading}
+            onChange={handleChange}
+            rowKey={(record) => record.uid}
+            scroll={{ x: 'max-content' }}
+          />
+        </TableContainer>
       </section>
       <Modal
         header={null}

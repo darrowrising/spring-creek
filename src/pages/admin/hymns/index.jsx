@@ -7,7 +7,7 @@ import Button, { ButtonRow } from '../../../components/Button';
 import { markSearchValue, uuid } from '../../../utils/data.utils';
 import { db, docs } from '../../../utils/firebase.utils';
 import { utc } from '../../../utils/date.utils';
-import { colorBlue1 } from '../../../styles/variables';
+import { colorBlue1, media } from '../../../styles/variables';
 
 const { Search } = Input;
 
@@ -119,6 +119,34 @@ const ModalForm = ({ form, hymns, hymnToEdit = {}, onClose }) => {
 const ActionBar = styled.section`
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  gap: var(--space-3);
+
+  ${media.tablet} {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-2);
+  }
+
+  ${media.mobile} {
+    gap: var(--space-2);
+  }
+`;
+
+const SearchContainer = styled.div`
+  ${media.tablet} {
+    width: 100%;
+  }
+`;
+
+const TableContainer = styled.div`
+  ${media.tablet} {
+    overflow-x: auto;
+
+    .ant-table {
+      min-width: 600px;
+    }
+  }
 `;
 // #endregion styles
 
@@ -225,24 +253,28 @@ function Hymns({ className }) {
         <Button color="primary" onClick={() => setIsModalOpen(true)}>
           Add Hymn
         </Button>
-        <Search
-          placeholder="search by number or title"
-          onSearch={onSearch}
-          style={{ width: 250 }}
-          aria-label="search"
-        />
+        <SearchContainer>
+          <Search
+            placeholder="search by number or title"
+            onSearch={onSearch}
+            style={{ width: '100%' }}
+            aria-label="search"
+          />
+        </SearchContainer>
       </ActionBar>
-      <Table
-        dataSource={hymnData}
-        pagination={false}
-        columns={columns(onEdit)}
-        loading={loading}
-        rowKey={(record) => record.uid}
-        scroll={{ x: 'max-content', y: 500 }}
-        size="small"
-        bordered
-        rowClassName={handleRowClass}
-      />
+      <TableContainer>
+        <Table
+          dataSource={hymnData}
+          pagination={false}
+          columns={columns(onEdit)}
+          loading={loading}
+          rowKey={(record) => record.uid}
+          scroll={{ x: 'max-content', y: 500 }}
+          size="small"
+          bordered
+          rowClassName={handleRowClass}
+        />
+      </TableContainer>
       <Modal title="Add/Edit Hymn" open={isModalOpen} footer={null} onCancel={onCancel}>
         <ModalForm form={form} hymnToEdit={hymnToEdit} hymns={hymnData} onClose={onCancel} />
       </Modal>

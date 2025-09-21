@@ -28,6 +28,7 @@ import {
   colorViolet1,
   colorWhite2,
 } from '../../../styles/variables';
+import { media } from '../../../styles/variables';
 // #endregion imports
 
 const { TextArea } = Input;
@@ -42,11 +43,22 @@ const Row = styled.div`
   & > div {
     width: 100%;
   }
+
+  ${media.tablet} {
+    flex-direction: column;
+    row-gap: var(--space-3);
+  }
 `;
 
 const ButtonLayout = styled.div`
   text-align: right;
   transform: translate(-20px, -50px);
+
+  ${media.tablet} {
+    text-align: center;
+    transform: none;
+    margin-top: var(--space-3);
+  }
 `;
 // #endregion styles
 // #endregion shared
@@ -56,6 +68,11 @@ const HymnRow = styled.div`
   grid-template-columns: auto 1fr;
   align-items: flex-end;
   gap: var(--space-4);
+
+  ${media.tablet} {
+    grid-template-columns: 1fr;
+    gap: var(--space-2);
+  }
 
   & .hymn-label {
     text-transform: capitalize;
@@ -472,6 +489,10 @@ const Layout = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--space-6);
+
+  ${media.mobile} {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const ProgramLayout = styled.div`
@@ -479,6 +500,10 @@ const ProgramLayout = styled.div`
   border: 1px solid var(--color-grey-3);
   border-radius: var(--space-2);
   padding: var(--space-6);
+
+  ${media.mobile} {
+    display: none;
+  }
 `;
 // #endregion styles
 

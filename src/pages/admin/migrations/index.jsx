@@ -8,6 +8,7 @@ import BackupProvider, { useBackups } from './provider';
 import { dateShort } from '../../../configs/dateFormats';
 import { utc } from '../../../utils/date.utils';
 import { backup, remove, restore } from './scripts/utils';
+import { media } from '../../../styles/variables';
 
 // import { removeSpokeLast } from './scripts/removeSpokeLast';
 // import { addYear } from './scripts/addYear';
@@ -42,6 +43,18 @@ const Item = styled.div`
 
   & > ${ButtonGroup} {
     float: right;
+
+    ${media.tablet} {
+      float: none;
+      margin-top: var(--space-3);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+  }
+
+  ${media.tablet} {
+    padding: var(--space-3);
   }
 `;
 

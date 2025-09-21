@@ -12,11 +12,17 @@ import { utc } from '../../../utils/date.utils';
 import { hasData } from '../../../utils/data.utils';
 import { db } from '../../../utils/firebase.utils';
 import AnnouncementForm from '../../announcements/Form';
+import { media } from '../../../styles/variables';
 
 const Page = styled.div``;
 
 const SectionHeading = styled(SubHeading)`
   padding-bottom: var(--space-4);
+
+  ${media.tablet} {
+    font-size: 1.6rem;
+    padding-bottom: var(--space-3);
+  }
 `;
 
 const Empty = styled.div``;
@@ -31,8 +37,19 @@ const Wrapper = styled.div`
   background-color: var(--color-grey-3);
   padding: var(--space-4);
 
+  ${media.tablet} {
+    padding: var(--space-3);
+  }
+
   & > ${ButtonGroup} {
     margin-top: var(--space-4);
+
+    ${media.tablet} {
+      margin-top: var(--space-3);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+    }
   }
 `;
 
@@ -45,6 +62,13 @@ const StyledModal = styled(Modal)`
   }
   .ant-modal-body {
     border-top: 1px solid var(--color-grey-2);
+  }
+
+  ${media.tablet} {
+    .ant-modal {
+      margin: var(--space-2);
+      max-width: calc(100vw - var(--space-4));
+    }
   }
 `;
 

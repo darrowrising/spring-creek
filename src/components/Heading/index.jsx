@@ -1,7 +1,7 @@
 import { node, oneOf, string } from 'prop-types';
 import styled from 'styled-components';
 
-import { colorBlue2, colorGreen1 } from '../../styles/variables';
+import { colorBlue2, colorGreen1, media } from '../../styles/variables';
 
 // #region MonthHeading
 const Header = styled.header`

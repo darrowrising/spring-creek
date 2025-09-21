@@ -9,6 +9,7 @@ import { db, docs } from '../../../utils/firebase.utils';
 import { dateLongTime, programIdShort } from '../../../configs/dateFormats';
 import { utc, comingSunday } from '../../../utils/date.utils';
 import { bishop } from '../../../configs/unit';
+import { media } from '../../../styles/variables';
 // #endregion imports
 // #region Values
 // #region component
@@ -55,6 +56,17 @@ Lines.propTypes = {
 const ButtonLayout = styled.div`
   text-align: right;
   transform: translate(-20px, -50px);
+
+  ${media.tablet} {
+    text-align: center;
+    transform: none;
+    margin-top: var(--space-3);
+  }
+
+  ${media.mobile} {
+    padding-block-end: var(--space-3);
+    text-align: left;
+  }
 `;
 
 const Col = styled.div`
@@ -65,6 +77,11 @@ const Col = styled.div`
 
   &:first-of-type {
     border-right: 1px solid var(--color-grey-1);
+
+    ${media.tablet} {
+      border-right: none;
+      border-bottom: 1px solid var(--color-grey-1);
+    }
   }
 `;
 
@@ -73,6 +90,10 @@ const Page = styled.div`
   grid-template-columns: 50% 50%;
   /* gap: var(--space-6); */
   border: 1px solid var(--color-grey-1);
+
+  ${media.tablet} {
+    grid-template-columns: 1fr;
+  }
 
   & h3 {
     font-size: 1em;
@@ -195,7 +216,7 @@ function Conducting() {
         </Button>
       </ButtonLayout>
       <Page id="conductingPage">
-        <Col>
+        <Col style={{ overflow: 'hidden' }}>
           <h3>Welcome Everyone</h3>
           <div data-testid="presiding">
             <strong>Presiding:</strong> {presiding}
@@ -244,7 +265,7 @@ function Conducting() {
             {/* <Lines lines={2} /> */}
           </div>
         </Col>
-        <Col>
+        <Col style={{ overflow: 'hidden' }}>
           <h3>We Will Now Prepare For The Sacrament</h3>
           <div data-testid="sacramentHymn">
             <strong>Sacrament Hymn:</strong>{' '}

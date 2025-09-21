@@ -5,6 +5,7 @@ import { useLocation } from 'react-router-dom';
 import { bool } from 'prop-types';
 
 import Link from '../Link';
+import MobileMenu from '../Menu/MobileMenu';
 import { GAEvent } from '../Analytics';
 import { useUser } from '../../providers/user.provider';
 import { hasData } from '../../utils/data.utils';
@@ -12,20 +13,20 @@ import { dayjs } from '../../utils/date.utils';
 import { wardName } from '../../configs/unit';
 import { headerNav } from '../../configs/menu';
 import { dateSimple } from '../../configs/dateFormats';
-import { colorPrimary, colorBlue5, mobileMaxWidth } from '../../styles/variables';
+import { colorPrimary, colorBlue5, media } from '../../styles/variables';
 
 const HeaderContainer = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr auto;
   justify-content: space-between;
   background-color: ${({ $isAdmin }) => ($isAdmin ? colorBlue5 : colorPrimary)};
   color: var(--color-white-2);
   font-size: 2.6rem;
   padding: var(--space-2) var(--space-7);
 
-  @media screen and (max-width: ${mobileMaxWidth}) {
+  ${media.mobile} {
+    grid-template-columns: auto 1fr auto;
     padding: var(--space-2) var(--space-3);
-    padding-left: 50px;
   }
 `;
 
@@ -38,6 +39,11 @@ const Logo = styled(Link)`
   &&:hover {
     color: var(--color-white-2);
     text-decoration: none;
+  }
+
+  ${media.mobile} {
+    text-align: center;
+    width: 100%;
   }
 `;
 
@@ -72,6 +78,7 @@ function Header({ hideMenu = false }) {
 
   return (
     <HeaderContainer $isAdmin={isAdmin} className="header">
+      {isAdmin && <MobileMenu />}
       <Logo to="/" onClick={handleClick}>
         {wardName}
       </Logo>

@@ -24,6 +24,8 @@ import {
   saveMember,
 } from './Table.utils';
 
+import { media } from '../../../../styles/variables';
+
 export const Container = styled.section`
   & > ${Heading} {
     margin: var(--space-6) 0;
@@ -63,13 +65,29 @@ export const Bar = styled.div`
   display: flex;
   justify-content: flex-end;
   margin-bottom: 15px;
+  gap: var(--space-3);
+  align-items: center;
+
+  ${media.tablet} {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-2);
+  }
 
   button {
     margin-right: 15px;
+
+    ${media.tablet} {
+      margin-right: 0;
+    }
   }
 
   .left {
     margin-right: auto;
+
+    ${media.tablet} {
+      margin-right: 0;
+    }
   }
 `;
 
@@ -80,6 +98,16 @@ export const StatusColor = styled.span`
     if (status === 'activated') return `${colorSuccess}`;
     return 'inherit';
   }};
+`;
+
+export const TableContainer = styled.div`
+  ${media.tablet} {
+    overflow-x: auto;
+
+    .ant-table {
+      min-width: 900px;
+    }
+  }
 `;
 
 const listOfYears = listOfYearsForTabs();
@@ -225,18 +253,20 @@ function MembersList() {
           key: String(index + 1),
           children: (
             <Wrapper>
-              <Table
-                dataSource={speakers}
-                pagination={false}
-                columns={columns}
-                loading={loading}
-                onChange={handleChange}
-                rowKey={(record) => record.displayDate}
-                scroll={{ x: 'max-content', y: 500 }}
-                size="small"
-                bordered
-                rowClassName={handleRowClass}
-              />
+              <TableContainer>
+                <Table
+                  dataSource={speakers}
+                  pagination={false}
+                  columns={columns}
+                  loading={loading}
+                  onChange={handleChange}
+                  rowKey={(record) => record.displayDate}
+                  scroll={{ x: 'max-content', y: 500 }}
+                  size="small"
+                  bordered
+                  rowClassName={handleRowClass}
+                />
+              </TableContainer>
             </Wrapper>
           ),
         }))}

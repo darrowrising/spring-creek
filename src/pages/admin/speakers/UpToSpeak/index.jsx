@@ -11,6 +11,13 @@ import { REMOVE } from './enums';
 import RemoveFromSpeaking from './Modals/RemoveFromSpeaking';
 import SearchMembers from './SearchMembers';
 
+const Header = styled.header`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-block-end: var(--space-2);
+`;
+
 const MemberTable = ({ data, columns, isLoading = false }) => (
   <Table
     dataSource={data}
@@ -160,10 +167,12 @@ const UpToSpeak = () => {
 
   return (
     <UpToSpeakContainer>
-      <Heading color="secondary" size="sm">
-        Up to Speak
-      </Heading>
-      <SearchMembers set={set} />
+      <Header>
+        <Heading color="secondary" size="sm">
+          Up to Speak
+        </Heading>
+        <SearchMembers set={set} />
+      </Header>
       <Tabs
         defaultActiveKey={activeTab}
         activeKey={activeTab}

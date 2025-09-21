@@ -87,6 +87,24 @@ export const colorBorder2 = colorGrey2;
 export const colorBorderPrint = lighten(0.3, colorBlack2);
 // devices
 export const mobileMaxWidth = '480px';
+export const tabletMaxWidth = '768px';
+export const desktopMinWidth = '769px';
+
+// Responsive breakpoints
+export const breakpoints = {
+  mobile: '480px',
+  tablet: '768px',
+  desktop: '1024px',
+  largeDesktop: '1200px',
+};
+
+// Media query helpers
+export const media = {
+  mobile: `@media (max-width: ${breakpoints.mobile})`,
+  tablet: `@media (max-width: ${breakpoints.tablet})`,
+  desktop: `@media (min-width: ${breakpoints.desktop})`,
+  largeDesktop: `@media (min-width: ${breakpoints.largeDesktop})`,
+};
 
 /* eslint-disable indent */
 const rootCss = () => css`
