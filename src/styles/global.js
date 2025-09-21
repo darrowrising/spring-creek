@@ -109,14 +109,14 @@ export const GlobalStyle = createGlobalStyle`
     .ant-input {
       @media (max-width: 768px) {
         height: 36px;
-        font-size: 1.4rem;
+        font-size: 1.6rem;
       }
     }
     
     /* Responsive selects */
     .ant-select {
       @media (max-width: 768px) {
-        font-size: 1.4rem;
+        font-size: 1.6rem;
       }
     }
     
