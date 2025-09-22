@@ -34,12 +34,10 @@ const SubHeading = styled.h3`
   font-size: 1em;
   text-align: center;
   padding: 0.8em 0;
-  /* padding: 0.8vh 0; */
 
   & > strong {
     display: inline-block;
     padding: 0.8em 0;
-    /* padding: 0.8vh 0; */
   }
 `;
 

@@ -69,7 +69,20 @@ function Leaders({ title, value = '', subValue, helperText, ...rest }) {
       )}
       {helperText && (
         <HyperTextWrapper className="hyper-text">
-          <Text>{newHymnNumber > 1000 ? <Link href={newHymn.link}>{helperText}</Link> : helperText}</Text>
+          <Text>
+            {newHymnNumber > 1000 ? (
+              <Link
+                href={
+                  newHymn.link ||
+                  `https://www.churchofjesuschrist.org/media/music/songs/${newHymn.title.replaceAll(',', '').replaceAll(' ', '-').toLowerCase()}?lang=eng`
+                }
+              >
+                {helperText}
+              </Link>
+            ) : (
+              helperText
+            )}
+          </Text>
         </HyperTextWrapper>
       )}
     </LeadersContainer>
