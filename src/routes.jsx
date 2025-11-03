@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { node } from 'prop-types';
 
+import { hasPermission } from './utils/permissions.utils';
+
 // pages
 import Home from './pages/home';
 import Program from './pages/program';
@@ -31,6 +33,7 @@ import { setStorage } from './utils/localStorage.utils';
 import { isEmpty } from './utils/data.utils';
 import { useUser } from './providers/user.provider';
 
+// #region PrivateRoute
 const PrivateRoute = ({ children }) => {
   const { user, isUserLoading } = useUser();
   const { pathname } = useLocation();
@@ -52,6 +55,22 @@ const PrivateRoute = ({ children }) => {
 PrivateRoute.propTypes = {
   children: node,
 };
+// #endregion PrivateRoute
+
+// #region RoutePermissions
+const RoutePermissions = ({ permissions, children }) => {
+  const navigate = useNavigate();
+
+  if (!hasPermission(permissions)) {
+    setTimeout(() => {
+      navigate('/admin');
+    }, 100);
+    return null;
+  }
+
+  return children;
+};
+// #endregion RoutePermissions
 
 function RoutesComp() {
   return (
@@ -82,7 +101,14 @@ function RoutesComp() {
           <Route path="hymns" element={<Hymns />} />
           <Route path="moderation" element={<Moderation />} />
           <Route path="members" element={<Members />} />
-          <Route path="sacrament-speakers" element={<Speakers />} />
+          <Route
+            path="sacrament-speakers"
+            element={
+              <RoutePermissions permissions={['org:bishopric', 'calling:ward_clerk', 'page:sacrament-speakers']}>
+                <Speakers />
+              </RoutePermissions>
+            }
+          />
           <Route path="migrations" element={<Migrations />} />
           <Route path="build-program" element={<MakeProgram />} />
           <Route path="build-program/:id" element={<MakeProgram />} />

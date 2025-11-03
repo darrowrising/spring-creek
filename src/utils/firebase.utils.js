@@ -17,7 +17,6 @@ const firebaseConfig = {
   measurementId: import.meta.env.VITE_MEASUREMENT_ID ?? Cypress.env('VITE_MEASUREMENT_ID'),
 };
 
-console.log('firebaseConfig:', firebaseConfig);
 /* *** Initialize Firebase *** */
 // admin.initializeApp({ credential: admin.credential.applicationDefault() });
 firebase.initializeApp(firebaseConfig);

@@ -43,7 +43,7 @@ export const adminMenu = ({ members, moderation }) => [
   },
   {
     label: 'conducting',
-    permissions: ['org:bishopric'],
+    permissions: ['org:bishopric', 'calling:ward_clerk'],
   },
   {
     label: 'hymns',
@@ -52,7 +52,7 @@ export const adminMenu = ({ members, moderation }) => [
   {
     label: 'members',
     count: members,
-    permissions: ['org:bishopric'],
+    permissions: ['org:bishopric', 'calling:ward_clerk'],
   },
   {
     label: 'migrations',
@@ -66,6 +66,6 @@ export const adminMenu = ({ members, moderation }) => [
   {
     label: 'sacrament speakers',
     path: 'sacrament-speakers',
-    permissions: ['org:bishopric'],
+    permissions: ['org:bishopric', 'calling:ward_clerk', 'page:sacrament-speakers'],
   },
 ];

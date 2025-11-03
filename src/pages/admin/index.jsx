@@ -1,12 +1,5 @@
-// import styled from 'styled-components';
-// import {} from 'prop-types';
-
 function Admin() {
-  return <div>admin</div>;
+  return <div>Welcome to Spring Creek Ward Admin Portal</div>;
 }
-
-// Admin.propTypes = {
-
-// };
 
 export default Admin;

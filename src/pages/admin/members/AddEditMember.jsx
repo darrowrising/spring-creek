@@ -5,6 +5,7 @@ import { Form, Button, Alert, Input, Select, Tag, notification } from 'antd';
 import { roles, ageGroups, callings } from '../../../configs/settings';
 import { organizations } from '../../../configs/organizations';
 import { createMember } from '../../../factories/member';
+import { permissions } from '../../../configs/permissions';
 import { hasPermission } from '../../../utils/permissions.utils';
 import { db } from '../../../utils/firebase.utils';
 import { handleState, uuid } from '../../../utils/data.utils';
@@ -143,6 +144,13 @@ function AddEditMember({ content, setParentState }) {
               <Option key={item.name}>
                 <Tag color={item.color}>{item.name}</Tag>
               </Option>
+            ))}
+          </Select>
+        </Form.Item>
+        <Form.Item label="Permissions" name="permissions">
+          <Select mode="multiple" allowClear style={{ width: '100%' }} placeholder="Please select">
+            {permissions.map((permission) => (
+              <Option key={permission}>{permission}</Option>
             ))}
           </Select>
         </Form.Item>

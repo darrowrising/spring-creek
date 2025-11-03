@@ -3,9 +3,10 @@ import { Tag, Dropdown } from 'antd';
 
 import Status from '../../../components/Status';
 import { organizations } from '../../../configs/organizations';
+import { permissions } from '../../../configs/permissions';
 import { dateSimple } from '../../../configs/dateFormats';
 import { markSearchValue } from '../../../utils/data.utils';
-import { roles, ageGroups, callings, statuses } from '../../../configs/settings';
+import { ageGroups, callings } from '../../../configs/settings';
 import { utc } from '../../../utils/date.utils';
 
 const menu = (record) => [
@@ -56,14 +57,6 @@ export const tableHeaders = (filters, sort, searchValue) => [
     },
   },
   {
-    title: 'Roles',
-    dataIndex: 'roles',
-    key: 'roles',
-    filters: roles.length >= 1 ? roles.map((item) => ({ text: item?.name, value: item?.name })) : null,
-    filteredValue: filters.roles || null,
-    onFilter: (value, record) => (record?.roles || []).includes(value),
-  },
-  {
     title: 'Organizations',
     dataIndex: 'organizations',
     key: 'organizations',
@@ -94,7 +87,15 @@ export const tableHeaders = (filters, sort, searchValue) => [
     onFilter: (value, record) => (record?.callings || []).includes(value),
   },
   {
-    title: 'Last Visted',
+    title: 'Permissions',
+    dataIndex: 'permissions',
+    key: 'permissions',
+    filters: permissions.length >= 1 ? permissions.map((item) => ({ text: item?.name, value: item?.name })) : null,
+    filteredValue: filters.permissions || null,
+    onFilter: (value, record) => (record?.permissions || []).includes(value),
+  },
+  {
+    title: 'Last Visited',
     dataIndex: 'lastVisited',
     key: 'lastVisited',
     render: (record) => (record ? utc({ date: record, format: dateSimple }) : ''),
@@ -105,18 +106,18 @@ export const tableHeaders = (filters, sort, searchValue) => [
     key: 'createdOn',
     render: (record) => (record ? utc({ date: record, format: dateSimple }) : ''),
   },
-  {
-    title: 'Status',
-    dataIndex: 'status',
-    key: 'status',
-    filters: statuses.map(({ name }) => ({ text: name, value: name })),
-    filteredValue: filters.status || null,
-    onFilter: (value, { status = [] }) => value === status,
-    width: '150px',
-    render: (record) => (
-      <Status type={record} dangerouslySetInnerHTML={{ __html: markSearchValue(record, searchValue) }} />
-    ),
-  },
+  // {
+  //   title: 'Status',
+  //   dataIndex: 'status',
+  //   key: 'status',
+  //   filters: statuses.map(({ name }) => ({ text: name, value: name })),
+  //   filteredValue: filters.status || null,
+  //   onFilter: (value, { status = [] }) => value === status,
+  //   width: '150px',
+  //   render: (record) => (
+  //     <Status type={record} dangerouslySetInnerHTML={{ __html: markSearchValue(record, searchValue) }} />
+  //   ),
+  // },
   {
     title: '',
     key: 'more',
