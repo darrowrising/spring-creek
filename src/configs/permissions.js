@@ -4,6 +4,5 @@ export const permissions = [
   'page:hymns',
   'page:members',
   'page:moderation',
-  'page:migrations',
   'page:sacrament-speakers',
 ];

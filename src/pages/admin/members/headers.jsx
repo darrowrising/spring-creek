@@ -90,7 +90,8 @@ export const tableHeaders = (filters, sort, searchValue) => [
     title: 'Permissions',
     dataIndex: 'permissions',
     key: 'permissions',
-    filters: permissions.length >= 1 ? permissions.map((item) => ({ text: item?.name, value: item?.name })) : null,
+    filters:
+      permissions.length >= 1 ? permissions.map((permission) => ({ text: permission, value: permission })) : null,
     filteredValue: filters.permissions || null,
     onFilter: (value, record) => (record?.permissions || []).includes(value),
   },
