@@ -64,6 +64,11 @@ export const adminMenu = ({ members, moderation }) => [
     permissions: ['org:bishopric'],
   },
   {
+    label: 'sacrament prayers',
+    path: 'prayers',
+    permissions: ['org:bishopric', 'calling:ward_clerk', 'page:prayers'],
+  },
+  {
     label: 'sacrament speakers',
     path: 'sacrament-speakers',
     permissions: ['org:bishopric', 'calling:ward_clerk', 'page:sacrament-speakers'],

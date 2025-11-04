@@ -24,6 +24,7 @@ import Speakers from './pages/admin/speakers';
 import Migrations from './pages/admin/migrations';
 import Conducting from './pages/admin/conducting';
 import MakeProgram from './pages/admin/buildProgram';
+import Prayers from './pages/admin/prayers';
 // layouts
 import AdminLayout from './layouts/admin';
 import AuthLayout from './layouts/auth';
@@ -101,6 +102,14 @@ function RoutesComp() {
           <Route path="hymns" element={<Hymns />} />
           <Route path="moderation" element={<Moderation />} />
           <Route path="members" element={<Members />} />
+          <Route
+            path="prayers"
+            element={
+              <RoutePermissions permissions={['org:bishopric', 'calling:ward_clerk', 'page:prayers']}>
+                <Prayers />
+              </RoutePermissions>
+            }
+          />
           <Route
             path="sacrament-speakers"
             element={
