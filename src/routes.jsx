@@ -103,7 +103,7 @@ function RoutesComp() {
           <Route path="moderation" element={<Moderation />} />
           <Route path="members" element={<Members />} />
           <Route
-            path="prayers"
+            path="sacrament-prayers"
             element={
               <RoutePermissions permissions={['org:bishopric', 'calling:ward_clerk', 'page:prayers']}>
                 <Prayers />

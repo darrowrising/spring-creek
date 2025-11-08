@@ -15,8 +15,9 @@ import { media } from '../../../styles/variables';
 // import { addMemberUid } from './scripts/addMemberUid';
 // import { transferEvents } from './scripts/moveEvents';
 // import { addUidToSpeaker } from './scripts/addUidToSpeaker';
-import { uidNoMatch } from './scripts/uid-no-match';
-import { makeProgram } from './scripts/makeProgram';
+// import { uidNoMatch } from './scripts/uid-no-match';
+// import { makeProgram } from './scripts/makeProgram';
+import { addPrayerHistory } from './scripts/addPrayerHistory';
 
 const { Ribbon } = Badge;
 
@@ -128,15 +129,20 @@ const MIGRATIONS = [
   //   action: transferEvents,
   //   collection: 'announcements',
   // },
+  // {
+  //   label: 'Uid No Match Ref',
+  //   action: uidNoMatch,
+  //   collection: '',
+  // },
+  // {
+  //   label: 'Create Program',
+  //   action: makeProgram,
+  //   collection: '',
+  // },
   {
-    label: 'Uid No Match Ref',
-    action: uidNoMatch,
-    collection: '',
-  },
-  {
-    label: 'Create Program',
-    action: makeProgram,
-    collection: '',
+    label: 'Add Prayer History',
+    action: addPrayerHistory,
+    collection: 'members',
   },
 ];
 

@@ -7,11 +7,13 @@ export const filterLastPrayed = (members, tab) => {
   const now = Number(utc({ format: programIdShort }));
   const sort = (list) =>
     list
-      .map(({ prayerHistory = [], ...rest }) => {
-        const lastPrayed = prayerHistory.at(-1) || '';
+      .map(({ prayingHistory = [], ...rest }) => {
+        const { date: lastPrayed, type: lastPrayedType } = prayingHistory.at(-1) || { date: '', type: '' };
+
         return {
-          prayerHistory,
+          prayingHistory,
           lastPrayed,
+          lastPrayedType,
           ...rest,
         };
       })
@@ -40,5 +42,5 @@ export const filterLastPrayed = (members, tab) => {
 };
 
 export const saveNote = (docId, value = '') => {
-  if (value) db.collection('members').doc(docId).update({ speakingNote: value });
+  db.collection('members').doc(docId).update({ prayingNote: value });
 };

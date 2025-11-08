@@ -13,6 +13,12 @@ const Wrapper = styled.div`
 
   & > * {
     width: 100%;
+    border: none;
+
+    &:focus-within {
+      outline: none;
+      box-shadow: none;
+    }
   }
 `;
 

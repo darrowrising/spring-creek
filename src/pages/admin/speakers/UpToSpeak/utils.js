@@ -40,5 +40,5 @@ export const filterLastSpoke = (members, tab) => {
 };
 
 export const saveNote = (docId, value = '') => {
-  if (value) db.collection('members').doc(docId).update({ speakingNote: value });
+  db.collection('members').doc(docId).update({ speakingNote: value });
 };

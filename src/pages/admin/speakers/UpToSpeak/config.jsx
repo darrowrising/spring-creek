@@ -38,7 +38,7 @@ export const columns = (onCellClick, onSave) => [
     className: 'cell editable',
     render: (cellValue, record) =>
       record?.showInput ? (
-        <EditableCell defaultValue={cellValue} onSave={({ target: { value } }) => onSave(record.uid, value, 'note')} />
+        <EditableCell defaultValue={cellValue} onSave={(value) => onSave(record.uid, value, 'note')} />
       ) : (
         cellValue
       ),

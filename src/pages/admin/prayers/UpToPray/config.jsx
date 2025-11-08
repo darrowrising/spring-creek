@@ -1,6 +1,4 @@
 import React from 'react';
-// import { MoreOutlined } from '@ant-design/icons';
-// import { Dropdown } from 'antd';
 
 import Button from '../../../../components/Button';
 import { utc } from '../../../../utils/date.utils';
@@ -8,13 +6,6 @@ import { dateShort } from '../../../../configs/dateFormats';
 import { NotPrayed } from './styles';
 import { REMOVE } from './enums';
 import EditableCell from '../EditableCell';
-
-// const menu = (record) => [
-//   {
-//     key: '1',
-//     label: <span onClick={() => record.onClick(record, REMOVE)}>Delay From Speaking</span>,
-//   },
-// ];
 
 export const columns = (onCellClick, onSave) => [
   {
@@ -31,14 +22,20 @@ export const columns = (onCellClick, onSave) => [
     render: (record) => (record ? utc({ date: record, format: dateShort }) : <NotPrayed>has not prayed yet</NotPrayed>),
   },
   {
+    title: 'Prayed',
+    dataIndex: 'lastPrayedType',
+    key: 'lastPrayedType',
+    width: '170px',
+  },
+  {
     title: 'Notes',
-    dataIndex: 'prayerNote',
-    key: 'prayerNote',
+    dataIndex: 'prayingNote',
+    key: 'prayingNote',
     onCell: (record) => ({ onClick: () => onCellClick(record) }),
     className: 'cell editable',
     render: (cellValue, record) =>
       record?.showInput ? (
-        <EditableCell defaultValue={cellValue} onSave={({ target: { value } }) => onSave(record.uid, value, 'note')} />
+        <EditableCell defaultValue={cellValue} onSave={(value) => onSave(record.uid, value, 'note')} />
       ) : (
         cellValue
       ),
@@ -50,9 +47,6 @@ export const columns = (onCellClick, onSave) => [
       <Button size="small" onClick={() => record.onClick(record, REMOVE)}>
         Delay Praying
       </Button>
-      // <Dropdown className="more" menu={{ items: menu(record) }}>
-      //   <MoreOutlined />
-      // </Dropdown>
     ),
     width: '100px',
     fixed: 'right',
