@@ -10,10 +10,10 @@ import { useFindMember } from '../../../../utils/organizations.utils';
 import { currentYear } from '../../../../utils/date.utils';
 import { handleState, hasData } from '../../../../utils/data.utils';
 import { FieldValue } from '../../../../utils/firebase.utils';
-import { createTalk } from '../../../../factories/program';
+import SearchProgram from './SearchProgram';
 import { colorGrey3, colorAlert, colorSuccess } from '../../../../styles/variables';
 
-import { tableHeaders } from './Table.config';
+import { tableHeaders, searchColumns } from './Table.config';
 import {
   getPrayers,
   unsubscribe,
@@ -110,6 +110,18 @@ export const TableContainer = styled.div`
   }
 `;
 
+export const HeadingGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  gap: var(--space-2);
+
+  & > div {
+    position: relative;
+    top: 20px;
+  }
+`;
+
 const listOfYears = listOfYearsForTabs();
 
 const initialState = {
@@ -203,7 +215,10 @@ function MembersList() {
   return (
     <Container>
       <Heading color="secondary" size="sm" className="secondary-sm">
-        Talk Schedule
+        <HeadingGrid>
+          Talk Schedule
+          <SearchProgram defaultTab={activeTab} set={set} />
+        </HeadingGrid>
       </Heading>
       <Tabs
         defaultActiveKey={activeTab}
@@ -212,28 +227,48 @@ function MembersList() {
         size="small"
         style={{ marginBottom: 32 }}
         onChange={onTabChange}
-        items={listOfYearsForTabs().map((year, index) => ({
-          label: year,
-          key: String(index + 1),
-          children: (
-            <Wrapper>
-              <TableContainer>
-                <Table
-                  dataSource={prayers}
-                  pagination={false}
-                  columns={columns}
-                  loading={loading}
-                  onChange={handleChange}
-                  rowKey={(record) => record.displayDate}
-                  scroll={{ x: 'max-content', y: 500 }}
-                  size="small"
-                  bordered
-                  rowClassName={handleRowClass}
-                />
-              </TableContainer>
-            </Wrapper>
-          ),
-        }))}
+        items={[
+          ...listOfYearsForTabs().map((year, index) => ({
+            label: year,
+            key: String(index + 1),
+            children: (
+              <Wrapper>
+                <TableContainer>
+                  <Table
+                    dataSource={prayers}
+                    pagination={false}
+                    columns={columns}
+                    loading={loading}
+                    onChange={handleChange}
+                    rowKey={(record) => record.displayDate}
+                    scroll={{ x: 'max-content', y: 500 }}
+                    size="small"
+                    bordered
+                    rowClassName={handleRowClass}
+                  />
+                </TableContainer>
+              </Wrapper>
+            ),
+          })),
+          activeTab === 'search' && {
+            key: 'search',
+            label: 'Search Results',
+            children: (
+              <Table
+                dataSource={prayers}
+                pagination={false}
+                columns={searchColumns}
+                loading={loading}
+                onChange={handleChange}
+                rowKey={(record) => record.displayDate}
+                scroll={{ x: 'max-content', y: 500 }}
+                size="small"
+                bordered
+                rowClassName={handleRowClass}
+              />
+            ),
+          },
+        ]}
       />
     </Container>
   );

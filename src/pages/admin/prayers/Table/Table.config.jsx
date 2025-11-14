@@ -1,5 +1,7 @@
 import { dateIdMaker } from '../../../../utils/date.utils';
 import EditableCell from '../EditableCell';
+import { dateShortYear } from '../../../../configs/dateFormats';
+import { utc } from '../../../../utils/date.utils';
 
 export const tableHeaders = ({ onCellSave, onCellClick, onCellClear }) => {
   const columns = [
@@ -56,3 +58,23 @@ export const tableHeaders = ({ onCellSave, onCellClick, onCellClear }) => {
 
   return [...columns];
 };
+
+export const searchColumns = [
+  {
+    title: 'Date',
+    dataIndex: 'date',
+    key: 'date',
+    fixed: 'left',
+    render: (record) => <div id={`date-${dateIdMaker(record)}`}>{utc({ date: record, format: dateShortYear })}</div>,
+  },
+  {
+    title: 'Name',
+    dataIndex: 'displayName',
+    key: 'name',
+  },
+  {
+    title: 'Prayed',
+    dataIndex: 'lastPrayed',
+    key: 'prayed',
+  },
+];

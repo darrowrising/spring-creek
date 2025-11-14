@@ -142,7 +142,7 @@ Hymn.propTypes = {
 
 // #region BuildProgram
 // #region SearchSelectProgram
-function SearchSelectProgram({ label, placeholder, options, form, name, restField, 'data-testid': testId }) {
+function SearchSelectProgram({ label, placeholder, options, form, name, 'data-testid': testId }) {
   const [searchValue, setSearchValue] = useState('');
 
   const program = form.getFieldValue('program');
@@ -154,11 +154,11 @@ function SearchSelectProgram({ label, placeholder, options, form, name, restFiel
   return (
     <>
       {noOptions ? (
-        <Form.Item {...restField} label={label} name={[name, 'value']}>
+        <Form.Item label={label} name={[name, 'value']}>
           <Input placeholder={placeholder} autoFocus data-testid={testId} />
         </Form.Item>
       ) : (
-        <Form.Item {...restField} label={label} name={[name, 'value']}>
+        <Form.Item label={label} name={[name, 'value']}>
           <Select
             showSearch
             placeholder={placeholder}
@@ -188,19 +188,18 @@ SearchSelectProgram.propTypes = {
   options: arrayOf(shape()),
   form: shape(),
   name: number,
-  restField: shape(),
 };
 // #endregion SearchSelectProgram
 // #region Music
 const PROGRAM_TYPE_OPTIONS = ['talk', 'music', 'meeting', 'hymn'];
 
-function Music({ name, restField }) {
+function Music({ name }) {
   return (
     <>
-      <Form.Item {...restField} label="Song Title" name={[name, 'title']}>
+      <Form.Item label="Song Title" name={[name, 'title']}>
         <Input data-testid="music-title" />
       </Form.Item>
-      <Form.Item {...restField} label="Performers and Accompanists" name={[name, 'value']}>
+      <Form.Item label="Performers and Accompanists" name={[name, 'value']}>
         <TextArea data-testid="music-performers" />
       </Form.Item>
     </>
@@ -210,8 +209,7 @@ function Music({ name, restField }) {
 // #region Meeting
 const MEETINGS = ['Fast Sunday', 'General Conference', 'Stake Conference'];
 
-function Meeting({ name, restField, form }) {
-  const program = form.getFieldValue('program');
+function Meeting({ name, form }) {
   const options = MEETINGS.map((meet) => ({
     label: meet,
     value: meet,
@@ -225,7 +223,6 @@ function Meeting({ name, restField, form }) {
       </Form.Item>
       <SearchSelectProgram
         name={name}
-        restField={restField}
         form={form}
         label="Meeting Name"
         placeholder="meeting name"
@@ -238,7 +235,6 @@ function Meeting({ name, restField, form }) {
 
 Meeting.propTypes = {
   name: number,
-  restField: shape(),
   form: shape(),
 };
 // #endregion Meeting
@@ -247,7 +243,7 @@ const RestHymnTitle = styled.div`
   align-self: center;
 `;
 
-function RestHymn({ name, restField, form }) {
+function RestHymn({ name, form }) {
   const program = form.getFieldValue('program');
 
   const { title } = program[name] || {};
@@ -255,7 +251,6 @@ function RestHymn({ name, restField, form }) {
   return (
     <>
       <Form.Item
-        {...restField}
         label="Hymn Number"
         name={[name, 'value']}
         onChange={({ target: { value } }) => {
@@ -281,18 +276,17 @@ function RestHymn({ name, restField, form }) {
 // };
 // #endregion RestHymn
 // #region Talk
-function Talk({ name, restField, form }) {
+function Talk({ name, form }) {
   const { members } = useAdminContext();
   const options = members.map(({ displayName }) => ({ label: displayName, value: displayName }));
 
   return (
     <>
-      <Form.Item {...restField} label="Title" name={[name, 'title']} initialValue="Speaker">
+      <Form.Item label="Title" name={[name, 'title']} initialValue="Speaker">
         <Input data-testid={`speaker-title-${name}`} />
       </Form.Item>
       <SearchSelectProgram
         name={name}
-        restField={restField}
         form={form}
         label="Name"
         placeholder="speaker"
@@ -414,19 +408,19 @@ const getType = ({ form, name }) => {
 // #region component
 function BuildProgram({ form }) {
   const renderItem = useCallback(
-    ({ name, form, ...restField }) => {
+    ({ name, form }) => {
       switch (getType({ form, name })) {
         case 'music': {
-          return <Music name={name} {...restField} />;
+          return <Music name={name} />;
         }
         case 'meeting': {
-          return <Meeting name={name} {...restField} form={form} />;
+          return <Meeting name={name} form={form} />;
         }
         case 'hymn': {
-          return <RestHymn name={name} {...restField} form={form} />;
+          return <RestHymn name={name} form={form} />;
         }
         default: {
-          return <Talk name={name} form={form} {...restField} />;
+          return <Talk name={name} form={form} />;
         }
       }
     },
@@ -438,7 +432,7 @@ function BuildProgram({ form }) {
       <Form.List name="program">
         {(fields, { add, remove, move }) => (
           <>
-            {fields.map(({ name, ...restField }) => (
+            {fields.map(({ name }) => (
               <div key={`program-item-${name + 1}`} className={`type type-${getType({ form, name })}`}>
                 <h4 className="program-title">Program Item {name + 1}</h4>
                 <ListRow>
@@ -448,7 +442,7 @@ function BuildProgram({ form }) {
                       <StyledDownOutlined $disabled={name === fields.length - 1} onClick={() => move(name, name + 1)} />
                     </MoveButtons>
                   </MoveButtonsLayout>
-                  <Form.Item {...restField} label="Item Type" name={[name, 'type']} initialValue="talk">
+                  <Form.Item label="Item Type" name={[name, 'type']} initialValue="talk">
                     <Select
                       data-testid={`program-type-${name}`}
                       onSelect={(type) => {
@@ -464,7 +458,7 @@ function BuildProgram({ form }) {
                       ))}
                     </Select>
                   </Form.Item>
-                  {renderItem({ name, form, ...restField })}
+                  {renderItem({ name, form })}
                   <MinusCircleOutlined onClick={() => remove(name)} />
                 </ListRow>
               </div>
@@ -784,7 +778,7 @@ function MakeProgram() {
             >
               <Select placeholder="print layout" data-testid="print-layout">
                 {PRINT_LAYOUTS.map((layout) => (
-                  <Option key={layout} value={layout}>
+                  <Option key={`print-layout-${layout}`} value={layout}>
                     {layout}
                   </Option>
                 ))}
@@ -819,7 +813,7 @@ function MakeProgram() {
                 }}
               >
                 {fieldOptions('conducting').map((conductor) => (
-                  <Option key={conductor} value={conductor}>
+                  <Option key={`conductor-${conductor}`} value={conductor}>
                     {conductor}
                   </Option>
                 ))}
@@ -850,7 +844,7 @@ function MakeProgram() {
                 }}
               >
                 {fieldOptions('chorister').map((leadingMusic) => (
-                  <Option key={leadingMusic} value={leadingMusic}>
+                  <Option key={`chorister-${leadingMusic}`} value={leadingMusic}>
                     {leadingMusic}
                   </Option>
                 ))}
@@ -878,9 +872,9 @@ function MakeProgram() {
                   if (code === 'Enter') form.setFieldValue('organist', value);
                 }}
               >
-                {fieldOptions('organist').map((organistor) => (
-                  <Option key={organistor} value={organistor}>
-                    {organistor}
+                {fieldOptions('organist').map((organist) => (
+                  <Option key={`organist-${organist}`} value={organist}>
+                    {organist}
                   </Option>
                 ))}
               </Select>
@@ -900,7 +894,7 @@ function MakeProgram() {
               }}
             >
               {members.map(({ displayName, uid }) => (
-                <Option key={uid} value={displayName}>
+                <Option key={`member-${uid}`} value={displayName}>
                   {displayName}
                 </Option>
               ))}

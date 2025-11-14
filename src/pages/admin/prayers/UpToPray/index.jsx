@@ -171,7 +171,7 @@ const UpToPray = () => {
         <Heading color="secondary" size="sm">
           Up to Pray
         </Heading>
-        <SearchMembers set={set} />
+        <SearchMembers defaultTab={activeTab} set={set} />
       </Header>
       <Tabs
         defaultActiveKey={activeTab}

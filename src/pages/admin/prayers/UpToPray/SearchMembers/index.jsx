@@ -32,12 +32,12 @@ const filterMembers = ({ members, searchValue }) => {
 
 const defaultSet = () => undefined;
 
-const SearchMembers = ({ set = defaultSet, ...rest }) => {
+const SearchMembers = ({ defaultTab, set = defaultSet, ...rest }) => {
   const { members } = useAdminContext();
 
   const handleChange = ({ target: { value } }) => {
     const prayers = filterMembers({ members, searchValue: value });
-    const activeTab = value ? 'search' : 'adult';
+    const activeTab = value ? 'search' : defaultTab;
     set({ prayers, activeTab });
   };
 

@@ -121,7 +121,7 @@ function Menu({ className, onNavigate }) {
                 {...rest}
                 key={label}
                 label={label}
-                $isSelected={selected === (path || label)}
+                $isSelected={selected === label}
                 onClick={() => handleClick(path, label)}
               />
             )

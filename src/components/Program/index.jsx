@@ -4,8 +4,7 @@ import { shape, bool } from 'prop-types';
 import Leaders from '../Leaders';
 import { PageHeading } from '../Heading';
 import Link from '../Link';
-// import * as CSB from '../../../public/csb';
-// import PDF from 'src/components/PDF';
+
 import { fadeIn } from '../../styles/animations';
 
 import Lyrics from './Lyrics';
@@ -65,10 +64,6 @@ const MusicalTitle = styled.strong`
 const MusicalNumber = styled.em``;
 
 function Program({ data = { program: [] }, isPrint, ...rest }) {
-  // const csbHymns = Object.keys(data)
-  //   .filter((item) => item.includes('fileName'))
-  //   .filter((item) => data[item])
-  //   .map((item) => data[item]);
   const program = (data.program ?? [{}]).filter((obj) => obj);
 
   return (
@@ -108,15 +103,6 @@ function Program({ data = { program: [] }, isPrint, ...rest }) {
       <SubHeading>
         <strong>Administration of the Sacrament</strong>
       </SubHeading>
-      {/* eslint-disable react/jsx-indent, indent */}
-      {/* {csbHymns.length !== 0
-        ? csbHymns.map((csbHymn) => (
-            <div className="csb-wrapper">
-              <PDF file={CSB[csbHymn]} />
-            </div>
-          ))
-        : null} */}
-      {/* eslint-enable react/jsx-indent, indent */}
 
       <SpeakerContainer>
         {program
@@ -164,11 +150,8 @@ function Program({ data = { program: [] }, isPrint, ...rest }) {
         <Leaders
           title="Closing Hymn"
           value={data?.closing_hymn && `#${data?.closing_hymn}`}
-          // value=" "
           subValue={data.closing_hymn_title}
-          // subValue="I Will Be What I Believe"
           helperText={data.closing_hymn_extra}
-          // helperText="performed by the youth and primary"
           className="closing-hymn"
         />
 

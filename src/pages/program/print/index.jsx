@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from 'react';
 import styled from 'styled-components';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 import Loader from '../../../components/Loader';
 import Header from '../../../components/Header';
@@ -62,7 +62,7 @@ function ProgramPrint() {
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
   const { programId } = useParams();
-
+  const navigate = useNavigate();
   const Content = useMemo(() => programLayout(programData.print_layout, programData.note), [programData.print_layout]);
 
   const onPrint = () => window.print();
@@ -106,7 +106,10 @@ function ProgramPrint() {
     <Layout>
       <Header />
       <ButtonLayout className="print-button">
-        <Button htmlType="button" onClick={onPrint}>
+        <Button htmlType="button" onClick={() => navigate('/admin/build-program')}>
+          Back
+        </Button>
+        <Button color="primary" htmlType="button" onClick={onPrint}>
           Print
         </Button>
       </ButtonLayout>

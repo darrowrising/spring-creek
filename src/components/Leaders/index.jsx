@@ -2,7 +2,6 @@ import styled from 'styled-components';
 import { string } from 'prop-types';
 
 import Link from '../Link';
-import { hymns } from '../../configs/hymns';
 
 const Text = styled.div`
   text-align: center;
@@ -46,21 +45,15 @@ const LeadersContainer = styled.div`
   }
 `;
 
-const idLink = (value) => `#${value.replace(' #', '')}`;
-
-function Leaders({ title, value = '', subValue, helperText, ...rest }) {
-  let newHymn;
-  const isCSB = value?.includes('CSB');
-  const newHymnNumber = Number(value?.split('#')[1]);
-
-  if (newHymnNumber) newHymn = hymns.find(({ number }) => number === newHymnNumber) || {};
+function Leaders({ title, value = '', link, subValue, helperText, ...rest }) {
+  const hymnNumber = Number(value?.split('#')[1]);
 
   return (
     <LeadersContainer {...rest}>
       <LeadersWrapper>
         <span>{title}</span>
         <Dots />
-        <Value>{isCSB ? <Link href={idLink(value)}>{value}</Link> : value || 'TBA'}</Value>
+        <Value>{value || 'TBA'}</Value>
       </LeadersWrapper>
       {subValue && (
         <SubValueWrapper>
@@ -70,11 +63,14 @@ function Leaders({ title, value = '', subValue, helperText, ...rest }) {
       {helperText && (
         <HyperTextWrapper className="hyper-text">
           <Text>
-            {newHymnNumber > 1000 ? (
+            {hymnNumber > 1000 ? (
               <Link
                 href={
-                  newHymn.link ||
-                  `https://www.churchofjesuschrist.org/media/music/songs/${newHymn.title.replaceAll(',', '').replaceAll(' ', '-').toLowerCase()}?lang=eng`
+                  link ||
+                  `https://www.churchofjesuschrist.org/media/music/songs/${subValue
+                    .replaceAll(',', '')
+                    .replaceAll(' ', '-')
+                    .toLowerCase()}?lang=eng`
                 }
               >
                 {helperText}

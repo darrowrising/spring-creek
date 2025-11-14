@@ -162,7 +162,6 @@ const INITIAL_STATE = {
 };
 
 const reducer = (state, { type, ...updatedState }) => {
-  console.log('type:', type);
   if (type === 'clear') return INITIAL_STATE;
   return {
     ...state,
