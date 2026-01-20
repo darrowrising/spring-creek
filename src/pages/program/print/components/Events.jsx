@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import styled, { css } from 'styled-components';
-import { shape, string, oneOfType } from 'prop-types';
+import styled from 'styled-components';
+import { shape } from 'prop-types';
 import { QRCode } from 'antd';
 
 import Heading from '../../../../components/Heading';
@@ -9,194 +9,7 @@ import { sortEvents, hasData } from '../../../../utils/data.utils';
 import { utc, dayjs, comingSunday, isBetween } from '../../../../utils/date.utils';
 import { dateLong, dateLongTime, programIdShort } from '../../../../configs/dateFormats';
 import config from '../../../temp/initiative/config';
-
-// #region Details
-const DetailsLayout = styled.div``;
-
-const Group = styled.h5`
-  background-color: var(--color-grey-2);
-  padding: var(--space-1);
-  font-size: 0.6em;
-  color: var(--color-black-2);
-  text-align: left;
-  text-indent: var(--space-3);
-`;
-
-const Content = styled.div`
-  display: grid;
-  grid-template-columns: auto 40px;
-  padding: var(--space-3);
-  text-align: left;
-`;
-
-const Title = styled.h6`
-  font-weight: normal;
-  font-size: 0.8em;
-`;
-
-const Time = styled.span`
-  font-size: 0.6em;
-  color: var(--color-black-2);
-`;
-
-const QRGroup = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  .ant-qrcode {
-    padding: 0;
-
-    ${({ $qrSize }) => css`
-      width: calc(${$qrSize}px - 20px) !important;
-      height: calc(${$qrSize}px - 20px) !important;
-    `}
-  }
-`;
-const QRTitle = styled.span`
-  font-size: 0.6em;
-  color: var(--color-black-2);
-`;
-
-const PrintMessage = styled.div`
-  font-size: 0.6em;
-  max-width: 250px;
-  padding-top: var(--space-1);
-`;
-
-function Details({ group, title, time, qrLink, qrTitle, qrSize = 60, printMessage }) {
-  return (
-    <DetailsLayout>
-      <Group>{group}</Group>
-      <Content>
-        <div>
-          <Title>{title}</Title>
-          {time && <Time>@ {time}</Time>}
-          {printMessage && <PrintMessage>{printMessage}</PrintMessage>}
-        </div>
-        {qrLink && (
-          <QRGroup $qrSize={qrSize}>
-            {qrTitle && <QRTitle>{qrTitle}</QRTitle>}
-            <QRCode size={qrSize} value={qrLink} />
-          </QRGroup>
-        )}
-      </Content>
-    </DetailsLayout>
-  );
-}
-
-Details.propTypes = {
-  group: string,
-  title: string,
-  time: string,
-  qrLink: string,
-  qrTitle: string,
-  printMessage: oneOfType(string, shape()),
-};
-// #endregion Details
-
-// #region EventDate
-const DateLayout = styled.dl`
-  display: flex;
-  flex-direction: column;
-  padding: var(--space-3) var(--space-5);
-`;
-
-const WeekDay = styled.dd`
-  font-size: 0.8em;
-  text-transform: uppercase;
-  color: var(--color-grey-1);
-`;
-
-const Day = styled.dd`
-  font-size: 1.2em;
-`;
-
-const Month = styled.dd`
-  font-size: 0.8em;
-  text-transform: uppercase;
-  color: var(--color-grey-1);
-  font-weight: 500;
-`;
-
-function EventDate({ date }) {
-  return (
-    <DateLayout>
-      <WeekDay>{utc({ date, format: 'ddd' })}</WeekDay>
-      <Day>{utc({ date, format: 'DD' })}</Day>
-      <Month>{utc({ date, format: 'MMM' })}</Month>
-    </DateLayout>
-  );
-}
-
-EventDate.propTypes = {
-  date: string,
-};
-// #endregion EventDate
-
-// #region Date Group
-const DateGroupLayout = styled.div`
-  align-items: center;
-  display: flex;
-  border-right: 1px solid var(--color-border-print);
-  /* background-color: var(--color-white-2); */
-`;
-
-const Multiple = styled.span`
-  /* padding: 0 var(--space-2); */
-  font-size: 2em;
-  color: var(--color-grey-1);
-`;
-
-function DateGroup({ startDate, endDate }) {
-  return (
-    <DateGroupLayout>
-      {startDate && <EventDate date={startDate} />}
-      {startDate && endDate && <Multiple>&#8250;</Multiple>}
-      {endDate && <EventDate date={endDate} />}
-    </DateGroupLayout>
-  );
-}
-
-DateGroup.propTypes = {
-  startDate: string,
-  endDate: string,
-};
-// #endregion Date Group
-
-// #region Card
-const CardLayout = styled.div`
-  border: 1px solid var(--color-border-print);
-  border-radius: var(--space-1);
-  display: grid;
-  grid-template-columns: min-content 1fr;
-  /* box-shadow: var(--elevation-3); */
-  overflow: hidden;
-`;
-
-function Card({ event }) {
-  const { startDate, endDate, time, group, title, qrLink, qrTitle, qrSize, printMessage } = event;
-
-  return (
-    <CardLayout>
-      <DateGroup startDate={startDate} endDate={endDate} time={time} />
-      <Details
-        group={group}
-        title={title}
-        time={time}
-        qrLink={qrLink}
-        qrTitle={qrTitle}
-        qrSize={qrSize}
-        printMessage={printMessage}
-      />
-    </CardLayout>
-  );
-}
-
-Card.propTypes = {
-  event: shape(),
-};
-// #endregion Card
+import EventCard from '../../../../components/EventCard';
 
 // #region Print Events
 const Center = styled.div`
@@ -310,7 +123,7 @@ function Events({ data = [] }) {
                   qrLink: 'https://drive.google.com/file/d/13vPkjzqzMpNgC-I_v9LMV2KCPQiT0Ypj/view',
                   qrTitle: 'For Info',
                   // qrSize: 65,
-                  printMessage: <span>Scan QR code to see your family's days</span>,
+                  printMessage: <span>Scan QR code to see your family&apos;s days</span>,
                 },
               ];
             }
@@ -370,7 +183,7 @@ function Events({ data = [] }) {
       </Header>
       <div>
         <EventsHeading>Upcoming Events</EventsHeading>
-        <EventsGrid>{hasData(events) && events.map((event) => <Card key={event.uid} event={event} />)}</EventsGrid>
+        <EventsGrid>{hasData(events) && events.map((event) => <EventCard key={event.uid} event={event} />)}</EventsGrid>
       </div>
       {note && (
         <Quote>

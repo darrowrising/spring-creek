@@ -1,9 +1,10 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { Table, Tabs, Modal } from 'antd';
 import styled from 'styled-components';
+import { arrayOf, bool, number, oneOfType, shape, string } from 'prop-types';
 
 import Heading from '../../../../components/Heading';
-import { handleState, hasData, isEmpty } from '../../../../utils/data.utils';
+import { handleState, hasData } from '../../../../utils/data.utils';
 import { useAdminContext } from '../../../../providers/admin.provider';
 import { filterLastPrayed, saveNote } from './utils';
 import { columns, searchColumns } from './config';
@@ -18,11 +19,11 @@ const Header = styled.header`
   padding-block-end: var(--space-2);
 `;
 
-const MemberTable = ({ data, columns, isLoading = false }) => (
+const MemberTable = ({ data, tableColumns, isLoading = false }) => (
   <Table
     dataSource={data}
     pagination={false}
-    columns={columns}
+    columns={tableColumns}
     loading={isLoading}
     rowKey={(record) => record.uid}
     scroll={{ x: 'max-content', y: 410 }}
@@ -30,6 +31,16 @@ const MemberTable = ({ data, columns, isLoading = false }) => (
     bordered
   />
 );
+
+MemberTable.propTypes = {
+  data: arrayOf(
+    shape({
+      uid: oneOfType([string, number]).isRequired,
+    })
+  ).isRequired,
+  tableColumns: arrayOf(shape({})).isRequired,
+  isLoading: bool,
+};
 
 export const UpToPrayContainer = styled.div`
   position: relative;
@@ -139,22 +150,22 @@ const UpToPray = () => {
     {
       key: 'adult',
       label: 'Adult',
-      children: <MemberTable data={data} columns={columns(onCellClick, handleSaveField)} isLoading={isLoading} />,
+      children: <MemberTable data={data} tableColumns={columns(onCellClick, handleSaveField)} isLoading={isLoading} />,
     },
     {
       key: 'youth',
       label: 'Youth',
-      children: <MemberTable data={data} columns={columns(onCellClick, handleSaveField)} />,
+      children: <MemberTable data={data} tableColumns={columns(onCellClick, handleSaveField)} />,
     },
     {
       key: 'primary',
       label: 'Primary',
-      children: <MemberTable data={data} columns={columns(onCellClick, handleSaveField)} />,
+      children: <MemberTable data={data} tableColumns={columns(onCellClick, handleSaveField)} />,
     },
     activeTab === 'search' && {
       key: 'search',
       label: 'Search Results',
-      children: <MemberTable data={data} columns={searchColumns(onCellClick, handleSaveField)} />,
+      children: <MemberTable data={data} tableColumns={searchColumns(onCellClick, handleSaveField)} />,
     },
   ];
 
@@ -185,7 +196,7 @@ const UpToPray = () => {
       <Modal
         title={modalState.title}
         open={modalState.isVisible}
-        destroyOnClose
+        destroyOnHidden
         onCancel={() => setModalState({ ...modalState, isVisible: false })}
         footer={null}
       >

@@ -1,8 +1,8 @@
 export const hasPermission = (compare = []) => {
-  if (hasPermission.userPermissions.includes('role:ultron')) return true;
+  if (hasPermission?.userPermissions?.includes('role:ultron')) return true;
   if (compare.length === 0) return false;
 
-  return hasPermission.userPermissions.some((userPermission) =>
+  return hasPermission?.userPermissions?.some((userPermission) =>
     compare.some((comparePermission) => userPermission === comparePermission)
   );
 };

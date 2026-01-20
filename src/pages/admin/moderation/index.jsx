@@ -128,7 +128,7 @@ function Moderation() {
         )}
       </Grid>
       <StyledModal open={isModalOpen} title="Edit Event" footer={null} width={800} onCancel={onCancel}>
-        <AnnouncementForm destroyOnClose event={eventToEdit} onCancel={onCancel} />
+        <AnnouncementForm destroyOnHidden event={eventToEdit} onCancel={onCancel} />
       </StyledModal>
     </Page>
   );

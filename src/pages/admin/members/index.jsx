@@ -132,7 +132,7 @@ function Members() {
     setSearchValue('');
   };
   const handleSearch = (event) => {
-    const { value } = event?.target;
+    const { value } = event?.target ?? {};
 
     setList(searchList(members, value));
     setSearchValue(value);
@@ -146,7 +146,7 @@ function Members() {
     } else {
       setList(members);
     }
-  }, [members]);
+  }, [members, searchValue]);
 
   const handleOnClick = (record, type) => {
     switch (type) {
@@ -203,7 +203,7 @@ function Members() {
         footer={null}
         open={showModal}
         onCancel={() => set({ modalContent: {}, showModal: false })}
-        destroyOnClose
+        destroyOnHidden
       >
         <ModalContentComp content={modalContent} setParentState={set} />
       </Modal>

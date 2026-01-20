@@ -11,11 +11,13 @@ dayjsLib.extend(customParseFormat);
 dayjsLib.extend(isBetweenPlugin);
 
 export function utc({ date, format } = {}) {
+  if (!date) return '';
+  if (!format) return dayjsLib(date).utc().local().format();
   return dayjsLib(date).utc().local().format(format);
 }
 
 export const isBetween = ({ start, end }) => dayjsLib().isBetween(start, end, 'day', '[]');
-export const isAfter = (endDate) => dayjs().isAfter(endDate, 'day');
+export const isAfter = (endDate) => dayjsLib().isAfter(endDate, 'day');
 
 export const dateIdMaker = (dateStr = '') => dateStr.split(' ').join('');
 
