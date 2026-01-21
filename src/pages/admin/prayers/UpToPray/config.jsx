@@ -1,5 +1,3 @@
-import React from 'react';
-
 import Button from '../../../../components/Button';
 import { utc } from '../../../../utils/date.utils';
 import { dateShort } from '../../../../configs/dateFormats';
@@ -37,7 +35,7 @@ export const columns = (onCellClick, onSave) => [
       record?.showInput ? (
         <EditableCell defaultValue={cellValue} onSave={(value) => onSave(record.uid, value, 'note')} />
       ) : (
-        cellValue
+        <div style={{ padding: 'var(--space-1) 10px' }}>{cellValue}</div>
       ),
   },
   {

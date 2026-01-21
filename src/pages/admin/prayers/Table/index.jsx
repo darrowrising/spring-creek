@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Table, Tabs } from 'antd';
 import styled from 'styled-components';
 import { lighten } from 'polished';
@@ -11,7 +11,7 @@ import { currentYear } from '../../../../utils/date.utils';
 import { handleState, hasData } from '../../../../utils/data.utils';
 import { FieldValue } from '../../../../utils/firebase.utils';
 import SearchProgram from './SearchProgram';
-import { colorGrey3, colorAlert, colorSuccess } from '../../../../styles/variables';
+import { colorGrey3, colorAlert, colorSuccess, media } from '../../../../styles/variables';
 
 import { tableHeaders, searchColumns } from './Table.config';
 import {
@@ -23,8 +23,6 @@ import {
   saveCell,
   saveMember,
 } from './Table.utils';
-
-import { media } from '../../../../styles/variables';
 
 export const Container = styled.section`
   & > ${Heading} {
@@ -58,6 +56,10 @@ export const Wrapper = styled.div`
   .cell {
     min-width: 75px;
     height: 49px;
+  }
+
+  ${media.mobile} {
+    height: 300px;
   }
 `;
 
@@ -165,8 +167,7 @@ function MembersList() {
   };
 
   const onCellSave = ({ value = '', column, rowData = {} }) => {
-    const date = rowData.date;
-    const uid = rowData.uid;
+    const { date, uid } = rowData;
     const member = findMember({ name: value });
 
     const previousPrayer = rowData[column];
@@ -202,7 +203,7 @@ function MembersList() {
       getPrayers({ set, year: prayerYear, members });
       return () => unsubscribe();
     }
-  }, [members]);
+  }, [members, prayerYear]);
 
   const columns = tableHeaders({
     searchValue,
@@ -216,7 +217,7 @@ function MembersList() {
     <Container>
       <Heading color="secondary" size="sm" className="secondary-sm">
         <HeadingGrid>
-          Talk Schedule
+          Prayer Schedule
           <SearchProgram defaultTab={activeTab} set={set} />
         </HeadingGrid>
       </Heading>
@@ -268,7 +269,7 @@ function MembersList() {
               />
             ),
           },
-        ]}
+        ].filter(Boolean)}
       />
     </Container>
   );

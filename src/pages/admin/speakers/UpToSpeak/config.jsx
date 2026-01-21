@@ -1,7 +1,3 @@
-import React from 'react';
-import { MoreOutlined } from '@ant-design/icons';
-import { Dropdown } from 'antd';
-
 import Button from '../../../../components/Button';
 import { utc } from '../../../../utils/date.utils';
 import { dateShort } from '../../../../configs/dateFormats';
@@ -9,12 +5,12 @@ import { NotSpoken } from './styles';
 import { REMOVE } from './enums';
 import EditableCell from '../EditableCell';
 
-const menu = (record) => [
-  {
-    key: '1',
-    label: <span onClick={() => record.onClick(record, REMOVE)}>Delay From Speaking</span>,
-  },
-];
+// const menu = (record) => [
+//   {
+//     key: '1',
+//     label: <span onClick={() => record.onClick(record, REMOVE)}>Delay From Speaking</span>,
+//   },
+// ];
 
 export const columns = (onCellClick, onSave) => [
   {
@@ -40,7 +36,7 @@ export const columns = (onCellClick, onSave) => [
       record?.showInput ? (
         <EditableCell defaultValue={cellValue} onSave={(value) => onSave(record.uid, value, 'note')} />
       ) : (
-        cellValue
+        <div style={{ padding: 'var(--space-1) 10px' }}>{cellValue}</div>
       ),
   },
   {
@@ -50,9 +46,6 @@ export const columns = (onCellClick, onSave) => [
       <Button size="small" onClick={() => record.onClick(record, REMOVE)}>
         Delay Speaking
       </Button>
-      // <Dropdown className="more" menu={{ items: menu(record) }}>
-      //   <MoreOutlined />
-      // </Dropdown>
     ),
     width: '100px',
     fixed: 'right',

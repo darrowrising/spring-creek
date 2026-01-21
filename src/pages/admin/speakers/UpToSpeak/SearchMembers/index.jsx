@@ -6,7 +6,9 @@ import { useAdminContext } from '../../../../../providers/admin.provider';
 import { debounce } from '../../../../../utils/data.utils';
 
 export const SearchContainer = styled.div`
-  display: flex;
+  button {
+    height: auto;
+  }
 `;
 
 const Search = styled(Input.Search)`

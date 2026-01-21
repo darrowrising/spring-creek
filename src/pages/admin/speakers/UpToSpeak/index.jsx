@@ -26,7 +26,7 @@ const MemberTable = ({ data, tableColumns, isLoading = false }) => (
     columns={tableColumns}
     loading={isLoading}
     rowKey={(record) => record.uid}
-    scroll={{ x: 'max-content', y: 410 }}
+    scroll={{ x: 'max-content', y: 340 }}
     size="small"
     bordered
   />
@@ -120,6 +120,7 @@ const UpToSpeak = () => {
       ...record,
       ...newState,
     });
+
     set({
       speakers: newSpeakers,
     });
@@ -170,11 +171,29 @@ const UpToSpeak = () => {
   ].filter(Boolean);
 
   useEffect(() => {
-    if (activeTab === 'search') {
-      const updatedSpeakers = speakers.map(({ uid }) => ({ ...members.find((member) => member.uid === uid) }));
-      set({ speakers: updatedSpeakers });
-    } else if (hasData(members)) set({ speakers: members, isLoading: false });
-  }, [members, activeTab, speakers]);
+    if (activeTab === 'search') return;
+    if (!hasData(members)) return;
+
+    // Keep base list in sync with members updates without clobbering edits on click.
+    set({ speakers: members, isLoading: false });
+  }, [members, activeTab]);
+
+  useEffect(() => {
+    if (activeTab !== 'search') return;
+    if (!hasData(members)) return;
+
+    // When viewing search results, re-hydrate the current list from latest members.
+    setState((current) => {
+      const updatedSpeakers = (current.speakers ?? [])
+        .map(({ uid }) => members.find((member) => member.uid === uid))
+        .filter(Boolean);
+
+      return {
+        ...current,
+        speakers: updatedSpeakers,
+      };
+    });
+  }, [activeTab, members]);
 
   return (
     <UpToSpeakContainer>

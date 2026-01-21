@@ -1,4 +1,4 @@
-import { useState, useEffect, createContext, useContext } from 'react';
+import { useState, useEffect, createContext, useContext, useMemo } from 'react';
 import { node } from 'prop-types';
 
 // utils
@@ -63,7 +63,9 @@ function UserProvider({ children }) {
     });
   }, []);
 
-  return <Context.Provider value={{ user, isUserLoading }}>{children}</Context.Provider>;
+  const providerValues = useMemo(() => ({ user, isUserLoading }), [user, isUserLoading]);
+
+  return <Context.Provider value={providerValues}>{children}</Context.Provider>;
 }
 
 UserProvider.propTypes = {

@@ -19,8 +19,8 @@
     "deploy:prod": "bun run build && firebase deploy --only hosting:production"
   },
   "dependencies": {
-    "@ant-design/icons": "^5.2.6",
-    "antd": "^5.11.0",
+    "@ant-design/icons": "^6.1.0",
+    "antd": "^6.2.1",
     "dayjs": "^1.11.10",
     "firebase": "^8",
     "polished": "^4.2.2",

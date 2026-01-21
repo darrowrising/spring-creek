@@ -26,7 +26,7 @@ const MemberTable = ({ data, tableColumns, isLoading = false }) => (
     columns={tableColumns}
     loading={isLoading}
     rowKey={(record) => record.uid}
-    scroll={{ x: 'max-content', y: 410 }}
+    scroll={{ x: 'max-content', y: 340 }}
     size="small"
     bordered
   />
@@ -167,14 +167,32 @@ const UpToPray = () => {
       label: 'Search Results',
       children: <MemberTable data={data} tableColumns={searchColumns(onCellClick, handleSaveField)} />,
     },
-  ];
+  ].filter(Boolean);
 
   useEffect(() => {
-    if (activeTab === 'search') {
-      const updatedPrayers = prayers.map(({ uid }) => ({ ...members.find((member) => member.uid === uid) }));
-      set({ prayers: updatedPrayers });
-    } else if (hasData(members)) set({ prayers: members, isLoading: false });
-  }, [members]);
+    if (activeTab === 'search') return;
+    if (!hasData(members)) return;
+
+    // Keep base list in sync with members updates without clobbering edits on click.
+    set({ prayers: members, isLoading: false });
+  }, [members, activeTab]);
+
+  useEffect(() => {
+    if (activeTab !== 'search') return;
+    if (!hasData(members)) return;
+
+    // When viewing search results, re-hydrate the current list from latest members.
+    setState((current) => {
+      const updatedPrayers = (current.prayers ?? [])
+        .map(({ uid }) => members.find((member) => member.uid === uid))
+        .filter(Boolean);
+
+      return {
+        ...current,
+        prayers: updatedPrayers,
+      };
+    });
+  }, [activeTab, members]);
 
   return (
     <UpToPrayContainer>

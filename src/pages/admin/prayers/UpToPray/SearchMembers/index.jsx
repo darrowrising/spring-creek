@@ -1,4 +1,4 @@
-import { func } from 'prop-types';
+import { func, string } from 'prop-types';
 import { Input } from 'antd';
 import styled from 'styled-components';
 
@@ -6,7 +6,9 @@ import { useAdminContext } from '../../../../../providers/admin.provider';
 import { debounce } from '../../../../../utils/data.utils';
 
 export const SearchContainer = styled.div`
-  display: flex;
+  button {
+    height: auto;
+  }
 `;
 
 const Search = styled(Input.Search)`
@@ -50,6 +52,7 @@ const SearchMembers = ({ defaultTab, set = defaultSet, ...rest }) => {
 
 SearchMembers.propTypes = {
   set: func,
+  defaultTab: string,
 };
 
 export default SearchMembers;

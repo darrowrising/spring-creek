@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { func, string } from 'prop-types';
 import { Input, Select } from 'antd';
 import styled from 'styled-components';
@@ -20,6 +20,10 @@ const Wrapper = styled.div`
       box-shadow: none;
     }
   }
+
+  & > span {
+    background-color: var(--color-bg-select-transparent) !important;
+  }
 `;
 
 const EditableCell = ({ defaultValue = '', onSave, onRemove, type, column, ...rest }) => {
@@ -28,12 +32,11 @@ const EditableCell = ({ defaultValue = '', onSave, onRemove, type, column, ...re
   const [options, setOptions] = useState([]);
 
   useEffect(() => {
-    if (column === 'topic') {
-    } else if (column === 'members') {
+    if (column === 'members') {
       const memberOptions = members.map(({ displayName }) => displayName);
       setOptions(memberOptions);
     }
-  }, [column]);
+  }, [column, members]);
 
   if (type === 'select') {
     if (!options) return <div>loading...</div>;
@@ -70,11 +73,12 @@ const EditableCell = ({ defaultValue = '', onSave, onRemove, type, column, ...re
           defaultValue={defaultValue}
           autoFocus
           allowClear
-          searchValue={cellValue}
-          showSearch
-          onSearch={(value) => {
-            if (cellValue.length === 1 && !value) setCellValue(value);
-            if (value) setCellValue(value);
+          showSearch={{
+            searchValue: cellValue,
+            onSearch: (value) => {
+              if (cellValue.length === 1 && !value) setCellValue(value);
+              if (value) setCellValue(value);
+            },
           }}
           onChange={(value) => onSave(value)}
           onClear={() => onRemove()}

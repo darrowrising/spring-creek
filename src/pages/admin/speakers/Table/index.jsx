@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Table, Tabs } from 'antd';
 import styled from 'styled-components';
 import { lighten } from 'polished';
@@ -11,7 +11,7 @@ import { currentYear } from '../../../../utils/date.utils';
 import { handleState, hasData } from '../../../../utils/data.utils';
 import { FieldValue } from '../../../../utils/firebase.utils';
 import { createTalk } from '../../../../factories/program';
-import { colorGrey3, colorAlert, colorSuccess } from '../../../../styles/variables';
+import { colorGrey3, colorAlert, colorSuccess, media } from '../../../../styles/variables';
 
 import { tableHeaders } from './Table.config';
 import {
@@ -23,8 +23,6 @@ import {
   saveCell,
   saveMember,
 } from './Table.utils';
-
-import { media } from '../../../../styles/variables';
 
 export const Container = styled.section`
   & > ${Heading} {
@@ -58,6 +56,10 @@ export const Wrapper = styled.div`
   .cell {
     min-width: 75px;
     height: 49px;
+  }
+
+  ${media.mobile} {
+    height: 300px;
   }
 `;
 
@@ -154,8 +156,7 @@ function MembersList() {
   };
 
   const onCellSave = ({ value = '', column, index = 0, rowData = {} }) => {
-    const date = rowData.date;
-    const uid = rowData.uid;
+    const { date, uid } = rowData;
     const member = findMember({ name: value });
     const priority = index;
 
@@ -168,7 +169,7 @@ function MembersList() {
     }
 
     if (column === 'speaker') {
-      let program = [...(rowData.program ?? [])];
+      const program = [...(rowData.program ?? [])];
       const memberId = member?.uid ? { memberUid: member.uid } : {};
       const talk = createTalk({ priority, value, ...memberId });
       const arrayIndex = program.findIndex((item) => item.priority === index);
@@ -222,7 +223,7 @@ function MembersList() {
       getSpeakers({ set, year: speakerYear, members });
       return () => unsubscribe();
     }
-  }, [members]);
+  }, [members, speakerYear]);
 
   const columns = tableHeaders({
     searchValue,

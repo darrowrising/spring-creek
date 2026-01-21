@@ -24,8 +24,9 @@ const ADULT_YEAR = dayjs().subtract(19, 'year').format('YYYY');
 
 const createGroup = (year) => {
   if (year <= ADULT_YEAR) return 'adult';
-  else if (year <= YOUTH_YEAR) return 'youth';
-  else return 'primary';
+  if (year <= YOUTH_YEAR) return 'youth';
+
+  return 'primary';
 };
 
 function AdminProvider({ children }) {
@@ -60,11 +61,16 @@ function AdminProvider({ children }) {
       }));
 
       setMembers(
-        data.map((member) => ({
-          ...member,
-          displayName: createDisplayName(member),
-          ageGroup: createGroup(member.year || '1980'),
-        }))
+        data
+          .map((member) => ({
+            ...member,
+            displayName: createDisplayName(member),
+            ageGroup: createGroup(member.year || '1980'),
+          }))
+          .map((member) => ({
+            ...member,
+            ageGroup: createGroup(member.year || '1980'),
+          }))
       );
       if (hasData(newMembersList))
         setNewMembers(

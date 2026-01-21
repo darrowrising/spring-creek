@@ -75,6 +75,7 @@ export const colorStatusInactive = colorGrey1;
 export const colorStatusDeactivated = colorRed1;
 // background colors
 export const colorBgDark = colorBlack2;
+export const colorBgSelectTransparent = rgba(colorPrimary, 0.15);
 // text colors
 export const colorBgText = colorGrey3;
 export const colorText = colorBlack2;
@@ -195,7 +196,7 @@ const rootCss = () => css`
     /* background colors */
     --color-bg-light: var(--color-white-1);
     --color-bg-dark: ${colorBgDark};
-    --color-bg-select-transparent: ${rgba(colorPrimary, 0.15)};
+    --color-bg-select-transparent: ${colorBgSelectTransparent};
 
     /* border colors */
     --color-border-1: ${colorBorder1};

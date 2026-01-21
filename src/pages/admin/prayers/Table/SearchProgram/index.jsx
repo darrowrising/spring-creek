@@ -1,16 +1,17 @@
 import { useState } from 'react';
-import { func } from 'prop-types';
+import { func, string } from 'prop-types';
 import { Input } from 'antd';
 import styled from 'styled-components';
 
-import { debounce } from '../../../../../utils/data.utils';
+import { debounce, markSearchValue } from '../../../../../utils/data.utils';
 import { db, docs } from '../../../../../utils/firebase.utils';
-import { markSearchValue } from '../../../../../utils/data.utils';
 
 const getAllPrograms = () => db.collection('program').get().then(docs);
 
 export const SearchContainer = styled.div`
-  display: flex;
+  button {
+    height: auto;
+  }
 `;
 
 const Search = styled(Input.Search)`
@@ -29,9 +30,7 @@ const filterPrograms = ({ programs, searchValue }) => {
   if (!searchValue) return [];
 
   return programs
-    .filter(({ benediction = '', invocation = '' }) => {
-      return contains(benediction) || contains(invocation);
-    })
+    .filter(({ benediction = '', invocation = '' }) => contains(benediction) || contains(invocation))
     .map(({ benediction, invocation, ...rest }) => ({
       ...rest,
       benediction,
@@ -45,7 +44,7 @@ const filterPrograms = ({ programs, searchValue }) => {
     }))
     .sort((a, b) => {
       if (a.date > b.date) return -1;
-      else if (a.date < b.date) return 1;
+      if (a.date < b.date) return 1;
       return 0;
     });
 };
@@ -58,9 +57,9 @@ const SearchProgram = ({ defaultTab, set = defaultSet, ...rest }) => {
   const handleChange = async ({ target: { value } }) => {
     let programsData = programs;
     if (programs.length === 0) {
-      const programs = await getAllPrograms();
-      programsData = programs;
-      setPrograms(programs);
+      const allPrograms = await getAllPrograms();
+      programsData = allPrograms;
+      setPrograms(allPrograms);
     }
     const prayers = filterPrograms({ programs: programsData, searchValue: value });
     const activeTab = value ? 'search' : defaultTab;
@@ -77,6 +76,7 @@ const SearchProgram = ({ defaultTab, set = defaultSet, ...rest }) => {
 
 SearchProgram.propTypes = {
   set: func,
+  defaultTab: string,
 };
 
 export default SearchProgram;
