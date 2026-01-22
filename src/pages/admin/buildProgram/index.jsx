@@ -1,7 +1,7 @@
 // #region imports
-import { useEffect, useState, useCallback, useMemo } from 'react';
+import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import styled from 'styled-components';
-import { arrayOf, number, shape, string } from 'prop-types';
+import { arrayOf, func, number, shape, string } from 'prop-types';
 import { Form, Input, InputNumber, notification, Popconfirm, Select } from 'antd';
 import { DownOutlined, MinusCircleOutlined, PlusOutlined, UpOutlined } from '@ant-design/icons';
 import { darken, lighten, rgba } from 'polished';
@@ -18,7 +18,6 @@ import { useFindMember } from '../../../utils/organizations.utils';
 import { hasData, uuid } from '../../../utils/data.utils';
 import { createProgram } from '../../../factories/program';
 import { programIdShort } from '../../../configs/dateFormats';
-import { hymns } from '../../../configs/hymns';
 import {
   colorGreen1,
   colorGrey1,
@@ -27,8 +26,8 @@ import {
   colorPink2,
   colorViolet1,
   colorWhite2,
+  media,
 } from '../../../styles/variables';
-import { media } from '../../../styles/variables';
 // #endregion imports
 
 const { TextArea } = Input;
@@ -135,8 +134,9 @@ function Hymn({ type, form, 'data-testid': testId }) {
 }
 
 Hymn.propTypes = {
-  name: string,
+  type: string,
   form: shape(),
+  'data-testid': string,
 };
 // #endregion Hymn
 
@@ -148,37 +148,37 @@ function SearchSelectProgram({ label, placeholder, options, form, name, 'data-te
   const program = form.getFieldValue('program');
   const noOptions = useMemo(
     () => searchValue && !options.filter(({ value }) => value.toLowerCase().includes(searchValue.toLowerCase())).length,
-    [searchValue]
+    [searchValue, options]
   );
-
+  if (noOptions) {
+    return (
+      <Form.Item label={label} name={[name, 'value']}>
+        <Input placeholder={placeholder} autoFocus data-testid={testId} />
+      </Form.Item>
+    );
+  }
   return (
-    <>
-      {noOptions ? (
-        <Form.Item label={label} name={[name, 'value']}>
-          <Input placeholder={placeholder} autoFocus data-testid={testId} />
-        </Form.Item>
-      ) : (
-        <Form.Item label={label} name={[name, 'value']}>
-          <Select
-            showSearch
-            placeholder={placeholder}
-            options={options}
-            data-testid={testId}
-            onSearch={(value) => {
-              program[name] = { ...program[name], value };
-              form.setFieldValue('program', program);
-              setSearchValue(value);
-            }}
-            onInputKeyDown={({ code, target: { value } }) => {
-              if (code === 'Enter') {
-                program[name] = { ...program[name], value };
-                form.setFieldValue('program', program);
-              }
-            }}
-          />
-        </Form.Item>
-      )}
-    </>
+    <Form.Item label={label} name={[name, 'value']}>
+      <Select
+        showSearch={{
+          searchValue,
+          onSearch: (value) => {
+            program[name] = { ...program[name], value };
+            form.setFieldValue('program', program);
+            setSearchValue(value);
+          },
+        }}
+        placeholder={placeholder}
+        options={options}
+        data-testid={testId}
+        onInputKeyDown={({ code, target: { value } }) => {
+          if (code === 'Enter') {
+            program[name] = { ...program[name], value };
+            form.setFieldValue('program', program);
+          }
+        }}
+      />
+    </Form.Item>
   );
 }
 
@@ -188,6 +188,7 @@ SearchSelectProgram.propTypes = {
   options: arrayOf(shape()),
   form: shape(),
   name: number,
+  'data-testid': string,
 };
 // #endregion SearchSelectProgram
 // #region Music
@@ -205,6 +206,10 @@ function Music({ name }) {
     </>
   );
 }
+
+Music.propTypes = {
+  name: number,
+};
 // #endregion music
 // #region Meeting
 const MEETINGS = ['Fast Sunday', 'General Conference', 'Stake Conference'];
@@ -244,9 +249,8 @@ const RestHymnTitle = styled.div`
 `;
 
 function RestHymn({ name, form }) {
-  const program = form.getFieldValue('program');
-
-  const { title } = program[name] || {};
+  const program = form.getFieldValue('program') ?? [];
+  const { title } = program[name] ?? {};
 
   return (
     <>
@@ -258,22 +262,26 @@ function RestHymn({ name, form }) {
             .where('number', '==', Number(value))
             .get()
             .then((snap) => docs(snap)[0])
-            .then(({ title } = {}) => {
-              program[name] = { ...program[name], value, title };
+            .then(({ title: hymnTitle } = {}) => {
+              program[name] = { ...program[name], value, title: hymnTitle };
               form.setFieldValue('program', program);
             });
         }}
       >
         <InputNumber data-testid="rest-hymn" />
       </Form.Item>
-      {<RestHymnTitle>{title === 'Speaker' ? '' : title}</RestHymnTitle>}
+      <RestHymnTitle>{title === 'Speaker' ? '' : title}</RestHymnTitle>
     </>
   );
 }
 
-// RestHymn.propTypes = {
-
-// };
+RestHymn.propTypes = {
+  name: number,
+  form: shape({
+    getFieldValue: func,
+    setFieldValue: func,
+  }),
+};
 // #endregion RestHymn
 // #region Talk
 function Talk({ name, form }) {
@@ -296,6 +304,14 @@ function Talk({ name, form }) {
     </>
   );
 }
+
+Talk.propTypes = {
+  name: number,
+  form: shape({
+    getFieldValue: func,
+    setFieldValue: func,
+  }),
+};
 // #endregion Talk
 // #region styles
 const ProgramList = styled.div`
@@ -408,7 +424,7 @@ const getType = ({ form, name }) => {
 // #region component
 function BuildProgram({ form }) {
   const renderItem = useCallback(
-    ({ name, form }) => {
+    ({ name }) => {
       switch (getType({ form, name })) {
         case 'music': {
           return <Music name={name} />;
@@ -458,7 +474,7 @@ function BuildProgram({ form }) {
                       ))}
                     </Select>
                   </Form.Item>
-                  {renderItem({ name, form })}
+                  {renderItem({ name })}
                   <MinusCircleOutlined onClick={() => remove(name)} />
                 </ListRow>
               </div>
@@ -474,6 +490,13 @@ function BuildProgram({ form }) {
     </ProgramList>
   );
 }
+
+BuildProgram.propTypes = {
+  form: shape({
+    getFieldValue: func,
+    setFieldValue: func,
+  }),
+};
 // #endregion component
 // #endregion BuildProgram
 
@@ -566,7 +589,7 @@ const handleMembersInProgram = ({ findMember, program, prevProgram = [], date })
 function MakeProgram() {
   const [dropdowns, setDropdowns] = useState(INITIAL_DROPDOWN_STATE);
   const [dbData, setDbData] = useState({});
-  const [date, setDate] = useState(() => utc({ date: comingSunday() }));
+  // const [date, setDate] = useState(() => utc({ date: comingSunday() }));
   const [form] = Form.useForm();
   const { id } = useParams();
   const navigate = useNavigate();
@@ -577,7 +600,12 @@ function MakeProgram() {
   const { topic } = store;
   const { setFieldsValue, setFieldValue, getFieldsValue } = form;
   const findMember = useFindMember(members);
+  const findMemberRef = useRef(findMember);
   const memberOptions = useMemo(() => members.map(({ displayName }) => displayName), [members]);
+
+  useEffect(() => {
+    findMemberRef.current = findMember;
+  }, [findMember]);
 
   const fieldOptions = (field) => {
     const fieldValue = form.getFieldValue(field);
@@ -590,10 +618,12 @@ function MakeProgram() {
 
   const onFinish = (data = {}) => {
     const { uid: programUid } = dbData;
-    data.program = data.program.map(({ uid, ...rest }, index) => ({ ...rest, priority: index, uid: uid || uuid() }));
-    data.date = date;
+    const newData = { ...data };
 
-    const programData = createProgram(data);
+    newData.program = data.program.map(({ uid, ...rest }, index) => ({ ...rest, priority: index, uid: uid || uuid() }));
+    newData.date = utc({ date: comingSunday() });
+
+    const programData = createProgram(newData);
 
     programData.program = programData.program.map((item = '') => {
       const { type } = item;
@@ -606,12 +636,11 @@ function MakeProgram() {
             ...item,
             memberUid: uid,
           };
-        } else {
-          return item;
         }
-      } else {
         return item;
       }
+
+      return item;
     });
 
     if (id) {
@@ -708,10 +737,8 @@ function MakeProgram() {
           const data = docs(programSnap)[0] ?? {};
 
           const findMembersWithCallings = (callings) =>
-            findMember({
-              callings,
-            }).map(({ displayName, callings }) => {
-              if (callings.includes('Bishop')) return `Bishop ${displayName}`;
+            findMemberRef.current({ callings }).map(({ displayName, callings: memberCallings }) => {
+              if (memberCallings.includes('Bishop')) return `Bishop ${displayName}`;
               return displayName;
             });
 
@@ -725,7 +752,7 @@ function MakeProgram() {
 
           setFieldsValue({
             ...createProgram(),
-            presiding: `Bishop ${findMember({ calling: 'Bishop' })?.displayName}`,
+            presiding: `Bishop ${findMemberRef.current({ calling: 'Bishop' })?.displayName}`,
             program: (data.program || [{ type: 'talk', title: 'Speaker' }]).sort((a, b) => a.priority - b.priority),
             ...data,
           });
@@ -733,7 +760,7 @@ function MakeProgram() {
 
       return () => unsubscribe();
     }
-  }, [members]);
+  }, [members, id, setDropdowns, setDbData, setFieldsValue]);
 
   useEffect(() => {
     if (topic === 'Fast Sunday') {
@@ -746,7 +773,7 @@ function MakeProgram() {
         },
       ]);
     }
-  }, [topic]);
+  }, [topic, setFieldValue]);
 
   return (
     <>
@@ -799,12 +826,13 @@ function MakeProgram() {
               name="conducting"
             >
               <Select
-                showSearch
+                showSearch={{
+                  onSearch: (value) => {
+                    form.setFieldValue('conducting', value);
+                  },
+                }}
                 placeholder="who's conducting?"
                 data-testid="conducting"
-                onSearch={(value) => {
-                  form.setFieldValue('conducting', value);
-                }}
                 onBlur={({ target: { value } }) => {
                   if (value) form.setFieldValue('conducting', value);
                 }}
@@ -830,12 +858,13 @@ function MakeProgram() {
               name="chorister"
             >
               <Select
-                showSearch
+                showSearch={{
+                  onSearch: (value) => {
+                    form.setFieldValue('chorister', value);
+                  },
+                }}
                 placeholder="who's leading the music?"
                 data-testid="chorister"
-                onSearch={(value) => {
-                  form.setFieldValue('chorister', value);
-                }}
                 onBlur={({ target: { value } }) => {
                   if (value) form.setFieldValue('chorister', value);
                 }}
@@ -859,12 +888,13 @@ function MakeProgram() {
               name="organist"
             >
               <Select
-                showSearch
+                showSearch={{
+                  onSearch: (value) => {
+                    form.setFieldValue('organist', value);
+                  },
+                }}
                 placeholder="who's organist?"
                 data-testid="organist"
-                onSearch={(value) => {
-                  form.setFieldValue('organist', value);
-                }}
                 onBlur={({ target: { value } }) => {
                   if (value) form.setFieldValue('organist', value);
                 }}
@@ -937,7 +967,6 @@ function MakeProgram() {
                 title="Delete this program"
                 description="Are you sure to delete this program?"
                 onConfirm={onDelete}
-                // onCancel={cancel}
                 okText="Yes"
                 cancelText="No"
               >
