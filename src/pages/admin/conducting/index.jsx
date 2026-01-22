@@ -133,7 +133,7 @@ const buildProgramItem = ({ title, value, type }) => {
           Musical Number
         </h5>
         <div>
-          <strong>Title</strong>: <em>"{title}"</em>
+          <strong>Title</strong>: <em>&quot;{title}&quot;</em>
         </div>
         <div>{value}</div>
       </div>
@@ -206,7 +206,7 @@ function Conducting() {
       });
 
     return () => unsubscribe();
-  }, []);
+  }, [id]);
 
   return (
     <>
