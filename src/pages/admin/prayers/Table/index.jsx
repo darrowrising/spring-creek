@@ -102,26 +102,11 @@ export const StatusColor = styled.span`
   }};
 `;
 
-export const TableContainer = styled.div`
-  ${media.tablet} {
-    overflow-x: auto;
-
-    .ant-table {
-      min-width: 900px;
-    }
-  }
-`;
-
 export const HeadingGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr auto;
   align-items: end;
   gap: var(--space-2);
-
-  & > div {
-    position: relative;
-    top: 20px;
-  }
 `;
 
 const listOfYears = listOfYearsForTabs();
@@ -234,20 +219,19 @@ function MembersList() {
             key: String(index + 1),
             children: (
               <Wrapper>
-                <TableContainer>
-                  <Table
-                    dataSource={prayers}
-                    pagination={false}
-                    columns={columns}
-                    loading={loading}
-                    onChange={handleChange}
-                    rowKey={(record) => record.displayDate}
-                    scroll={{ x: 'max-content', y: 500 }}
-                    size="small"
-                    bordered
-                    rowClassName={handleRowClass}
-                  />
-                </TableContainer>
+                <Table
+                  dataSource={prayers}
+                  pagination={false}
+                  columns={columns}
+                  loading={loading}
+                  onChange={handleChange}
+                  rowKey={(record) => record.displayDate}
+                  scroll={{ x: 'max-content', y: 500 }}
+                  size="small"
+                  bordered
+                  tableLayout="auto"
+                  rowClassName={handleRowClass}
+                />
               </Wrapper>
             ),
           })),

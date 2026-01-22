@@ -17,13 +17,15 @@ export const columns = (onCellClick, onSave) => [
     title: 'Name',
     dataIndex: 'displayName',
     key: 'displayName',
-    width: '200px',
+    ellipsis: true,
+    minWidth: 100,
   },
   {
     title: 'Last Spoke',
     dataIndex: 'lastSpoke',
     key: 'lastSpoke',
-    width: '170px',
+    ellipsis: true,
+    minWidth: 100,
     render: (record) => (record ? utc({ date: record, format: dateShort }) : <NotSpoken>has not spoken yet</NotSpoken>),
   },
   {
@@ -32,6 +34,8 @@ export const columns = (onCellClick, onSave) => [
     key: 'speakingNote',
     onCell: (record) => ({ onClick: () => onCellClick(record) }),
     className: 'cell editable',
+    ellipsis: true,
+    minWidth: 200,
     render: (cellValue, record) =>
       record?.showInput ? (
         <EditableCell defaultValue={cellValue} onSave={(value) => onSave(record.uid, value, 'note')} />

@@ -9,18 +9,22 @@ export const tableHeaders = ({ totalSpeakers, onCellSave, onCellClick, onCellCle
       key: 'date',
       fixed: 'left',
       render: (record) => <div id={`date-${dateIdMaker(record)}`}>{record}</div>,
+      ellipsis: true,
+      minWidth: 100,
     },
     {
       title: 'Topic',
       dataIndex: 'topic',
       key: 'topic',
+      ellipsis: true,
+      minWidth: 100,
       // render: (record) => <span dangerouslySetInnerHTML={{ __html: markSearchValue(record, searchValue) }} />,
       onCell: (record, rowIndex, rowData) => ({
         onClick: () => onCellClick({ record, column: 'topic', rowIndex, rowData }),
       }),
       className: 'cell editable',
-      render: (record, rowData) => {
-        return rowData.showInput === 0 ? (
+      render: (record, rowData) =>
+        rowData.showInput === 0 ? (
           <EditableCell
             defaultValue={record}
             onSave={(value = '') => onCellSave({ value, column: 'topic', rowData })}
@@ -31,8 +35,7 @@ export const tableHeaders = ({ totalSpeakers, onCellSave, onCellClick, onCellCle
           />
         ) : (
           <span data-testid="topic-cell">{record}</span>
-        );
-      },
+        ),
     },
   ];
 
@@ -47,8 +50,8 @@ export const tableHeaders = ({ totalSpeakers, onCellSave, onCellClick, onCellCle
         onClick: () => onCellClick({ record, index, column: 'speaker', rowIndex }),
       }),
       className: 'cell editable',
-      render: (record, rowData) => {
-        return rowData.showInput === index + 1 ? (
+      render: (record, rowData) =>
+        rowData.showInput === index + 1 ? (
           <EditableCell
             defaultValue={rowData[`speaker_${index + 1}`]}
             onSave={(value) => onCellSave({ value, column: 'speaker', index, rowData })}
@@ -59,8 +62,7 @@ export const tableHeaders = ({ totalSpeakers, onCellSave, onCellClick, onCellCle
           />
         ) : (
           record
-        );
-      },
+        ),
     }));
 
   return [...columns, ...speakerList];

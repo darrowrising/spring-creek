@@ -10,20 +10,23 @@ export const columns = (onCellClick, onSave) => [
     title: 'Name',
     dataIndex: 'displayName',
     key: 'displayName',
-    width: '200px',
+    ellipsis: true,
+    minWidth: 100,
   },
   {
     title: 'Last Prayed',
     dataIndex: 'lastPrayed',
     key: 'lastPrayed',
-    width: '170px',
+    ellipsis: true,
+    minWidth: 100,
     render: (record) => (record ? utc({ date: record, format: dateShort }) : <NotPrayed>has not prayed yet</NotPrayed>),
   },
   {
     title: 'Prayed',
     dataIndex: 'lastPrayedType',
     key: 'lastPrayedType',
-    width: '170px',
+    ellipsis: true,
+    minWidth: 100,
   },
   {
     title: 'Notes',
@@ -31,6 +34,8 @@ export const columns = (onCellClick, onSave) => [
     key: 'prayingNote',
     onCell: (record) => ({ onClick: () => onCellClick(record) }),
     className: 'cell editable',
+    ellipsis: true,
+    minWidth: 200,
     render: (cellValue, record) =>
       record?.showInput ? (
         <EditableCell defaultValue={cellValue} onSave={(value) => onSave(record.uid, value, 'note')} />

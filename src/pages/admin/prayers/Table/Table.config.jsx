@@ -1,7 +1,6 @@
-import { dateIdMaker } from '../../../../utils/date.utils';
+import { dateIdMaker, utc } from '../../../../utils/date.utils';
 import EditableCell from '../EditableCell';
 import { dateShortYear } from '../../../../configs/dateFormats';
-import { utc } from '../../../../utils/date.utils';
 
 export const tableHeaders = ({ onCellSave, onCellClick, onCellClear }) => {
   const columns = [
@@ -11,6 +10,8 @@ export const tableHeaders = ({ onCellSave, onCellClick, onCellClear }) => {
       key: 'date',
       fixed: 'left',
       render: (record) => <div id={`date-${dateIdMaker(record)}`}>{record}</div>,
+      ellipsis: true,
+      minWidth: 100,
     },
     {
       title: 'Invocation',
@@ -19,6 +20,8 @@ export const tableHeaders = ({ onCellSave, onCellClick, onCellClear }) => {
       onCell: (record, rowIndex) => ({
         onClick: () => onCellClick({ record, column: 'invocation', rowIndex }),
       }),
+      minWidth: 100,
+      ellipsis: true,
       render: (record, rowData) =>
         rowData.showInput === 'invocation' ? (
           <EditableCell
@@ -40,6 +43,9 @@ export const tableHeaders = ({ onCellSave, onCellClick, onCellClear }) => {
       onCell: (record, rowIndex) => ({
         onClick: () => onCellClick({ record, column: 'benediction', rowIndex }),
       }),
+      width: '100%',
+      ellipsis: true,
+      minWidth: 100,
       render: (record, rowData) =>
         rowData.showInput === 'benediction' ? (
           <EditableCell

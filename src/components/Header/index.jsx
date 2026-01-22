@@ -16,8 +16,7 @@ import { dateSimple } from '../../configs/dateFormats';
 import { colorPrimary, colorBlue5, media } from '../../styles/variables';
 
 const HeaderContainer = styled.div`
-  display: grid;
-  grid-template-columns: 1fr auto;
+  display: flex;
   justify-content: space-between;
   background-color: ${({ $isAdmin }) => ($isAdmin ? colorBlue5 : colorPrimary)};
   color: var(--color-white-2);

@@ -31,6 +31,10 @@ const FormContainer = styled.div`
   .message-label {
     font-size: 1.2em;
   }
+
+  .ant-form-item-explain {
+    margin-block-end: var(--space-2);
+  }
 `;
 
 const EditorContainer = styled.div`
@@ -335,7 +339,7 @@ function AnnouncementForm({ event = {}, onCancel, setStorageEvents = () => undef
               onChange={(val) => dispatch({ time: utc({ date: val, format: timeFormat }) })}
             />
           </Form.Item>
-          <Form.Item label="Program Message (optional, max 120 characters)" name="description">
+          <Form.Item label="Program Message (optional)" name="description" help="Max 120 characters">
             <Input
               placeholder=""
               allowClear

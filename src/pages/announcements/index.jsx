@@ -51,7 +51,7 @@ const SectionContainer = styled.section`
 `;
 
 const StyledModal = styled(Modal)`
-  .ant-modal-content {
+  .ant-modal-container {
     padding: 0;
   }
   .ant-modal-header {

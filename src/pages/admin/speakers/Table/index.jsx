@@ -102,16 +102,6 @@ export const StatusColor = styled.span`
   }};
 `;
 
-export const TableContainer = styled.div`
-  ${media.tablet} {
-    overflow-x: auto;
-
-    .ant-table {
-      min-width: 900px;
-    }
-  }
-`;
-
 const listOfYears = listOfYearsForTabs();
 
 const initialState = {
@@ -254,20 +244,18 @@ function MembersList() {
           key: String(index + 1),
           children: (
             <Wrapper>
-              <TableContainer>
-                <Table
-                  dataSource={speakers}
-                  pagination={false}
-                  columns={columns}
-                  loading={loading}
-                  onChange={handleChange}
-                  rowKey={(record) => record.displayDate}
-                  scroll={{ x: 'max-content', y: 500 }}
-                  size="small"
-                  bordered
-                  rowClassName={handleRowClass}
-                />
-              </TableContainer>
+              <Table
+                dataSource={speakers}
+                pagination={false}
+                columns={columns}
+                loading={loading}
+                onChange={handleChange}
+                rowKey={(record) => record.displayDate}
+                scroll={{ x: 'max-content', y: 500 }}
+                size="small"
+                bordered
+                rowClassName={handleRowClass}
+              />
             </Wrapper>
           ),
         }))}
