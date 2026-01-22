@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Form, Input, notification, Modal, Popconfirm, Table } from 'antd';
 import { lighten } from 'polished';
+import { arrayOf, func, number, shape, string } from 'prop-types';
 
 import Button, { ButtonRow } from '../../../components/Button';
 import { markSearchValue, uuid } from '../../../utils/data.utils';
@@ -12,10 +13,10 @@ import { colorBlue1, media } from '../../../styles/variables';
 const { Search } = Input;
 
 // #region utils
-const createHymn = ({ createdOn, link = '', number, title, uid }) => ({
+const createHymn = ({ createdOn, link = '', number: hymnNumber, title, uid }) => ({
   createdOn: createdOn || utc(),
   link,
-  number: typeof number === 'string' ? Number(number) : number,
+  number: typeof hymnNumber === 'string' ? Number(hymnNumber) : hymnNumber,
   title,
   uid: uid || uuid(),
   updatedOn: utc(),
@@ -32,9 +33,9 @@ const deleteHymn = ({ uid }) => {
     });
 };
 
-const handleRowClass = ({ number }) => {
-  if (number >= 1000 && number < 1200) return 'sabbath-weekday';
-  else if (number >= 1200) return 'easter-christmas';
+const handleRowClass = ({ number: hymnNumber }) => {
+  if (hymnNumber >= 1000 && hymnNumber < 1200) return 'sabbath-weekday';
+  if (hymnNumber >= 1200) return 'easter-christmas';
   return 'original';
 };
 // #endregion utils
@@ -65,7 +66,7 @@ const ModalForm = ({ form, hymns, hymnToEdit = {}, onClose }) => {
             validator(_, value = '') {
               if (hymnToEdit?.uid) return Promise.resolve();
 
-              const exist = hymns.some(({ number }) => number === Number(value));
+              const exist = hymns.some(({ number: hymnNumber }) => hymnNumber === Number(value));
 
               if (exist) return Promise.reject(new Error('Hymn number already exist'));
               return Promise.resolve();
@@ -114,6 +115,25 @@ const ModalForm = ({ form, hymns, hymnToEdit = {}, onClose }) => {
   );
 };
 // #endregion ModalForm
+
+ModalForm.propTypes = {
+  form: shape({}).isRequired,
+  hymns: arrayOf(
+    shape({
+      uid: string,
+      number,
+      title: string,
+      link: string,
+    })
+  ).isRequired,
+  hymnToEdit: shape({
+    uid: string,
+    number,
+    title: string,
+    link: string,
+  }),
+  onClose: func.isRequired,
+};
 
 // #region styles
 const ActionBar = styled.section`
@@ -218,8 +238,8 @@ function Hymns({ className }) {
 
     if (searchItem) {
       searchResults = hymns
-        .filter(({ number, title }) => {
-          if (isNumber) return number === num;
+        .filter(({ number: hymnNumber, title }) => {
+          if (isNumber) return hymnNumber === num;
           return title.toLowerCase().includes(searchItem.toLowerCase());
         })
         .map(({ title, ...rest }) => ({ title: markSearchValue(title, searchItem), ...rest }));
@@ -281,6 +301,10 @@ function Hymns({ className }) {
     </div>
   );
 }
+
+Hymns.propTypes = {
+  className: string,
+};
 
 export default styled(Hymns)`
   display: grid;

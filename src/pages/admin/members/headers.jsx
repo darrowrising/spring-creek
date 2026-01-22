@@ -1,7 +1,6 @@
 import { MoreOutlined } from '@ant-design/icons';
 import { Tag, Dropdown } from 'antd';
 
-import Status from '../../../components/Status';
 import { organizations } from '../../../configs/organizations';
 import { permissions } from '../../../configs/permissions';
 import { dateSimple } from '../../../configs/dateFormats';

@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { shape, func } from 'prop-types';
 import { Form, Button, Alert, Input, Select, Tag, notification } from 'antd';
 
-import { roles, ageGroups, callings } from '../../../configs/settings';
+import { roles, callings } from '../../../configs/settings';
 import { organizations } from '../../../configs/organizations';
 import { createMember } from '../../../factories/member';
 import { permissions } from '../../../configs/permissions';
@@ -14,7 +14,7 @@ async function saveMember(record, setParent) {
   const uid = record?.uid || uuid();
   const ref = db.collection('members').doc(uid);
   const isEdit = record?.uid;
-  let obj = {};
+  const obj = {};
   let message = '';
 
   Object.keys(record).forEach((item) => {

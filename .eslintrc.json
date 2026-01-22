@@ -1,6 +1,28 @@
 {
   "root": true,
   "env": { "browser": true, "es2020": true },
+  "overrides": [
+    {
+      "files": ["**/*.cy.js", "**/*.cy.jsx", "**/*.cy.ts", "**/*.cy.tsx"],
+      "env": { "mocha": true },
+      "globals": {
+        "cy": "readonly",
+        "Cypress": "readonly",
+        "expect": "readonly",
+        "assert": "readonly"
+      }
+    },
+    {
+      "files": ["cypress/**/*.js", "cypress/**/*.jsx", "cypress/**/*.ts", "cypress/**/*.tsx"],
+      "env": { "mocha": true },
+      "globals": {
+        "cy": "readonly",
+        "Cypress": "readonly",
+        "expect": "readonly",
+        "assert": "readonly"
+      }
+    }
+  ],
   "extends": [
     "airbnb",
     "eslint:recommended",
