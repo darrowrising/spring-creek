@@ -1,4 +1,4 @@
-import { useState, useEffect, useReducer } from 'react';
+import { useState, useEffect, useReducer, useRef } from 'react';
 import styled from 'styled-components';
 import { Alert, Form, Input, Select, Divider, DatePicker, TimePicker, Switch, notification } from 'antd';
 import { darken } from 'polished';
@@ -45,12 +45,6 @@ const EditorContainer = styled.div`
 const EditorWrapper = styled.div`
   flex-grow: 2;
 `;
-
-// const Row = styled.div`
-//   display: grid;
-//   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-//   column-gap: var(--space-4);
-// `;
 
 const StyledDatePicker = styled(DatePicker)`
   width: 100%;
@@ -174,6 +168,8 @@ function AnnouncementForm({ event = {}, onCancel, setStorageEvents = () => undef
   const [form] = Form.useForm();
   const { setFieldsValue } = form;
 
+  const titleRef = useRef(null);
+
   if (event.uid) setFieldsValue({ ...event, endDate: dayjs(event.endDate), time: dayjs() });
 
   const { isDateRange, editorMessage, firstName, lastName } = state;
@@ -228,14 +224,6 @@ function AnnouncementForm({ event = {}, onCancel, setStorageEvents = () => undef
     }
   };
 
-  // useEffect(() => {
-  //   if (hasData(event)) {
-  //     console.info('has');
-  //     const x = form.getFieldsValue();
-  //     console.log('x:', x, event);
-  //   }
-  // }, [event]);
-
   useEffect(() => {
     const name = getStorage('announcement-name');
 
@@ -245,13 +233,19 @@ function AnnouncementForm({ event = {}, onCancel, setStorageEvents = () => undef
     }
   }, [form]);
 
+  useEffect(() => {
+    if (titleRef.current) {
+      titleRef.current.focus();
+    }
+  }, [titleRef]);
+
   return (
     <FormContainer>
       {status === STATUS.ERROR ? (
-        <Alert message={errorMessage} type="error" showIcon />
+        <Alert title={errorMessage} type="error" showIcon />
       ) : (
         <Alert
-          message="All announcements and events created or edited will be sent to the Bishopric for approval."
+          title="All announcements and events created or edited will be sent to the Bishopric for approval."
           type="info"
           showIcon
         />
@@ -269,7 +263,7 @@ function AnnouncementForm({ event = {}, onCancel, setStorageEvents = () => undef
             ]}
             onChange={({ target: { value } }) => dispatch({ title: value })}
           >
-            <Input placeholder="title" allowClear />
+            <Input ref={titleRef} autoComplete="off" placeholder="title" allowClear />
           </Form.Item>
           <Form.Item
             label="Who is this event for?"
@@ -332,15 +326,16 @@ function AnnouncementForm({ event = {}, onCancel, setStorageEvents = () => undef
               onChange={(val) => dispatch({ isAllDay: val })}
             />
           </SwitchWrapper>
-          <Form.Item label="Time" name="time">
+          <Form.Item label="Time" name="time" autoComplete="off">
             <StyledTimePicker
               format="hh:mm a"
               disabled={isDateRange}
               onChange={(val) => dispatch({ time: utc({ date: val, format: timeFormat }) })}
             />
           </Form.Item>
-          <Form.Item label="Program Message (optional)" name="description" help="Max 120 characters">
+          <Form.Item label="Program Message (optional)" name="description" help="Max 120 characters" autoComplete="off">
             <Input
+              autoComplete="off"
               placeholder=""
               allowClear
               maxLength={120}
@@ -376,6 +371,7 @@ function AnnouncementForm({ event = {}, onCancel, setStorageEvents = () => undef
           <Name>
             <Form.Item name="firstName">
               <Input
+                autoComplete="off"
                 allowClear
                 placeholder="first name"
                 status={status === STATUS.ERROR && !firstName ? 'error' : ''}
@@ -384,6 +380,7 @@ function AnnouncementForm({ event = {}, onCancel, setStorageEvents = () => undef
             </Form.Item>
             <Form.Item name="lastName">
               <Input
+                autoComplete="off"
                 allowClear
                 placeholder="last name"
                 status={status === STATUS.ERROR && !lastName ? 'error' : ''}

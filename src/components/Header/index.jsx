@@ -46,6 +46,18 @@ const Logo = styled(Link)`
   }
 `;
 
+const LogoText = styled.span`
+  display: inline-block;
+  color: var(--color-white-2);
+  font-family: var(--font-brand);
+  width: max-content;
+
+  ${media.mobile} {
+    text-align: center;
+    width: 100%;
+  }
+`;
+
 const StyleDropdown = styled(Dropdown)`
   justify-self: flex-end;
 `;
@@ -78,9 +90,13 @@ function Header({ hideMenu = false }) {
   return (
     <HeaderContainer $isAdmin={isAdmin} className="header">
       {isAdmin && <MobileMenu />}
-      <Logo to="/" onClick={handleClick}>
-        {wardName}
-      </Logo>
+      {isAdmin ? (
+        <LogoText onClick={handleClick}>{wardName}</LogoText>
+      ) : (
+        <Logo to="/" onClick={handleClick}>
+          {wardName}
+        </Logo>
+      )}
       {!hideMenu && (
         <StyleDropdown menu={{ items }} trigger={['click']}>
           <MenuOutlined />
