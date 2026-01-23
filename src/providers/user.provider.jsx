@@ -2,7 +2,7 @@ import { useState, useEffect, createContext, useContext, useMemo } from 'react';
 import { node } from 'prop-types';
 
 // utils
-import { db, docs, auth } from '../utils/firebase.utils';
+import { db, docs, doc, auth } from '../utils/firebase.utils';
 import { catchify } from '../utils/data.utils';
 import { buildPermissions } from '../utils/permissions.utils';
 import { createDisplayName } from '../factories/member';
@@ -47,7 +47,9 @@ function UserProvider({ children }) {
         db.collection('members').where('email', '==', userAuth?.email).get()
       );
 
-      if (error) {
+      const [unitError, unitSettingsSnap] = await catchify(db.collection('settings').doc('unit').get());
+
+      if (error || unitError) {
         console.error(error?.code || error);
         setUser({});
         setIsUserLoading(false);
@@ -56,7 +58,9 @@ function UserProvider({ children }) {
       }
 
       const userData = docs(dbInfoSnapshots);
-      setUser(filterUserData(userAuth, userData[0]));
+      const unitSettings = doc(unitSettingsSnap) ?? {};
+
+      setUser({ ...filterUserData(userAuth, userData[0]), unit: unitSettings });
       setIsUserLoading(false);
 
       return true;

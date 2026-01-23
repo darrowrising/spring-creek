@@ -23,8 +23,8 @@ export const dateIdMaker = (dateStr = '') => dateStr.split(' ').join('');
 
 export const currentYear = dayjsLib().year();
 
-export const comingSunday = () => {
-  const [meetingHour, meetingMinute] = meetingTime.split(':');
+export const comingSunday = (unitTime = '10:30') => {
+  const [meetingHour, meetingMinute] = unitTime?.split(':') ?? [];
 
   const today = dayjsLib().format(programIdShort);
   const day = today === dayjsLib().day(0).format(programIdShort) ? 0 : 7;

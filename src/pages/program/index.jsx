@@ -7,7 +7,7 @@ import Program from '../../components/Program';
 // import * as CSB from '../../../public/csb';
 // import PDF from 'components/PDF';
 import { bishop } from '../../configs/unit';
-import { programIdShort, dateLongTime } from '../../configs/dateFormats';
+import { programIdShort, dateLong } from '../../configs/dateFormats';
 import { comingSunday, utc } from '../../utils/date.utils';
 import { db, docs } from '../../utils/firebase.utils';
 
@@ -22,7 +22,7 @@ const ProgramContainer = styled.div`
 `;
 
 const initialState = {
-  date: utc({ date: comingSunday(), format: dateLongTime }),
+  date: utc({ date: comingSunday(), format: dateLong }),
   presiding: bishop,
   program: [
     {
@@ -51,7 +51,7 @@ function ProgramPage() {
         if (data) {
           setProgram({
             ...data,
-            date: utc({ date: data.date, format: dateLongTime }),
+            date: utc({ date: data.date, format: dateLong }),
           });
         }
 

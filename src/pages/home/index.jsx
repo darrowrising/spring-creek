@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Link from '../../components/Link';
 import { GAEvent } from '../../components/Analytics';
 import InitiativeSample from '../temp/initiative/Sample';
-import { sacramentMeetingTime } from '../../utils/date.utils';
+import { useUser } from '../../providers/user.provider';
 
 const HomeContainer = styled.div`
   width: 100%;
@@ -64,6 +64,8 @@ function handleClick(event) {
 }
 
 function Home() {
+  const { user } = useUser();
+
   return (
     <HomeContainer>
       <Row>
@@ -77,7 +79,7 @@ function Home() {
       <Row>
         <Col>
           <SubHeading>Sacrament Meeting</SubHeading>
-          <div>{sacramentMeetingTime}</div>
+          <div>{user.unit?.meetingTime}</div>
         </Col>
         <Col>
           <SubHeading>Stake Website</SubHeading>

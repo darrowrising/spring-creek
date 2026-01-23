@@ -5,6 +5,7 @@ import Leaders from '../Leaders';
 import { PageHeading } from '../Heading';
 import Link from '../Link';
 
+import { useUser } from '../../providers/user.provider';
 import { fadeIn } from '../../styles/animations';
 
 import Lyrics from './Lyrics';
@@ -27,6 +28,10 @@ const Date = styled.div`
   text-align: center;
   font-size: 0.8em;
   padding: var(--space-3) 0 var(--space-5);
+
+  & > span {
+    text-transform: uppercase;
+  }
 `;
 
 const SubHeading = styled.h3`
@@ -65,11 +70,14 @@ const MusicalNumber = styled.em``;
 
 function Program({ data = { program: [] }, isPrint, ...rest }) {
   const program = (data.program ?? [{}]).filter((obj) => obj);
+  const { user } = useUser();
 
   return (
     <ProgramWrapper {...rest} $speakerCount={program.length} $isPrint={isPrint} data-testid="program-component">
       <PageHeading>Sacrament Meeting</PageHeading>
-      <Date className="date">{data.date}</Date>
+      <Date className="date">
+        {data.date} <span>{user.unit?.meetingTime}</span>
+      </Date>
 
       <section>
         <Leaders title="Presiding" value={data?.presiding} />

@@ -29,7 +29,7 @@ function Footer({ ...rest }) {
   return (
     <FooterContainer {...rest} className="footer">
       This is not an official website of{' '}
-      <Link href="https://www.churchofjesuschrist.org">The Church of Jesus Christ of Latter-day Saints</Link>
+      <Link href="https://www.churchofjesuschrist.org">The Church of Jesus Christ of Latter-day Saints</Link>.&nbsp;
       <br />
       This site&#39;s sole purpose is to help members and visitors of the Spring Creek Ward.
     </FooterContainer>

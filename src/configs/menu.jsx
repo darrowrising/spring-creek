@@ -42,6 +42,10 @@ export const adminMenu = ({ members, moderation }) => [
     permissions: ['calling:ward_clerk'],
   },
   {
+    label: 'unit',
+    permissions: ['org:bishopric', 'calling:ward_clerk'],
+  },
+  {
     label: 'conducting',
     permissions: ['org:bishopric', 'calling:ward_clerk'],
   },

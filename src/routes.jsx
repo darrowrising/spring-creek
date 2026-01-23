@@ -25,6 +25,7 @@ import Migrations from './pages/admin/migrations';
 import Conducting from './pages/admin/conducting';
 import MakeProgram from './pages/admin/buildProgram';
 import Prayers from './pages/admin/prayers';
+import Unit from './pages/admin/unit';
 // layouts
 import AdminLayout from './layouts/admin';
 import AuthLayout from './layouts/auth';
@@ -121,6 +122,14 @@ function RoutesComp() {
           <Route path="migrations" element={<Migrations />} />
           <Route path="build-program" element={<MakeProgram />} />
           <Route path="build-program/:id" element={<MakeProgram />} />
+          <Route
+            path="unit"
+            element={
+              <RoutePermissions permissions={['org:bishopric', 'calling:ward_clerk']}>
+                <Unit />
+              </RoutePermissions>
+            }
+          />
         </Route>
         <Route element={<AuthLayout />}>
           <Route path="/login" element={<Login />} />

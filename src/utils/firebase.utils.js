@@ -45,6 +45,7 @@ export const signOut = () => auth.signOut();
 
 // firebase data handling
 /* single return of firebase doc */
-export const docs = (snapshot) => snapshot.docs.map((doc) => doc.data());
+export const doc = (snapshot) => snapshot.data();
+export const docs = (snapshot) => snapshot.docs.map((document) => document.data());
 /* multiple from a promise all */
 export const allDocs = (snapshots) => snapshots.map((snap) => docs(snap));
