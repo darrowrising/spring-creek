@@ -52,10 +52,6 @@ const SubHeading = styled.h3`
   padding-top: var(--space-10);
 `;
 
-// const Map = styled.img`
-//   width: 100%;
-// `;
-
 function handleClick(event) {
   const { currentTarget } = event;
   const label = currentTarget.getAttribute('href').replace('/', '');
@@ -82,20 +78,10 @@ function Home() {
         <Col>
           <SubHeading>Sacrament Meeting</SubHeading>
           <div>{sacramentMeetingTime}</div>
-          {/* <SubHeading>Stake Website</SubHeading>
-            <Link href="https://farmingtonwest.org/" target="_blank" rel="noreferrer">
-              Farmington West Stake
-            </Link> */}
         </Col>
         <Col>
           <SubHeading>Stake Website</SubHeading>
           <Link href="https://farmingtonwest.org/">Farmington West Stake</Link>
-          {/* <SubHeading>Map to Building</SubHeading>
-            <div>79 S 1525 W</div>
-            <Map
-              src="https://firebasestorage.googleapis.com/v0/b/springcreeklds.appspot.com/o/NewChurchMap.jpg?alt=media&token=3d4d6add-cbf7-4f34-b472-af954d3a6fa4"
-              alt="new building map"
-            /> */}
         </Col>
       </Row>
       <InitiativeSample />

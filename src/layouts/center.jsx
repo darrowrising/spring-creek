@@ -8,7 +8,8 @@ import Loader from '../components/Loader';
 const CenterContainer = styled.div`
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  min-height: 100dvh;
+  overflow: hidden;
 `;
 
 const Main = styled.main`
@@ -17,8 +18,10 @@ const Main = styled.main`
   justify-content: center;
   padding: var(--space-5) var(--space-4) var(--space-10);
   width: 100%;
-  flex-grow: 2;
+  flex: 1 1 auto;
+  min-height: 0;
   position: relative;
+  overflow: auto;
 
   & > div {
     max-width: 960px;

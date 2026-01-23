@@ -24,8 +24,11 @@ const HeaderContainer = styled.div`
   padding: var(--space-2) var(--space-7);
 
   ${media.mobile} {
-    grid-template-columns: auto 1fr auto;
     padding: var(--space-2) var(--space-3);
+  }
+
+  & > a {
+    text-align: ${({ $isAdmin }) => ($isAdmin ? 'center' : 'left')};
   }
 `;
 
@@ -39,11 +42,11 @@ const Logo = styled(Link)`
     color: var(--color-white-2);
     text-decoration: none;
   }
-
+  /* 
   ${media.mobile} {
     text-align: center;
     width: 100%;
-  }
+  } */
 `;
 
 const LogoText = styled.span`
