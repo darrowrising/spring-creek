@@ -105,18 +105,22 @@ export const GlobalStyle = createGlobalStyle`
       }
     }
     
-    /* Responsive inputs */
-    .ant-input {
-      @media (max-width: 768px) {
-        height: 36px;
+    /* Mobile Safari: prevent zoom on form focus by ensuring >= 16px */
+    @media (max-width: 768px) {
+      input,
+      textarea,
+      select,
+      .ant-input,
+      .ant-input-affix-wrapper input,
+      .ant-input-number-input,
+      .ant-picker-input > input,
+      .ant-select-selector,
+      .ant-select-selection-search-input {
         font-size: 16px !important;
       }
-    }
-    
-    /* Responsive selects */
-    .ant-select {
-      @media (max-width: 768px) {
-        font-size: 16px !important;
+
+      .ant-input {
+        height: 36px;
       }
     }
     
