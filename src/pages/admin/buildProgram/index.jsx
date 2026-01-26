@@ -584,6 +584,58 @@ const handleMembersInProgram = ({ findMember, program, prevProgram = [], date })
     }
   });
 };
+
+const handlePrayingHistory = ({ current, prev, findMember }) => {
+  const comparePrayingHistory = ({ type, date, currentName = '', prevName = '', memberFinder }) => {
+    if (!date) return;
+
+    const historyEntry = { date, type };
+
+    // If the previous assignment existed and changed, remove the history from the previous member.
+    if (prevName && prevName !== currentName) {
+      const prevMember = memberFinder?.({ name: prevName });
+
+      if (prevMember?.uid) {
+        saveMember({
+          uid: prevMember.uid,
+          prayingHistory: FieldValue().arrayRemove(historyEntry),
+        });
+      }
+    }
+
+    // If the current assignment exists and changed, add the history to the current member.
+    if (currentName && currentName !== prevName) {
+      const currentMember = memberFinder?.({ name: currentName });
+
+      if (currentMember?.uid) {
+        saveMember({
+          uid: currentMember.uid,
+          prayingHistory: hasData(currentMember.prayingHistory)
+            ? FieldValue().arrayUnion(historyEntry)
+            : [historyEntry],
+        });
+      }
+    }
+  };
+
+  const date = prev?.date || current?.date;
+
+  comparePrayingHistory({
+    type: 'invocation',
+    date,
+    currentName: current?.invocation ?? '',
+    prevName: prev?.invocation ?? '',
+    memberFinder: findMember,
+  });
+
+  comparePrayingHistory({
+    type: 'benediction',
+    date,
+    currentName: current?.benediction ?? '',
+    prevName: prev?.benediction ?? '',
+    memberFinder: findMember,
+  });
+};
 // #endregion utils
 // #region component
 function MakeProgram() {
@@ -624,6 +676,8 @@ function MakeProgram() {
     newData.date = utc({ date: comingSunday() });
 
     const programData = createProgram(newData);
+
+    handlePrayingHistory({ current: programData, prev: dbData, findMember });
 
     programData.program = programData.program.map((item = '') => {
       const { type } = item;
@@ -717,6 +771,7 @@ function MakeProgram() {
             saveMember({
               uid: memberUid,
               speakingHistory: FieldValue().arrayRemove(dbData.date),
+              prayingHistory: FieldValue().arrayRemove(dbData.date),
             });
           }
         });

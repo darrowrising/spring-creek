@@ -25,6 +25,7 @@ const LinkBase = styled(Link)`
   height: 150px;
   font-weight: bold;
   transition: opacity var(--transition-medium);
+  font-size: 1.2em;
 
   &&:hover {
     color: var(--color-white-1);
