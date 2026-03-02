@@ -88,6 +88,10 @@ const EditorContent = styled.div`
       outline: none;
     }
   }
+  /* Responsive font size to fix zoom issue on mobile */
+  @media (max-width: 768px) {
+    font-size: 16px;
+  }
 `;
 
 const LinkInputWrapper = styled.div`

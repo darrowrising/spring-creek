@@ -8,6 +8,8 @@
     "dev:prod": "bun dev --mode production",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
+    "test": "vitest",
+    "test:run": "vitest run",
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
@@ -56,6 +58,7 @@
     "react-dev-utils": "^12.0.1",
     "vite": "^4.4.5",
     "vite-plugin-babel-macros": "^1.0.6",
-    "vite-plugin-live-reload": "^3.0.2"
+    "vite-plugin-live-reload": "^3.0.2",
+    "vitest": "^4.0.18"
   }
 }

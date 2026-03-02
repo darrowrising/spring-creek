@@ -63,8 +63,11 @@ const StyledModal = styled(Modal)`
 `;
 
 const deleteOutdatedEvents = (events) => {
+  console.log('events:', events);
   const storage = getStorage('events') || [];
+
   const deleteEvent = (expiredEventUid) => db.collection('announcements').doc(expiredEventUid).delete();
+
   const removeOutdatedFromStorage = ({ uid } = {}) => {
     const newStorage = [...storage].filter(({ uid: eventId }) => uid !== eventId);
 
@@ -76,7 +79,11 @@ const deleteOutdatedEvents = (events) => {
     const today = utc();
     const { endDate, uid } = event;
     const isLocal = storage.some(({ uid: eventId }) => eventId === uid);
-
+    console.group();
+    console.log('endDate:', endDate);
+    console.log('today:', today);
+    console.log('today > endDate:', today > endDate);
+    console.groupEnd();
     if (isLocal) removeOutdatedFromStorage(event);
     if (today > endDate) deleteEvent(uid);
   });

@@ -11,8 +11,6 @@ dayjsLib.extend(customParseFormat);
 dayjsLib.extend(isBetweenPlugin);
 
 export function utc({ date, format } = {}) {
-  if (!date) return '';
-  if (!format) return dayjsLib(date).utc().local().format();
   return dayjsLib(date).utc().local().format(format);
 }
 
