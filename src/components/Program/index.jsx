@@ -138,6 +138,7 @@ function Program({ data = { program: [] }, isPrint, ...rest }) {
                   <Leaders
                     title="Intermediate Hymn"
                     value={value && `#${value}`}
+                    helperText={value > 1000 ? 'Library App/Music/Hymns-For Home and Church' : ''}
                     subValue={title}
                     className="intermediate-hymn"
                     style={{

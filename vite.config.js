@@ -1,9 +1,15 @@
 /* eslint-disable import/no-extraneous-dependencies */
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import reactRefresh from '@vitejs/plugin-react-refresh';
 import liveReload from 'vite-plugin-live-reload';
 import macrosPlugin from 'vite-plugin-babel-macros';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+// Anchor to this file so `root` / `.env*` resolution does not depend on process cwd.
+const srcRoot = path.resolve(__dirname, 'src');
 
 // https://vitejs.dev/config/
 export default defineConfig(() => {
@@ -11,6 +17,8 @@ export default defineConfig(() => {
   const isTest = Boolean(process.env.VITEST);
 
   return {
+    root: srcRoot,
+    envDir: srcRoot,
     plugins: [
       react({
         babel: {
@@ -25,11 +33,10 @@ export default defineConfig(() => {
           ],
         },
       }),
-      !isTest && liveReload('./src'),
+      !isTest && liveReload('.'),
       !isTest && reactRefresh(),
       macrosPlugin(),
     ].filter(Boolean),
-    root: 'src',
     build: {
       outDir: '../dist',
       emptyOutDir: true,

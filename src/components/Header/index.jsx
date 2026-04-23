@@ -85,7 +85,7 @@ function Header({ hideMenu = false }) {
       if (authenticate) return false;
       return true;
     })
-    .flatMap(({ path, text, expire, ...rest }) => {
+    .flatMap(({ path, text, expire, authenticate, ...rest }) => {
       const isExpired = expire && dayjs(expire, dateSimple) < dayjs();
       return isExpired ? [] : { label: <Link to={path}>{text}</Link>, ...rest };
     });

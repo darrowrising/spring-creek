@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import styled from 'styled-components';
 import { arrayOf, func, number, shape, string } from 'prop-types';
-import { Form, Input, InputNumber, notification, Popconfirm, Select } from 'antd';
+import { AutoComplete, Form, Input, InputNumber, notification, Popconfirm, Select } from 'antd';
 import { DownOutlined, MinusCircleOutlined, PlusOutlined, UpOutlined } from '@ant-design/icons';
 import { darken, lighten, rgba } from 'polished';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -13,6 +13,7 @@ import Program from '../../../components/Program';
 import Button, { ButtonRow } from '../../../components/Button';
 import SearchSelect from '../../../components/SearchSelect';
 import { db, docs, FieldValue } from '../../../utils/firebase.utils';
+import useHymn from '../../../hooks/use-hymn';
 import { dayjs, comingSunday, utc } from '../../../utils/date.utils';
 import { useFindMember } from '../../../utils/organizations.utils';
 import { hasData, uuid } from '../../../utils/data.utils';
@@ -83,21 +84,18 @@ const HymnRow = styled.div`
 `;
 function Hymn({ type, form, 'data-testid': testId }) {
   const [showTitle, setShowTitle] = useState(false);
+  const { getHymns } = useHymn();
 
   const hymnTitle = `${type}_hymn_title`;
-  const getHymn = (num) => {
+  const getHymn = async (num) => {
     if (num) {
-      db.collection('hymns')
-        .where('number', '==', num)
-        .get()
-        .then((snap) => docs(snap)[0])
-        .then(({ title }) => {
-          if (num > 1000) {
-            form.setFieldValue(`${type}_hymn_extra`, 'Library App/Music/Hymns-For Home and Church');
-          }
-          form.setFieldValue(hymnTitle, title);
-          setShowTitle(true);
-        });
+      const { title } = (await getHymns({ number: num })) ?? {};
+
+      if (num > 1000) {
+        form.setFieldValue(`${type}_hymn_extra`, 'Library App/Music/Hymns-For Home and Church');
+      }
+      form.setFieldValue(hymnTitle, title);
+      setShowTitle(true);
     } else {
       form.setFieldValue(hymnTitle, '');
       setShowTitle(false);
@@ -142,42 +140,27 @@ Hymn.propTypes = {
 
 // #region BuildProgram
 // #region SearchSelectProgram
-function SearchSelectProgram({ label, placeholder, options, form, name, 'data-testid': testId }) {
-  const [searchValue, setSearchValue] = useState('');
+function SearchSelectProgram({ label, placeholder, options, name, 'data-testid': testId }) {
+  const [inputValue, setInputValue] = useState('');
+  const filteredOptions = useMemo(() => {
+    const normalizedValue = inputValue.trim().toLowerCase();
 
-  const program = form.getFieldValue('program');
-  const noOptions = useMemo(
-    () => searchValue && !options.filter(({ value }) => value.toLowerCase().includes(searchValue.toLowerCase())).length,
-    [searchValue, options]
-  );
-  if (noOptions) {
-    return (
-      <Form.Item label={label} name={[name, 'value']}>
-        <Input placeholder={placeholder} autoFocus data-testid={testId} />
-      </Form.Item>
-    );
-  }
+    if (!normalizedValue) return options;
+
+    return options.filter(({ value = '' }) => value.toLowerCase().includes(normalizedValue));
+  }, [inputValue, options]);
+
   return (
     <Form.Item label={label} name={[name, 'value']}>
-      <Select
-        showSearch={{
-          searchValue,
-          onSearch: (value) => {
-            program[name] = { ...program[name], value };
-            form.setFieldValue('program', program);
-            setSearchValue(value);
-          },
-        }}
+      <AutoComplete
         placeholder={placeholder}
-        options={options}
-        data-testid={testId}
-        onInputKeyDown={({ code, target: { value } }) => {
-          if (code === 'Enter') {
-            program[name] = { ...program[name], value };
-            form.setFieldValue('program', program);
-          }
+        options={filteredOptions}
+        onChange={(value) => {
+          setInputValue(value ?? '');
         }}
-      />
+      >
+        <Input data-testid={testId} />
+      </AutoComplete>
     </Form.Item>
   );
 }
@@ -186,7 +169,6 @@ SearchSelectProgram.propTypes = {
   label: string,
   placeholder: string,
   options: arrayOf(shape()),
-  form: shape(),
   name: number,
   'data-testid': string,
 };
@@ -249,26 +231,35 @@ const RestHymnTitle = styled.div`
 `;
 
 function RestHymn({ name, form }) {
+  const { getHymns } = useHymn();
   const program = form.getFieldValue('program') ?? [];
   const { title } = program[name] ?? {};
+  const syncHymnTitle = async (rawValue) => {
+    const value = Number(rawValue);
+    const nextProgram = [...(form.getFieldValue('program') ?? [])];
+
+    if (!value) {
+      nextProgram[name] = { ...nextProgram[name], value: rawValue, title: '' };
+      form.setFieldValue('program', nextProgram);
+      return;
+    }
+
+    const { title: hymnTitle } = (await getHymns({ number: value })) ?? {};
+    nextProgram[name] = { ...nextProgram[name], value, title: hymnTitle };
+    form.setFieldValue('program', nextProgram);
+  };
 
   return (
     <>
-      <Form.Item
-        label="Hymn Number"
-        name={[name, 'value']}
-        onChange={({ target: { value } }) => {
-          db.collection('hymns')
-            .where('number', '==', Number(value))
-            .get()
-            .then((snap) => docs(snap)[0])
-            .then(({ title: hymnTitle } = {}) => {
-              program[name] = { ...program[name], value, title: hymnTitle };
-              form.setFieldValue('program', program);
-            });
-        }}
-      >
-        <InputNumber data-testid="rest-hymn" />
+      <Form.Item label="Hymn Number" name={[name, 'value']}>
+        <InputNumber
+          data-testid="rest-hymn"
+          onBlur={({ target: { value } }) => syncHymnTitle(value)}
+          onPressEnter={({ target: { value } }) => syncHymnTitle(value)}
+        />
+      </Form.Item>
+      <Form.Item hidden name={[name, 'title']}>
+        <Input />
       </Form.Item>
       <RestHymnTitle>{title === 'Speaker' ? '' : title}</RestHymnTitle>
     </>
@@ -462,9 +453,19 @@ function BuildProgram({ form }) {
                     <Select
                       data-testid={`program-type-${name}`}
                       onSelect={(type) => {
-                        const program = form.getFieldValue('program');
-                        program[name] = { ...program[name], type };
-                        form.setFieldValue('program', program);
+                        const program = form.getFieldValue('program') ?? [];
+                        const nextProgram = [...program];
+                        const prevItem = nextProgram[name] ?? {};
+                        const defaultItem =
+                          type === 'talk' ? { title: 'Speaker', value: '' } : { title: '', value: '' };
+                        const nextItem = {
+                          ...defaultItem,
+                          type,
+                          ...(prevItem.uid ? { uid: prevItem.uid } : {}),
+                        };
+
+                        nextProgram[name] = nextItem;
+                        form.setFieldValue('program', nextProgram);
                       }}
                     >
                       {PROGRAM_TYPE_OPTIONS.map((option) => (

@@ -5,16 +5,19 @@ import 'firebase/firestore';
 import 'firebase/database';
 // import 'firebase/storage';
 
+const cypressEnv = (key) =>
+  typeof globalThis.Cypress !== 'undefined' ? globalThis.Cypress.env(key) : undefined;
+
 // configs
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_API_KEY || Cypress.env('VITE_API_KEY'),
-  authDomain: import.meta.env.VITE_AUTH_DOMAIN || Cypress.env('VITE_AUTH_DOMAIN'),
-  databaseURL: import.meta.env.VITE_DATABASE_URL ?? Cypress.env('VITE_DATABASE_URL'),
-  projectId: import.meta.env.VITE_PROJECT_ID ?? Cypress.env('VITE_PROJECT_ID'),
-  storageBucket: import.meta.env.VITE_STORAGE_BUCKET ?? Cypress.env('VITE_STORAGE_BUCKET'),
-  messagingSenderId: import.meta.env.VITE_MESSAGING_SENDER_ID ?? Cypress.env('VITE_MESSAGING_SENDER_ID'),
-  // appId: import.meta.env.VITE_APP_ID ?? Cypress.env('VITE_APP_ID'),
-  measurementId: import.meta.env.VITE_MEASUREMENT_ID ?? Cypress.env('VITE_MEASUREMENT_ID'),
+  apiKey: import.meta.env.VITE_API_KEY || cypressEnv('VITE_API_KEY'),
+  authDomain: import.meta.env.VITE_AUTH_DOMAIN || cypressEnv('VITE_AUTH_DOMAIN'),
+  databaseURL: import.meta.env.VITE_DATABASE_URL ?? cypressEnv('VITE_DATABASE_URL'),
+  projectId: import.meta.env.VITE_PROJECT_ID ?? cypressEnv('VITE_PROJECT_ID'),
+  storageBucket: import.meta.env.VITE_STORAGE_BUCKET ?? cypressEnv('VITE_STORAGE_BUCKET'),
+  messagingSenderId: import.meta.env.VITE_MESSAGING_SENDER_ID ?? cypressEnv('VITE_MESSAGING_SENDER_ID'),
+  // appId: import.meta.env.VITE_APP_ID ?? cypressEnv('VITE_APP_ID'),
+  measurementId: import.meta.env.VITE_MEASUREMENT_ID ?? cypressEnv('VITE_MEASUREMENT_ID'),
 };
 
 /* *** Initialize Firebase *** */
