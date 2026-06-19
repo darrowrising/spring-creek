@@ -3,12 +3,13 @@ import { number, oneOfType, shape, string } from 'prop-types';
 import { QRCode } from 'antd';
 
 import { utc } from '../../utils/date.utils';
+import { normalizeUrl } from '../../utils/url.utils';
 
 // #region EventDate
 const DateLayout = styled.dl`
   display: flex;
   flex-direction: column;
-  padding: var(--space-3) var(--space-5);
+  padding: var(--space-2) var(--space-3);
 `;
 
 const WeekDay = styled.dd`
@@ -48,11 +49,10 @@ const DateGroupLayout = styled.div`
   align-items: center;
   display: flex;
   border-right: 1px solid var(--color-border-print);
-  /* background-color: var(--color-white-2); */
+  flex: 1;
 `;
 
 const Multiple = styled.span`
-  /* padding: 0 var(--space-2); */
   font-size: 2em;
   color: var(--color-grey-1);
 `;
@@ -74,8 +74,6 @@ DateGroup.propTypes = {
 // #endregion Date Group
 
 // #region Details
-const DetailsLayout = styled.div``;
-
 const Group = styled.h5`
   background-color: var(--color-grey-2);
   padding: var(--space-1);
@@ -83,91 +81,109 @@ const Group = styled.h5`
   color: var(--color-black-2);
   text-align: left;
   text-indent: var(--space-3);
+  margin: 0;
 `;
 
-const Content = styled.div`
+const TitleRow = styled.div`
   display: flex;
-  justify-content: space-between;
-  padding: var(--space-3);
-  text-align: left;
-
-  & > div {
-    width: 100%;
-  }
+  align-items: flex-start;
+  gap: var(--space-2);
 `;
 
 const Title = styled.h6`
   font-weight: normal;
   font-size: 0.8em;
-`;
-
-const Row = styled.div`
-  display: flex;
-  justify-content: space-between;
-  gap: var(--space-2);
+  margin: 0;
+  flex: 1;
+  min-width: 0;
+  word-break: break-word;
 `;
 
 const Time = styled.span`
   font-size: 0.6em;
   color: var(--color-black-2);
+  flex-shrink: 0;
+  margin-left: auto;
+  text-align: right;
+  white-space: nowrap;
+`;
+
+const Description = styled.div`
+  font-size: 0.6em;
+  padding-top: var(--space-1);
+`;
+
+const TextContent = styled.div`
+  padding: var(--space-3);
+  text-align: left;
+  min-width: 0;
+`;
+
+const DetailsPanel = styled.div`
+  grid-column: 2;
+  grid-row: 1 / -1;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  min-width: 0;
 `;
 
 const QRGroup = styled.div`
+  grid-column: 3;
+  grid-row: 1 / -1;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  border-left: 1px solid var(--color-border-print);
+  padding: var(--space-2);
 
   .ant-qrcode {
     padding: 0;
 
     ${({ $qrSize }) => css`
-      width: calc(${$qrSize}px - 20px) !important;
-      height: calc(${$qrSize}px - 20px) !important;
+      width: ${$qrSize}px !important;
+      height: ${$qrSize}px !important;
     `}
   }
 `;
+
 const QRTitle = styled.span`
   font-size: 0.6em;
   color: var(--color-black-2);
 `;
 
-const Description = styled.div`
-  font-size: 0.6em;
-  max-width: 250px;
-  padding-top: var(--space-1);
-`;
-
-function Details({ group, title, time, qrLink, qrTitle, qrSize = 60, description }) {
+function EventText({ title, time, description }) {
   return (
-    <DetailsLayout>
-      <Group>{group}</Group>
-      <Content>
-        <div>
-          <Row>
-            <Title>{title}</Title>
-            {time && <Time>@ {time}</Time>}
-          </Row>
-          {description && <Description>{description}</Description>}
-        </div>
-        {qrLink && (
-          <QRGroup $qrSize={qrSize}>
-            {qrTitle && <QRTitle>{qrTitle}</QRTitle>}
-            <QRCode size={qrSize} value={qrLink} />
-          </QRGroup>
-        )}
-      </Content>
-    </DetailsLayout>
+    <TextContent>
+      <TitleRow>
+        <Title>{title}</Title>
+        {time && <Time>@ {time}</Time>}
+      </TitleRow>
+      {description && <Description>{description}</Description>}
+    </TextContent>
   );
 }
 
-Details.propTypes = {
-  group: string,
+EventText.propTypes = {
   title: string,
   time: string,
-  qrLink: string,
+  description: oneOfType([string, shape()]),
+};
+
+function EventQr({ qrLink, qrTitle, qrSize = 60 }) {
+  return (
+    <QRGroup $qrSize={qrSize}>
+      {qrTitle && <QRTitle>{qrTitle}</QRTitle>}
+      <QRCode size={qrSize} value={normalizeUrl(qrLink)} />
+    </QRGroup>
+  );
+}
+
+EventQr.propTypes = {
+  qrLink: string.isRequired,
   qrTitle: string,
   qrSize: number,
-  description: oneOfType([string, shape()]),
 };
 // #endregion Details
 
@@ -177,25 +193,31 @@ const CardLayout = styled.div`
   border: 1px solid var(--color-border-print);
   border-radius: var(--space-1);
   display: grid;
-  grid-template-columns: min-content 1fr;
+  grid-template-columns: ${({ $hasQr }) => ($hasQr ? 'min-content minmax(0, 1fr) auto' : 'min-content 1fr')};
+  align-items: stretch;
   overflow: hidden;
+`;
+
+const DateCell = styled.div`
+  grid-column: 1;
+  grid-row: 1 / -1;
+  display: flex;
 `;
 
 export default function EventCard({ event }) {
   const { startDate, endDate, time, group, title, qrLink, qrTitle, qrSize, description } = event;
+  const hasQr = Boolean(qrLink);
 
   return (
-    <CardLayout>
-      <DateGroup startDate={startDate} endDate={endDate} time={time} />
-      <Details
-        group={group}
-        title={title}
-        time={time}
-        qrLink={qrLink}
-        qrTitle={qrTitle}
-        qrSize={qrSize}
-        description={description}
-      />
+    <CardLayout $hasQr={hasQr}>
+      <DateCell>
+        <DateGroup startDate={startDate} endDate={endDate} />
+      </DateCell>
+      <DetailsPanel>
+        <Group>{group}</Group>
+        <EventText title={title} time={time} description={description} />
+      </DetailsPanel>
+      {hasQr && <EventQr qrLink={qrLink} qrTitle={qrTitle} qrSize={qrSize} />}
     </CardLayout>
   );
 }

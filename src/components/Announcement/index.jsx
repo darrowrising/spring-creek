@@ -1,10 +1,11 @@
-import styled, { keyframes } from 'styled-components';
+import styled, { keyframes, css } from 'styled-components';
 import { shape, string, func } from 'prop-types';
-import { useNavigate } from 'react-router-dom';
+import { QRCode } from 'antd';
 // import { DoubleRightOutlined } from '@ant-design/icons';
 import { lighten } from 'polished';
 
 import { utc } from '../../utils/date.utils';
+import { normalizeUrl } from '../../utils/url.utils';
 import { getOrganizationColor } from '../../utils/organizations.utils';
 import { dateLong } from '../../configs/dateFormats';
 import { fadeIn } from '../../styles/animations';
@@ -39,6 +40,8 @@ const Card = styled.div`
   color: var(--color-black-2);
   min-height: 100px;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
   cursor: ${({ onClick }) => (!onClick ? 'default' : 'pointer')};
   transition: all 0.3s ease;
 
@@ -62,13 +65,13 @@ const Group = styled.h4`
 
 const Title = styled.h3`
   align-items: center;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-2);
   padding: var(--space-1) 0 var(--space-2) var(--space-4);
   border-bottom: 1px solid var(--color-grey-3);
-  justify-content: space-between;
   font-size: 1em;
-  /* position: relative; */
+  margin: 0;
 `;
 
 const Edit = styled.div`
@@ -90,17 +93,59 @@ const Edit = styled.div`
 `;
 
 const Time = styled.span`
-  justify-self: flex-end;
   font-weight: 300;
   font-size: 0.8em;
   padding-right: var(--space-2);
+  flex-shrink: 0;
 `;
 
 const ContentContainer = styled.div`
   padding: var(--space-2);
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+`;
+
+const Body = styled.div`
+  display: grid;
+  grid-template-columns: ${({ $hasQr }) => ($hasQr ? 'auto 1fr' : '1fr')};
+  align-items: stretch;
+  flex: 1;
+`;
+
+const QRCell = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: var(--space-3) var(--space-3) var(--space-1) var(--space-1);
+  border-right: 1px solid var(--color-grey-3);
+
+  .ant-qrcode {
+    padding: 0;
+
+    ${({ $qrSize }) => css`
+      width: ${$qrSize}px !important;
+      height: ${$qrSize}px !important;
+    `}
+  }
+`;
+
+const QRTitle = styled.span`
+  font-size: 0.7em;
+  color: var(--color-grey-1);
+  padding-bottom: var(--space-1);
+`;
+
+const TextColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  ${({ $hasQr }) => $hasQr && 'min-height: 100%;'}
 `;
 
 const Message = styled.div`
+  flex: ${({ $hasQr }) => ($hasQr ? '1' : '0 1 auto')};
   padding: var(--space-4);
   padding-bottom: 0;
 
@@ -121,11 +166,15 @@ const Message = styled.div`
   }
 `;
 
+const WEBSITE_QR_SIZE = 80;
+
 const EndDate = styled.em`
   display: flex;
   justify-content: flex-end;
   color: var(--color-grey-1);
   font-size: 0.6em;
+  margin-top: ${({ $hasQr }) => ($hasQr ? 'auto' : '0')};
+  padding: var(--space-2) 0 0;
 
   & > span {
     color: var(--color-primary);
@@ -136,36 +185,45 @@ const EndDate = styled.em`
 
 // #region main
 function Announcement({ event = {}, ...rest }) {
-  const { group = '', title = '', message = '', endDate = '', time = '', uid } = event;
-  const navigate = useNavigate();
-  // const isRange = event?.startDate && event?.endDate;
-  // const dayOfWeek = event?.startDate || event?.endDate || event?.date;
-  // const dayOfWeekContent = isRange ? 'From' : moment(dayOfWeek, dateFormats.utc).format(dateFormats.dayOfWeek);
+  const { group = '', title = '', message = '', endDate = '', time = '', qrLink = '', qrTitle = '' } = event;
+  const hasQr = Boolean(qrLink);
+  const hasTime = Boolean(time?.trim());
 
   return (
     <Container>
       <WeekDay>
-        <span>{utc({ date: endDate, format: 'ddd' })}</span>
-        <span>{utc({ date: endDate, format: 'D' })}</span>
+        {endDate && (
+          <>
+            <span>{utc({ date: endDate, format: 'ddd' })}</span>
+            <span>{utc({ date: endDate, format: 'D' })}</span>
+          </>
+        )}
       </WeekDay>
       <Card {...rest}>
         {group && <Group $group={group}>{group}</Group>}
         <ContentContainer>
           <Title>
-            {title || 'Event Title'}
-            {time && <Time>{time}</Time>}
-            {/* <Edit onClick={() => navigate(`${uid}`)}>
-              <DoubleRightOutlined />
-            </Edit> */}
+            <span>{title || 'Event Title'}</span>
+            {hasTime && <Time>{time}</Time>}
           </Title>
-          <Message dangerouslySetInnerHTML={{ __html: message }} />
-          <EndDate>
-            {endDate && (
-              <>
-                <span>ends on</span> {utc({ date: endDate, format: dateLong })}
-              </>
+          <Body $hasQr={hasQr}>
+            {hasQr && (
+              <QRCell $qrSize={WEBSITE_QR_SIZE}>
+                {qrTitle && <QRTitle>{qrTitle}</QRTitle>}
+                <QRCode size={WEBSITE_QR_SIZE} value={normalizeUrl(qrLink)} />
+              </QRCell>
             )}
-          </EndDate>
+            <TextColumn $hasQr={hasQr}>
+              <Message $hasQr={hasQr} dangerouslySetInnerHTML={{ __html: message }} />
+              <EndDate $hasQr={hasQr}>
+                {endDate && (
+                  <>
+                    <span>ends on</span> {utc({ date: endDate, format: dateLong })}
+                  </>
+                )}
+              </EndDate>
+            </TextColumn>
+          </Body>
         </ContentContainer>
       </Card>
     </Container>
@@ -179,6 +237,8 @@ Announcement.propTypes = {
     message: string,
     endDate: string,
     time: string,
+    qrLink: string,
+    qrTitle: string,
   }).isRequired,
   onClick: func,
 };

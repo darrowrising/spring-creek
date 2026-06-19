@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { darken } from 'polished';
-import { Modal, Alert } from 'antd';
+import { Drawer, Alert } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 
 import { PageHeading } from '../../components/Heading';
 import { db, docs } from '../../utils/firebase.utils';
-import { getStorage, setStorage, removeStorage } from '../../utils/localStorage.utils';
-import { hasData, isEmpty, groupByDate } from '../../utils/data.utils';
-import { utc } from '../../utils/date.utils';
+import { getStorage } from '../../utils/localStorage.utils';
+import { hasData, groupByDate } from '../../utils/data.utils';
+import { isAfter } from '../../utils/date.utils';
+import { deleteOutdatedEvents } from '../../utils/announcements.utils';
 import { colorGrey3 } from '../../styles/variables';
 import Loader from '../../components/Loader';
 
@@ -50,90 +51,59 @@ const SectionContainer = styled.section`
   row-gap: var(--space-8);
 `;
 
-const StyledModal = styled(Modal)`
-  .ant-modal-container {
+const StyledDrawer = styled(Drawer)`
+  .ant-drawer-header {
+    padding: var(--space-2) var(--space-5) var(--space-2) var(--space-5);
+    border-bottom: none;
+  }
+  .ant-drawer-body {
+    border-top: 1px solid var(--color-grey-2);
     padding: 0;
   }
-  .ant-modal-header {
-    padding: var(--space-5) var(--space-5) 0 var(--space-5);
-  }
-  .ant-modal-body {
-    border-top: 1px solid var(--color-grey-2);
-  }
 `;
-
-const deleteOutdatedEvents = (events) => {
-  console.log('events:', events);
-  const storage = getStorage('events') || [];
-
-  const deleteEvent = (expiredEventUid) => db.collection('announcements').doc(expiredEventUid).delete();
-
-  const removeOutdatedFromStorage = ({ uid } = {}) => {
-    const newStorage = [...storage].filter(({ uid: eventId }) => uid !== eventId);
-
-    if (isEmpty(newStorage)) removeStorage('events');
-    else setStorage('events', newStorage);
-  };
-
-  events.forEach((event) => {
-    const today = utc();
-    const { endDate, uid } = event;
-    const isLocal = storage.some(({ uid: eventId }) => eventId === uid);
-    console.group();
-    console.log('endDate:', endDate);
-    console.log('today:', today);
-    console.log('today > endDate:', today > endDate);
-    console.groupEnd();
-    if (isLocal) removeOutdatedFromStorage(event);
-    if (today > endDate) deleteEvent(uid);
-  });
-};
 
 const ADD_TEXT = 'Add an Announcement or Event';
 
 function AnnouncementsPage() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [events, setEvents] = useState({});
   const [storageEvents, setStorageEvents] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const onCancel = () => setIsModalOpen(false);
+  const onClose = () => setIsDrawerOpen(false);
 
   useEffect(() => {
-    unsubscribe = db
-      .collection('announcements')
-      .where('moderate', '==', false)
-      .onSnapshot((announcementsSnap) => {
-        const data = docs(announcementsSnap) ?? [];
-        const groupedData = groupByDate(data);
-        deleteOutdatedEvents(data);
-        setEvents(groupedData);
-        const submittedEvents = getStorage('events');
-        setStorageEvents(submittedEvents);
-        setLoading(false);
-      });
+    unsubscribe = db.collection('announcements').onSnapshot((announcementsSnap) => {
+      const data = docs(announcementsSnap) ?? [];
+      deleteOutdatedEvents(data);
+      const approved = data.filter(({ moderate, endDate }) => moderate === false && (!endDate || !isAfter(endDate)));
+      setEvents(groupByDate(approved));
+      const submittedEvents = getStorage('events');
+      setStorageEvents(submittedEvents);
+      setLoading(false);
+    });
     return () => unsubscribe();
   }, []);
 
   return (
     <AnnouncementContainer>
       <PageHeading>Announcements and Events</PageHeading>
-      <AddButton onClick={() => setIsModalOpen({ isModalOpen: true })}>
+      <AddButton onClick={() => setIsDrawerOpen(true)}>
         <PlusOutlined />
         {ADD_TEXT}
       </AddButton>
       {hasData(storageEvents) && (
         <SectionContainer>
-          <Alert message="Your following announcements/events are waiting for approval" type="info" />
+          <Alert title="Your following announcements/events are waiting for approval" type="info" />
           {storageEvents.map(({ uid, ...rest }) => (
             <StorageCard key={uid} {...rest} />
           ))}
         </SectionContainer>
       )}
       <SectionContainer>{loading ? <Loader /> : <DisplayEvents events={events} />}</SectionContainer>
-      <StyledModal open={isModalOpen} title={ADD_TEXT} footer={null} width={800} onCancel={onCancel}>
-        <AnnouncementForm onCancel={onCancel} setStorageEvents={setStorageEvents} />
-      </StyledModal>
+      <StyledDrawer destroyOnHidden open={isDrawerOpen} title={ADD_TEXT} size={700} onClose={onClose}>
+        <AnnouncementForm onCancel={onClose} setStorageEvents={setStorageEvents} />
+      </StyledDrawer>
     </AnnouncementContainer>
   );
 }

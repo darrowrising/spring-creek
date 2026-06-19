@@ -3,7 +3,8 @@ import { node } from 'prop-types';
 
 import { db, docs } from '../utils/firebase.utils';
 import { hasData } from '../utils/data.utils';
-import { dayjs } from '../utils/date.utils';
+import { deleteOutdatedEvents } from '../utils/announcements.utils';
+import { dayjs, isAfter } from '../utils/date.utils';
 import { createDisplayName } from '../factories/member';
 
 const INITIAL_STATE = {
@@ -42,12 +43,14 @@ function AdminProvider({ children }) {
       .where('moderate', '==', true)
       .onSnapshot((snap) => {
         const data = docs(snap) || [];
+        deleteOutdatedEvents(data);
+        const pending = data.filter(({ moderate, endDate }) => moderate === true && (!endDate || !isAfter(endDate)));
 
         setNotifications((prev) => ({
           ...prev,
-          moderation: data.length,
+          moderation: pending.length,
         }));
-        setAnnouncements(data);
+        setAnnouncements(pending);
         setLoading(false);
       });
 
