@@ -1,14 +1,14 @@
-import { useState, useEffect, useReducer, useRef, memo, useCallback } from 'react';
+import { useState, useEffect, useReducer, useRef, memo, useCallback, useMemo, useDeferredValue } from 'react';
 import styled from 'styled-components';
 import { Alert, Form, Input, Select, Divider, DatePicker, TimePicker, Switch, notification } from 'antd';
 import { darken } from 'polished';
-import { func, shape } from 'prop-types';
+import { func, shape, bool } from 'prop-types';
 
 import AnnouncementCard from '../../components/Announcement';
 import Button from '../../components/Button';
-import Editor, { slateToHtml } from '../../components/Editor';
+import { slateToHtml, htmlToSlate } from '../../components/Editor';
 import { db } from '../../utils/firebase.utils';
-import { uuid, hasData } from '../../utils/data.utils';
+import { uuid } from '../../utils/data.utils';
 import { getStorage, setStorage } from '../../utils/localStorage.utils';
 import { utc, dayjs } from '../../utils/date.utils';
 import { normalizeUrl, isValidUrl } from '../../utils/url.utils';
@@ -17,6 +17,10 @@ import { time as timeFormat } from '../../configs/dateFormats';
 import { colorWhite3, breakpoints } from '../../styles/variables';
 import EventCard from '../../components/EventCard';
 import ProgramMessageField from './ProgramMessageField';
+import WebsiteMessageEditor, { hasWebsiteMessage } from './WebsiteMessageEditor';
+
+const MemoizedEventCard = memo(EventCard);
+const MemoizedAnnouncementCard = memo(AnnouncementCard);
 
 const FormContainer = styled.div`
   background-color: var(--color-white-3);
@@ -135,6 +139,7 @@ const Name = styled.div`
 const ButtonGroup = styled.div`
   display: flex;
   gap: var(--space-2);
+  padding-top: var(--space-4);
   padding-bottom: var(--space-4);
 `;
 
@@ -187,8 +192,14 @@ const createStorageEvent = ({ title, uid, createdOn, group }) => ({
   uid,
 });
 
+const EMPTY_EDITOR_MESSAGE = [{ type: 'paragraph', children: [{ text: '' }] }];
+
+const getEditorInitialValue = (event, isEditing) => {
+  if (isEditing && event.message) return htmlToSlate(event.message);
+  return EMPTY_EDITOR_MESSAGE;
+};
+
 const INITIAL_STATE = {
-  editorMessage: [{ type: 'paragraph', children: [{ text: '' }] }],
   description: '',
   message: '',
   title: '',
@@ -202,15 +213,57 @@ const INITIAL_STATE = {
   lastName: '',
 };
 
-const createInitialState = () => ({
-  ...INITIAL_STATE,
-  editorMessage: [{ type: 'paragraph', children: [{ text: '' }] }],
-});
+const createInitialState = () => ({ ...INITIAL_STATE });
 
-const hasWebsiteMessage = (editorMessage) => {
-  const html = slateToHtml(editorMessage);
-  const text = html.replace(/<[^>]*>/g, '').trim();
-  return Boolean(text);
+const parseCreatedBy = (createdBy = '') => {
+  const parts = createdBy.trim().split(/\s+/);
+  const firstName = parts[0] ?? '';
+  const lastName = parts.slice(1).join(' ');
+
+  return { firstName, lastName };
+};
+
+const eventToFormState = (event) => {
+  const { firstName, lastName } = parseCreatedBy(event.createdBy);
+
+  return {
+    ...createInitialState(),
+    title: event.title ?? '',
+    description: event.description ?? '',
+    group: event.group ?? '',
+    message: event.message ?? '',
+    isDateRange: Boolean(event.startDate),
+    isAllDay: !event.time,
+    qrLink: event.qrLink ?? '',
+    qrTitle: event.qrTitle ?? '',
+    firstName,
+    lastName,
+    startDate: event.startDate ?? '',
+    endDate: event.endDate ?? '',
+    time: event.time ?? '',
+  };
+};
+
+const getFormDateValues = (event) => {
+  const isDateRange = Boolean(event.startDate);
+  let endDate;
+
+  if (isDateRange && event.startDate && event.endDate) {
+    endDate = [dayjs(event.startDate), dayjs(event.endDate)];
+  } else if (event.endDate) {
+    endDate = dayjs(event.endDate);
+  }
+
+  return {
+    title: event.title,
+    group: event.group,
+    description: event.description ?? '',
+    endDate,
+    time: event.time ? dayjs(event.time, timeFormat) : undefined,
+    qrLink: event.qrLink ?? '',
+    qrTitle: event.qrTitle ?? '',
+    ...parseCreatedBy(event.createdBy),
+  };
 };
 
 const formatSubmitDates = ({ endDate, time, isDateRange }) => {
@@ -258,38 +311,91 @@ const reducer = (state, { type, ...updatedState }) => {
   };
 };
 
-function ProgramPreview({ form, state }) {
-  const description = Form.useWatch('description', form);
+const buildBasePreviewEvent = ({ startDate, endDate, time, group, title, qrLink, qrTitle }) => ({
+  startDate,
+  endDate,
+  time,
+  group,
+  title,
+  qrLink,
+  qrTitle,
+});
 
-  return <EventCard event={{ ...state, description: description ?? '' }} />;
+function ProgramPreviewCard({ form, baseEvent }) {
+  const description = Form.useWatch('description', form);
+  const deferredDescription = useDeferredValue(description);
+
+  const previewEvent = useMemo(
+    () => ({ ...baseEvent, description: deferredDescription ?? '' }),
+    [baseEvent, deferredDescription]
+  );
+
+  return <MemoizedEventCard event={previewEvent} />;
 }
 
-ProgramPreview.propTypes = {
+ProgramPreviewCard.propTypes = {
   form: shape({}).isRequired,
-  state: shape({}).isRequired,
+  baseEvent: shape({}).isRequired,
 };
 
-const MemoizedProgramPreview = memo(ProgramPreview);
+const MemoizedProgramPreviewCard = memo(ProgramPreviewCard);
 
-function AnnouncementForm({ event = {}, onCancel, setStorageEvents = () => undefined }) {
-  const [state, dispatch] = useReducer(reducer, hasData(event) ? event : createInitialState());
+function WebsitePreviewCard({ baseEvent, editorMessage }) {
+  const deferredEditorMessage = useDeferredValue(editorMessage);
+
+  const previewEvent = useMemo(
+    () => ({ ...baseEvent, message: slateToHtml(deferredEditorMessage) }),
+    [baseEvent, deferredEditorMessage]
+  );
+
+  return <MemoizedAnnouncementCard event={previewEvent} />;
+}
+
+WebsitePreviewCard.propTypes = {
+  baseEvent: shape({}).isRequired,
+  editorMessage: shape({}),
+};
+
+const MemoizedWebsitePreviewCard = memo(WebsitePreviewCard);
+
+function AnnouncementForm({ event = {}, onCancel, setStorageEvents = () => undefined, isModeratorEdit = false }) {
+  const isEditing = Boolean(event?.uid);
+  const [state, dispatch] = useReducer(reducer, isEditing ? eventToFormState(event) : createInitialState());
   const [status, setStatus] = useState(STATUS.READY);
   const [errorMessage, setErrorMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [editorKey, setEditorKey] = useState(0);
+  const [editorSeedValue, setEditorSeedValue] = useState(() => getEditorInitialValue(event, isEditing));
+  const [previewEditorMessage, setPreviewEditorMessage] = useState(() => getEditorInitialValue(event, isEditing));
+  const editorMessageRef = useRef(getEditorInitialValue(event, isEditing));
   const [form] = Form.useForm();
-  const { setFieldsValue } = form;
   const qrInputSize = useResponsiveInputSize();
 
   const titleRef = useRef(null);
 
-  if (event.uid) setFieldsValue({ ...event, endDate: dayjs(event.endDate), time: dayjs() });
-
-  const { isDateRange, editorMessage } = state;
+  const { isDateRange } = state;
   const qrLinkValue = Form.useWatch('qrLink', form);
   const firstNameValue = Form.useWatch('firstName', form);
   const lastNameValue = Form.useWatch('lastName', form);
   const showQrLabel = Boolean(qrLinkValue?.trim());
+
+  const basePreviewEvent = useMemo(
+    () =>
+      buildBasePreviewEvent({
+        startDate: state.startDate,
+        endDate: state.endDate,
+        time: state.time,
+        group: state.group,
+        title: state.title,
+        qrLink: state.qrLink,
+        qrTitle: state.qrTitle,
+      }),
+    [state.startDate, state.endDate, state.time, state.group, state.title, state.qrLink, state.qrTitle]
+  );
+
+  const handlePreviewEditorChange = useCallback((content) => {
+    setPreviewEditorMessage(content);
+  }, []);
 
   const restoreSavedName = useCallback(() => {
     const name = getStorage('announcement-name');
@@ -301,12 +407,24 @@ function AnnouncementForm({ event = {}, onCancel, setStorageEvents = () => undef
   }, [form]);
 
   const handleReset = () => {
+    const nextEditorValue = isModeratorEdit && isEditing ? getEditorInitialValue(event, true) : EMPTY_EDITOR_MESSAGE;
+
     form.resetFields();
     dispatch({ type: 'clear' });
     setStatus(STATUS.READY);
     setErrorMessage('');
+    setEditorSeedValue(nextEditorValue);
+    setPreviewEditorMessage(nextEditorValue);
+    editorMessageRef.current = nextEditorValue;
     setEditorKey((key) => key + 1);
-    restoreSavedName();
+
+    if (isModeratorEdit && isEditing) {
+      const formState = eventToFormState(event);
+      dispatch(formState);
+      form.setFieldsValue(getFormDateValues(event));
+    } else if (!isModeratorEdit) {
+      restoreSavedName();
+    }
   };
 
   const handleCancel = () => {
@@ -339,7 +457,7 @@ function AnnouncementForm({ event = {}, onCancel, setStorageEvents = () => undef
     } else if ('time' in changedValues) {
       const { time } = changedValues;
       dispatch({ time: time ? utc({ date: time, format: timeFormat }) : '' });
-    } else {
+    } else if (!('description' in changedValues)) {
       dispatch(changedValues);
     }
 
@@ -370,23 +488,28 @@ function AnnouncementForm({ event = {}, onCancel, setStorageEvents = () => undef
     const submitFirstName = values.firstName?.trim();
     const submitLastName = values.lastName?.trim();
 
-    if (!submitFirstName || !submitLastName) {
+    if (!isModeratorEdit && (!submitFirstName || !submitLastName)) {
       setStatus(STATUS.ERROR);
       setErrorMessage('Please enter your first and last name');
       form.scrollToField(submitFirstName ? 'lastName' : 'firstName', { block: 'center' });
       return;
     }
 
-    if (!hasWebsiteMessage(editorMessage)) {
+    if (!hasWebsiteMessage(editorMessageRef.current)) {
       setStatus(STATUS.ERROR);
       setErrorMessage('Please add a website message');
       return;
     }
 
+    const editorMessage = editorMessageRef.current;
+
     setStatus(STATUS.READY);
     setErrorMessage('');
     setIsSubmitting(true);
-    setStorage('announcement-name', { firstName: submitFirstName, lastName: submitLastName });
+
+    if (!isModeratorEdit) {
+      setStorage('announcement-name', { firstName: submitFirstName, lastName: submitLastName });
+    }
 
     const { startDate, endDate, time } = formatSubmitDates({
       endDate: values.endDate,
@@ -400,22 +523,36 @@ function AnnouncementForm({ event = {}, onCancel, setStorageEvents = () => undef
       startDate,
       endDate,
       time,
-      message: state.message,
+      message: slateToHtml(editorMessage),
       qrLink: qrLink ? normalizeUrl(qrLink) : '',
       qrTitle: qrLink && values.qrTitle?.trim() ? values.qrTitle.trim() : '',
-      createdBy: buildName({ firstName: submitFirstName, lastName: submitLastName }),
+      createdBy: isModeratorEdit
+        ? event.createdBy
+        : buildName({ firstName: submitFirstName, lastName: submitLastName }),
+      createdOn: isEditing ? event.createdOn : undefined,
+      uid: isEditing ? event.uid : undefined,
     });
 
     try {
       await db.collection('announcements').doc(announcement.uid).set(announcement);
 
       notification.success({
-        message: 'Announcement Submitted',
+        message: isEditing ? 'Announcement Updated' : 'Announcement Submitted',
       });
       const storageEvents = getStorage('events') ?? [];
-      const events = [...storageEvents, createStorageEvent(announcement)];
-      setStorage('events', events);
-      setStorageEvents(events);
+
+      if (isEditing) {
+        const events = storageEvents.map((storedEvent) =>
+          storedEvent.uid === announcement.uid ? createStorageEvent(announcement) : storedEvent
+        );
+        setStorage('events', events);
+        setStorageEvents(events);
+      } else {
+        const events = [...storageEvents, createStorageEvent(announcement)];
+        setStorage('events', events);
+        setStorageEvents(events);
+      }
+
       handleCancel();
     } catch {
       notification.error({
@@ -428,8 +565,13 @@ function AnnouncementForm({ event = {}, onCancel, setStorageEvents = () => undef
   };
 
   useEffect(() => {
-    restoreSavedName();
-  }, [restoreSavedName]);
+    if (isEditing) {
+      form.setFieldsValue(getFormDateValues(event));
+      setEditorKey((key) => key + 1);
+    } else if (!isModeratorEdit) {
+      restoreSavedName();
+    }
+  }, [event, form, isEditing, isModeratorEdit, restoreSavedName]);
 
   useEffect(() => {
     if (titleRef.current) {
@@ -567,50 +709,50 @@ function AnnouncementForm({ event = {}, onCancel, setStorageEvents = () => undef
           <EditorWrapper>
             <span style={{ color: 'red' }}>*</span>
             <span className="message-label"> Website Message</span>
-            <Editor
+            <WebsiteMessageEditor
               key={editorKey}
-              value={editorMessage}
-              onChange={(content) => {
-                const HTMLMessage = slateToHtml(content);
-                dispatch({ message: HTMLMessage, editorMessage: content });
-              }}
-              error={status === STATUS.ERROR && !hasWebsiteMessage(editorMessage)}
+              initialValue={editorSeedValue}
+              editorMessageRef={editorMessageRef}
+              onPreviewChange={handlePreviewEditorChange}
+              showError={status === STATUS.ERROR}
               placeholder="Enter your announcement message..."
             />
           </EditorWrapper>
         </EditorContainer>
         <PreviewContainer>
           <PreviewTitle>Sacrament Program Preview</PreviewTitle>
-          <MemoizedProgramPreview form={form} state={state} />
+          <MemoizedProgramPreviewCard form={form} baseEvent={basePreviewEvent} />
         </PreviewContainer>
         <PreviewContainer>
           <PreviewTitle>Website Announcement Preview</PreviewTitle>
-          <AnnouncementCard event={state} />
+          <MemoizedWebsitePreviewCard baseEvent={basePreviewEvent} editorMessage={previewEditorMessage} />
         </PreviewContainer>
-        <CreatorSection>
-          <p>
-            <em>(Required)</em> Please give your first and last name.
-          </p>
-          <Name>
-            <Form.Item name="firstName" style={{ marginBottom: 0 }}>
-              <Input
-                autoComplete="off"
-                allowClear
-                placeholder="first name"
-                status={status === STATUS.ERROR && !firstNameValue?.trim() ? 'error' : ''}
-              />
-            </Form.Item>
-            <Form.Item name="lastName" style={{ marginBottom: 0 }}>
-              <Input
-                autoComplete="off"
-                allowClear
-                placeholder="last name"
-                status={status === STATUS.ERROR && !lastNameValue?.trim() ? 'error' : ''}
-              />
-            </Form.Item>
-          </Name>
-          <p>First and last name are used for the moderators to help them know who posted the announcement.</p>
-        </CreatorSection>
+        {!isModeratorEdit && (
+          <CreatorSection>
+            <p>
+              <em>(Required)</em> Please give your first and last name.
+            </p>
+            <Name>
+              <Form.Item name="firstName" style={{ marginBottom: 0 }}>
+                <Input
+                  autoComplete="off"
+                  allowClear
+                  placeholder="first name"
+                  status={status === STATUS.ERROR && !firstNameValue?.trim() ? 'error' : ''}
+                />
+              </Form.Item>
+              <Form.Item name="lastName" style={{ marginBottom: 0 }}>
+                <Input
+                  autoComplete="off"
+                  allowClear
+                  placeholder="last name"
+                  status={status === STATUS.ERROR && !lastNameValue?.trim() ? 'error' : ''}
+                />
+              </Form.Item>
+            </Name>
+            <p>First and last name are used for the moderators to help them know who posted the announcement.</p>
+          </CreatorSection>
+        )}
         <ButtonGroup>
           <Button size="large" htmlType="button" color="primary" onClick={handleSubmit} loading={isSubmitting}>
             Submit
@@ -631,6 +773,7 @@ AnnouncementForm.propTypes = {
   onCancel: func.isRequired,
   setStorageEvents: func,
   event: shape({}),
+  isModeratorEdit: bool,
 };
 
 export default AnnouncementForm;

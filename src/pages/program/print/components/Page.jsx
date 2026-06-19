@@ -9,8 +9,7 @@ export const Space = styled.div`
 export const Page = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
-  padding: var(--space-6);
-  padding-left: 0;
+  padding: var(--space-6) 0;
 
   .date {
     display: none;

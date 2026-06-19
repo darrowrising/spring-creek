@@ -486,16 +486,116 @@ const serialize = (slateNode) => {
 // Helper function to convert Slate value to HTML (for saving to database)
 export const slateToHtml = (value) => value.map((slateNode) => serialize(slateNode)).join('');
 
-// Helper function to convert HTML to Slate value (for loading from database)
-export const htmlToSlate = (html) => {
-  // This is a simple implementation - you may want to use a library like html-to-slate for complex HTML
-  if (!html) {
-    return [{ type: 'paragraph', children: [{ text: '' }] }];
+const EMPTY_PARAGRAPH = [{ type: 'paragraph', children: [{ text: '' }] }];
+
+const getSpanColor = (element) => {
+  const styleAttr = element.getAttribute('style');
+  const colorMatch = styleAttr?.match(/color:\s*([^;]+)/i);
+
+  return colorMatch?.[1]?.trim() || element.style?.color || undefined;
+};
+
+const deserializeInlineNodes = (nodes, marks = {}) =>
+  Array.from(nodes).flatMap((node) => {
+    if (node.nodeType === Node.TEXT_NODE) {
+      const text = node.nodeValue ?? '';
+      return text ? [{ text, ...marks }] : [];
+    }
+
+    if (node.nodeType !== Node.ELEMENT_NODE) return [];
+
+    const tag = node.tagName.toLowerCase();
+
+    if (tag === 'strong' || tag === 'b') {
+      return deserializeInlineNodes(node.childNodes, { ...marks, bold: true });
+    }
+
+    if (tag === 'span') {
+      const color = getSpanColor(node);
+      const nextMarks = color ? { ...marks, color } : marks;
+      return deserializeInlineNodes(node.childNodes, nextMarks);
+    }
+
+    if (tag === 'a') {
+      const children = deserializeInlineNodes(node.childNodes);
+
+      return [
+        {
+          type: 'link',
+          url: node.getAttribute('href') || '',
+          children: children.length ? children : [{ text: node.textContent || '' }],
+        },
+      ];
+    }
+
+    if (tag === 'br') {
+      return [{ text: '\n', ...marks }];
+    }
+
+    return deserializeInlineNodes(node.childNodes, marks);
+  });
+
+const deserializeInline = (element) => {
+  const children = deserializeInlineNodes(element.childNodes);
+  return children.length ? children : [{ text: '' }];
+};
+
+const deserializeListItem = (element) => ({
+  type: 'list-item',
+  children: deserializeInline(element),
+});
+
+const deserializeBlock = (node) => {
+  if (node.nodeType === Node.TEXT_NODE) {
+    const text = node.nodeValue?.trim();
+    return text ? [{ type: 'paragraph', children: [{ text }] }] : [];
   }
 
-  // Simple parser - for basic HTML
+  if (node.nodeType !== Node.ELEMENT_NODE) return [];
+
+  const tag = node.tagName.toLowerCase();
+
+  if (tag === 'p') {
+    return [{ type: 'paragraph', children: deserializeInline(node) }];
+  }
+
+  if (tag === 'ul') {
+    const children = Array.from(node.children)
+      .filter((child) => child.tagName?.toLowerCase() === 'li')
+      .map(deserializeListItem);
+
+    return children.length ? [{ type: 'bulleted-list', children }] : [];
+  }
+
+  if (tag === 'ol') {
+    const children = Array.from(node.children)
+      .filter((child) => child.tagName?.toLowerCase() === 'li')
+      .map(deserializeListItem);
+
+    return children.length ? [{ type: 'numbered-list', children }] : [];
+  }
+
+  if (tag === 'li') {
+    return [deserializeListItem(node)];
+  }
+
+  if (tag === 'div') {
+    return Array.from(node.childNodes).flatMap(deserializeBlock);
+  }
+
+  return Array.from(node.childNodes).flatMap(deserializeBlock);
+};
+
+// Helper function to convert HTML to Slate value (for loading from database)
+export const htmlToSlate = (html) => {
+  if (!html?.trim()) {
+    return EMPTY_PARAGRAPH;
+  }
+
   const div = document.createElement('div');
   div.innerHTML = html;
 
-  return [{ type: 'paragraph', children: [{ text: div.textContent || '' }] }];
+  const blocks = Array.from(div.childNodes).flatMap(deserializeBlock);
+
+  return blocks.length ? blocks : EMPTY_PARAGRAPH;
 };

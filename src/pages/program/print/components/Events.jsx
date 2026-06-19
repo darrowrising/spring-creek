@@ -50,6 +50,12 @@ const EventsHeading = styled.h3`
   padding-bottom: var(--space-4);
 `;
 
+const EventsSection = styled.div`
+  padding: 0 var(--space-5);
+  width: 100%;
+  box-sizing: border-box;
+`;
+
 const EventsGrid = styled.div`
   display: flex;
   flex-direction: column;
@@ -61,10 +67,14 @@ const EventsGrid = styled.div`
 const SubmitInfo = styled.section`
   display: flex;
   align-items: center;
-  /* gap: var(--space-4); */
+  justify-content: center;
+  gap: var(--space-4);
   text-align: left;
   color: var(--color-grey-1);
   line-height: 1.1em;
+  padding: 0 var(--space-5);
+  width: 100%;
+  box-sizing: border-box;
 
   & > em {
     color: var(--color-primary);
@@ -125,10 +135,10 @@ function Events({ data = [] }) {
         <Heading>Spring Creek Ward</Heading>
         <Date>{updatedDate}</Date>
       </Header>
-      <div>
+      <EventsSection>
         <EventsHeading>Upcoming Events</EventsHeading>
         <EventsGrid>{hasData(events) && events.map((event) => <EventCard key={event.uid} event={event} />)}</EventsGrid>
-      </div>
+      </EventsSection>
       {note && (
         <Quote>
           <p>{note}</p>

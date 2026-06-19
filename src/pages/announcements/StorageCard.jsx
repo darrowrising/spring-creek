@@ -1,10 +1,34 @@
 import React from 'react';
 import styled from 'styled-components';
-import { string } from 'prop-types';
+import { FormOutlined } from '@ant-design/icons';
+import { func, string } from 'prop-types';
 
 import { utc } from '../../utils/date.utils';
 import { getOrganizationColor } from '../../utils/organizations.utils';
 import { dateShort } from '../../configs/dateFormats';
+
+const CardWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const EditRow = styled.div`
+  display: flex;
+  justify-content: flex-end;
+`;
+
+const EditButton = styled.button`
+  background: none;
+  border: none;
+  color: var(--color-grey-1);
+  cursor: pointer;
+  font-size: 1.1em;
+  padding: 0 0 var(--space-1);
+
+  &:hover {
+    color: var(--color-primary);
+  }
+`;
 
 const StorageCardContainer = styled.div`
   background-color: var(--color-white-2);
@@ -45,21 +69,28 @@ const CreatedDate = styled.em`
   }
 `;
 
-function StorageCard({ title, createdOn, group }) {
+function StorageCard({ title, createdOn, group, uid, onEdit }) {
   return (
-    <StorageCardContainer>
-      <Group>{group}</Group>
-      <Title>
-        {title}
-        <CreatedDate>
-          {createdOn && (
-            <>
-              <span>created on</span> {utc({ date: createdOn, format: dateShort })}
-            </>
-          )}
-        </CreatedDate>
-      </Title>
-    </StorageCardContainer>
+    <CardWrapper>
+      <EditRow>
+        <EditButton type="button" aria-label="Edit announcement" onClick={() => onEdit(uid)}>
+          <FormOutlined />
+        </EditButton>
+      </EditRow>
+      <StorageCardContainer>
+        <Group>{group}</Group>
+        <Title>
+          {title}
+          <CreatedDate>
+            {createdOn && (
+              <>
+                <span>created on</span> {utc({ date: createdOn, format: dateShort })}
+              </>
+            )}
+          </CreatedDate>
+        </Title>
+      </StorageCardContainer>
+    </CardWrapper>
   );
 }
 
@@ -67,6 +98,8 @@ StorageCard.propTypes = {
   title: string.isRequired,
   createdOn: string.isRequired,
   group: string.isRequired,
+  uid: string.isRequired,
+  onEdit: func.isRequired,
 };
 
 export default StorageCard;

@@ -6,10 +6,9 @@ import { PlusOutlined } from '@ant-design/icons';
 
 import { PageHeading } from '../../components/Heading';
 import { db, docs } from '../../utils/firebase.utils';
-import { getStorage } from '../../utils/localStorage.utils';
 import { hasData, groupByDate } from '../../utils/data.utils';
 import { isAfter } from '../../utils/date.utils';
-import { deleteOutdatedEvents } from '../../utils/announcements.utils';
+import { deleteOutdatedEvents, syncStorageEvents } from '../../utils/announcements.utils';
 import { colorGrey3 } from '../../styles/variables';
 import Loader from '../../components/Loader';
 
@@ -63,14 +62,35 @@ const StyledDrawer = styled(Drawer)`
 `;
 
 const ADD_TEXT = 'Add an Announcement or Event';
+const EDIT_TEXT = 'Edit an Announcement or Event';
 
 function AnnouncementsPage() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [editingEvent, setEditingEvent] = useState(null);
   const [events, setEvents] = useState({});
   const [storageEvents, setStorageEvents] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const onClose = () => setIsDrawerOpen(false);
+  const isEditing = Boolean(editingEvent?.uid);
+
+  const onClose = () => {
+    setIsDrawerOpen(false);
+    setEditingEvent(null);
+  };
+
+  const handleAdd = () => {
+    setEditingEvent(null);
+    setIsDrawerOpen(true);
+  };
+
+  const handleEdit = async (uid) => {
+    const doc = await db.collection('announcements').doc(uid).get();
+
+    if (doc.exists) {
+      setEditingEvent({ uid: doc.id, ...doc.data() });
+      setIsDrawerOpen(true);
+    }
+  };
 
   useEffect(() => {
     unsubscribe = db.collection('announcements').onSnapshot((announcementsSnap) => {
@@ -78,8 +98,7 @@ function AnnouncementsPage() {
       deleteOutdatedEvents(data);
       const approved = data.filter(({ moderate, endDate }) => moderate === false && (!endDate || !isAfter(endDate)));
       setEvents(groupByDate(approved));
-      const submittedEvents = getStorage('events');
-      setStorageEvents(submittedEvents);
+      setStorageEvents(syncStorageEvents(data) ?? []);
       setLoading(false);
     });
     return () => unsubscribe();
@@ -88,7 +107,7 @@ function AnnouncementsPage() {
   return (
     <AnnouncementContainer>
       <PageHeading>Announcements and Events</PageHeading>
-      <AddButton onClick={() => setIsDrawerOpen(true)}>
+      <AddButton onClick={handleAdd}>
         <PlusOutlined />
         {ADD_TEXT}
       </AddButton>
@@ -96,13 +115,24 @@ function AnnouncementsPage() {
         <SectionContainer>
           <Alert title="Your following announcements/events are waiting for approval" type="info" />
           {storageEvents.map(({ uid, ...rest }) => (
-            <StorageCard key={uid} {...rest} />
+            <StorageCard key={uid} uid={uid} onEdit={handleEdit} {...rest} />
           ))}
         </SectionContainer>
       )}
       <SectionContainer>{loading ? <Loader /> : <DisplayEvents events={events} />}</SectionContainer>
-      <StyledDrawer destroyOnHidden open={isDrawerOpen} title={ADD_TEXT} size={700} onClose={onClose}>
-        <AnnouncementForm onCancel={onClose} setStorageEvents={setStorageEvents} />
+      <StyledDrawer
+        destroyOnHidden
+        open={isDrawerOpen}
+        title={isEditing ? EDIT_TEXT : ADD_TEXT}
+        size={700}
+        onClose={onClose}
+      >
+        <AnnouncementForm
+          key={editingEvent?.uid ?? 'new'}
+          event={editingEvent ?? {}}
+          onCancel={onClose}
+          setStorageEvents={setStorageEvents}
+        />
       </StyledDrawer>
     </AnnouncementContainer>
   );
