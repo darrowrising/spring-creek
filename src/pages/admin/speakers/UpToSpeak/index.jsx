@@ -5,6 +5,7 @@ import { arrayOf, bool, number, oneOfType, shape, string } from 'prop-types';
 
 import Heading from '../../../../components/Heading';
 import { handleState, hasData } from '../../../../utils/data.utils';
+import { utc } from '../../../../utils/date.utils';
 import { useAdminContext } from '../../../../providers/admin.provider';
 import { filterLastSpoke, saveNote } from './utils';
 import { columns, searchColumns } from './config';
@@ -63,10 +64,7 @@ export const UpToSpeakContainer = styled.div`
 
   & tr td.editable {
     cursor: pointer;
-
-    &:has(textarea) {
-      padding: 0;
-    }
+    padding: 0;
 
     &:hover {
       background-color: #d99e3621;
@@ -132,8 +130,13 @@ const UpToSpeak = () => {
 
   const handleSaveField = (id, value) => {
     const record = speakers.find(({ uid }) => uid === id);
+    const speakingNote = value ?? '';
 
-    updateRecordState(record, { showInput: false });
+    updateRecordState(record, {
+      showInput: false,
+      speakingNote,
+      speakingNoteUpdatedAt: speakingNote ? utc() : '',
+    });
     saveNote(id, value);
   };
 
@@ -147,26 +150,29 @@ const UpToSpeak = () => {
     return [];
   }, [speakers, activeTab]);
 
+  const tableColumns = columns(onCellClick, handleSaveField, data);
+  const searchTableColumns = searchColumns(onCellClick, handleSaveField, data);
+
   const tabItems = [
     {
       key: 'adult',
       label: 'Adult',
-      children: <MemberTable data={data} tableColumns={columns(onCellClick, handleSaveField)} isLoading={isLoading} />,
+      children: <MemberTable data={data} tableColumns={tableColumns} isLoading={isLoading} />,
     },
     {
       key: 'youth',
       label: 'Youth',
-      children: <MemberTable data={data} tableColumns={columns(onCellClick, handleSaveField)} />,
+      children: <MemberTable data={data} tableColumns={tableColumns} />,
     },
     {
       key: 'primary',
       label: 'Primary',
-      children: <MemberTable data={data} tableColumns={columns(onCellClick, handleSaveField)} />,
+      children: <MemberTable data={data} tableColumns={tableColumns} />,
     },
     activeTab === 'search' && {
       key: 'search',
       label: 'Search Results',
-      children: <MemberTable data={data} tableColumns={searchColumns(onCellClick, handleSaveField)} />,
+      children: <MemberTable data={data} tableColumns={searchTableColumns} />,
     },
   ].filter(Boolean);
 

@@ -151,31 +151,29 @@ export const getPrayers = async ({ set, year, members }) => {
 };
 
 export const scrollToDate = (scrollAreaElement) => {
-  const dateId = `date-${dateIdMaker(comingSunday.format(dateShortNoYear))}`;
-  const getItemElement = () => document.getElementById(dateId);
-  const options = {
-    root: scrollAreaElement,
-    rootMargin: '0px',
-    threshold: 1.0,
-  };
+  if (!scrollAreaElement) return;
 
-  const callback = (entries) => {
-    entries.forEach((entry) => {
-      const { isIntersecting } = entry;
-      if (!isIntersecting) {
-        getItemElement().scrollIntoView({
-          behavior: 'smooth',
-          block: 'end',
-        });
-      }
+  const dateId = `date-${dateIdMaker(comingSunday().format(dateShortNoYear))}`;
+
+  const scroll = () => {
+    const tableBody = scrollAreaElement.querySelector('.ant-table-body');
+    const element = scrollAreaElement.querySelector(`#${dateId}`);
+    if (!tableBody || !element) return false;
+
+    const elementTop = element.getBoundingClientRect().top;
+    const bodyTop = tableBody.getBoundingClientRect().top;
+    tableBody.scrollTo({
+      top: tableBody.scrollTop + (elementTop - bodyTop),
+      behavior: 'smooth',
     });
+    return true;
   };
 
-  const observer = new IntersectionObserver(callback, options);
-
-  setTimeout(() => {
-    observer.observe(getItemElement());
-  }, 500);
+  requestAnimationFrame(() => {
+    if (!scroll()) {
+      setTimeout(scroll, 150);
+    }
+  });
 };
 
 export const handleRowClass = (record) => makeRowClassName(record.displayDate);

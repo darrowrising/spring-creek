@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { func, string } from 'prop-types';
 import { Input, Select } from 'antd';
 import styled from 'styled-components';
@@ -29,10 +29,68 @@ const Wrapper = styled.div`
   }
 `;
 
+const NoteInputWrapper = styled.div`
+  width: 100%;
+
+  .ant-input-textarea-affix-wrapper,
+  .ant-input-affix-wrapper {
+    width: 100%;
+    padding: 4px 8px;
+    border: 1px solid var(--color-grey-3, #d9d9d9);
+    border-radius: 6px;
+    background: #fff;
+    box-shadow: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+
+    &:hover,
+    &:focus-within {
+      border-color: #d99e36;
+      box-shadow: 0 0 0 2px #d99e3621;
+    }
+  }
+
+  .ant-input-textarea-affix-wrapper-focused,
+  .ant-input-affix-wrapper-focused {
+    border-color: #d99e36;
+    box-shadow: 0 0 0 2px #d99e3621;
+  }
+
+  .ant-input,
+  textarea.ant-input {
+    width: 100%;
+    margin: 0;
+    padding: 0 22px 0 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    resize: none;
+    line-height: 1.5715;
+    font-size: inherit;
+    color: inherit;
+  }
+
+  .ant-input-textarea-suffix,
+  .ant-input-suffix {
+    margin-inline-start: 4px;
+    align-self: flex-start;
+    margin-top: 2px;
+  }
+`;
+
 const EditableCell = ({ defaultValue = '', onSave, onRemove, type, column, ...rest }) => {
   const { members } = useAdminContext();
   const [cellValue, setCellValue] = useState(() => defaultValue);
   const [options, setOptions] = useState([]);
+  const cellValueRef = useRef(cellValue);
+  const hasSavedRef = useRef(false);
+
+  cellValueRef.current = cellValue;
+
+  const commit = (value) => {
+    if (hasSavedRef.current || !onSave) return;
+    hasSavedRef.current = true;
+    onSave(value ?? '');
+  };
 
   useEffect(() => {
     if (column === 'topic') {
@@ -103,15 +161,23 @@ const EditableCell = ({ defaultValue = '', onSave, onRemove, type, column, ...re
   }
 
   return (
-    <Wrapper>
+    <NoteInputWrapper>
       <TextArea
-        defaultValue={defaultValue}
-        autoSize
+        value={cellValue}
+        autoSize={{ minRows: 1 }}
         autoFocus
-        onBlur={({ target: { value } }) => onSave(value)}
         allowClear
+        onChange={({ target: { value } }) => setCellValue(value)}
+        onClear={() => {
+          setCellValue('');
+          commit('');
+        }}
+        onBlur={() => {
+          // Defer so the clear control can commit an empty value first.
+          setTimeout(() => commit(cellValueRef.current), 0);
+        }}
       />
-    </Wrapper>
+    </NoteInputWrapper>
   );
 };
 

@@ -1,4 +1,4 @@
-import { db } from '../../../../utils/firebase.utils';
+import { db, FieldValue } from '../../../../utils/firebase.utils';
 import { dayjs, utc } from '../../../../utils/date.utils';
 import { programIdShort } from '../../../../configs/dateFormats';
 
@@ -42,5 +42,11 @@ export const filterLastPrayed = (members, tab) => {
 };
 
 export const saveNote = (docId, value = '') => {
-  db.collection('members').doc(docId).update({ prayingNote: value });
+  const prayingNote = value ?? '';
+  db.collection('members')
+    .doc(docId)
+    .update({
+      prayingNote,
+      prayingNoteUpdatedAt: prayingNote ? utc() : FieldValue().delete(),
+    });
 };

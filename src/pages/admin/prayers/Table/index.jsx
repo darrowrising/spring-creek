@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Table, Tabs } from 'antd';
 import styled from 'styled-components';
 import { lighten } from 'polished';
@@ -7,7 +7,7 @@ import Heading from '../../../../components/Heading';
 
 import { useAdminContext } from '../../../../providers/admin.provider';
 import { useFindMember } from '../../../../utils/organizations.utils';
-import { currentYear } from '../../../../utils/date.utils';
+import { comingSunday, currentYear } from '../../../../utils/date.utils';
 import { handleState, hasData } from '../../../../utils/data.utils';
 import { FieldValue } from '../../../../utils/firebase.utils';
 import SearchProgram from './SearchProgram';
@@ -22,6 +22,7 @@ import {
   handleRowClass,
   saveCell,
   saveMember,
+  scrollToDate,
 } from './Table.utils';
 
 export const Container = styled.section`
@@ -122,6 +123,8 @@ const initialState = {
 function MembersList() {
   const [state, setState] = useState(() => initialState);
   const { members } = useAdminContext();
+  const wrapperRef = useRef(null);
+  const hasScrolledRef = useRef(false);
 
   const { searchValue, prayers, loading, prayerYear, activeTab } = state;
   const set = (update) => handleState(update, setState);
@@ -133,6 +136,7 @@ function MembersList() {
 
   const onTabChange = (tabIndex) => {
     const year = listOfYearsForTabs()[tabIndex - 1];
+    hasScrolledRef.current = false;
     set({ loading: true, activeTab: tabIndex.toString(), prayerYear: year });
 
     getPrayers({ set, year, members });
@@ -190,6 +194,14 @@ function MembersList() {
     }
   }, [members, prayerYear]);
 
+  useEffect(() => {
+    if (loading || !hasData(prayers) || hasScrolledRef.current) return;
+    if (activeTab === 'search' || prayerYear !== comingSunday().year()) return;
+
+    hasScrolledRef.current = true;
+    scrollToDate(wrapperRef.current);
+  }, [loading, prayers, prayerYear, activeTab]);
+
   const columns = tableHeaders({
     searchValue,
     totalPrayers: totalNumberOfPrayerColumns(prayers),
@@ -218,7 +230,7 @@ function MembersList() {
             label: year,
             key: String(index + 1),
             children: (
-              <Wrapper>
+              <Wrapper ref={year === prayerYear ? wrapperRef : null}>
                 <Table
                   dataSource={prayers}
                   pagination={false}

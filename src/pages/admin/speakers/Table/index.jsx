@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Table, Tabs } from 'antd';
 import styled from 'styled-components';
 import { lighten } from 'polished';
@@ -7,13 +7,14 @@ import Heading from '../../../../components/Heading';
 
 import { useAdminContext } from '../../../../providers/admin.provider';
 import { useFindMember } from '../../../../utils/organizations.utils';
-import { currentYear } from '../../../../utils/date.utils';
+import { comingSunday, currentYear } from '../../../../utils/date.utils';
 import { handleState, hasData } from '../../../../utils/data.utils';
 import { FieldValue } from '../../../../utils/firebase.utils';
 import { createTalk } from '../../../../factories/program';
 import { colorGrey3, colorAlert, colorSuccess, media } from '../../../../styles/variables';
+import SearchProgram from './SearchProgram';
 
-import { tableHeaders } from './Table.config';
+import { tableHeaders, searchColumns } from './Table.config';
 import {
   getSpeakers,
   unsubscribe,
@@ -22,6 +23,7 @@ import {
   handleRowClass,
   saveCell,
   saveMember,
+  scrollToDate,
 } from './Table.utils';
 
 export const Container = styled.section`
@@ -102,6 +104,13 @@ export const StatusColor = styled.span`
   }};
 `;
 
+export const HeadingGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  gap: var(--space-2);
+`;
+
 const listOfYears = listOfYearsForTabs();
 
 const initialState = {
@@ -115,6 +124,8 @@ const initialState = {
 function MembersList() {
   const [state, setState] = useState(() => initialState);
   const { members } = useAdminContext();
+  const wrapperRef = useRef(null);
+  const hasScrolledRef = useRef(false);
 
   const { searchValue, speakers, loading, speakerYear, activeTab } = state;
   const set = (update) => handleState(update, setState);
@@ -126,6 +137,7 @@ function MembersList() {
 
   const onTabChange = (tabIndex) => {
     const year = listOfYearsForTabs()[tabIndex - 1];
+    hasScrolledRef.current = false;
     set({ loading: true, activeTab: tabIndex.toString(), speakerYear: year });
 
     getSpeakers({ set, year, members });
@@ -215,6 +227,14 @@ function MembersList() {
     }
   }, [members, speakerYear]);
 
+  useEffect(() => {
+    if (loading || !hasData(speakers) || hasScrolledRef.current) return;
+    if (activeTab === 'search' || speakerYear !== comingSunday().year()) return;
+
+    hasScrolledRef.current = true;
+    scrollToDate(wrapperRef.current);
+  }, [loading, speakers, speakerYear, activeTab]);
+
   const columns = tableHeaders({
     searchValue,
     totalSpeakers: totalNumberOfSpeakerColumns(speakers),
@@ -225,12 +245,19 @@ function MembersList() {
 
   return (
     <Container>
-      {/* <Bar>
-            <Button onClick={handleClear}>Clear Filters and Sort</Button>
-            <Search placeholder="search" onChange={handleSearch} style={{ width: 200 }} value={searchValue} />
-        </Bar> */}
       <Heading color="secondary" size="sm" className="secondary-sm">
-        Talk Schedule
+        <HeadingGrid>
+          Talk Schedule
+          <SearchProgram
+            set={set}
+            onClear={() => {
+              const yearTab = String(listOfYears.indexOf(speakerYear) + 1);
+              hasScrolledRef.current = false;
+              set({ activeTab: yearTab, loading: true });
+              getSpeakers({ set, year: speakerYear, members });
+            }}
+          />
+        </HeadingGrid>
       </Heading>
       <Tabs
         defaultActiveKey={activeTab}
@@ -239,26 +266,46 @@ function MembersList() {
         size="small"
         style={{ marginBottom: 32 }}
         onChange={onTabChange}
-        items={listOfYearsForTabs().map((year, index) => ({
-          label: year,
-          key: String(index + 1),
-          children: (
-            <Wrapper>
+        items={[
+          ...listOfYearsForTabs().map((year, index) => ({
+            label: year,
+            key: String(index + 1),
+            children: (
+              <Wrapper ref={year === speakerYear ? wrapperRef : null}>
+                <Table
+                  dataSource={speakers}
+                  pagination={false}
+                  columns={columns}
+                  loading={loading}
+                  onChange={handleChange}
+                  rowKey={(record) => record.displayDate}
+                  scroll={{ x: 'max-content', y: 500 }}
+                  size="small"
+                  bordered
+                  rowClassName={handleRowClass}
+                />
+              </Wrapper>
+            ),
+          })),
+          activeTab === 'search' && {
+            key: 'search',
+            label: 'Search Results',
+            children: (
               <Table
                 dataSource={speakers}
                 pagination={false}
-                columns={columns}
+                columns={searchColumns}
                 loading={loading}
                 onChange={handleChange}
-                rowKey={(record) => record.displayDate}
+                rowKey={(record) => `${record.date}-${record.searchName}`}
                 scroll={{ x: 'max-content', y: 500 }}
                 size="small"
                 bordered
                 rowClassName={handleRowClass}
               />
-            </Wrapper>
-          ),
-        }))}
+            ),
+          },
+        ].filter(Boolean)}
       />
     </Container>
   );
