@@ -26,8 +26,11 @@ const Wrapper = styled.div`
   }
 `;
 
-const NoteInputWrapper = styled.div`
+const NoteInputWrapper = styled.div.attrs({ className: 'note-input' })`
   width: 100%;
+  font-size: inherit;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 
   .ant-input-textarea-affix-wrapper,
   .ant-input-affix-wrapper {
@@ -61,9 +64,8 @@ const NoteInputWrapper = styled.div`
     box-shadow: none !important;
     background: transparent !important;
     resize: none;
-    line-height: 1.4;
-    /* Match table text; override global mobile 16px/36px input rules */
-    font-size: 13px !important;
+    line-height: 1.4 !important;
+    font-size: inherit !important;
     height: auto !important;
     min-height: 0 !important;
     color: inherit;

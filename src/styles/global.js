@@ -76,6 +76,8 @@ export const GlobalStyle = createGlobalStyle`
     .ant-table {
       @media (max-width: 768px) {
         font-size: 1.2rem;
+        -webkit-text-size-adjust: 100%;
+        text-size-adjust: 100%;
       }
     }
     
@@ -104,6 +106,17 @@ export const GlobalStyle = createGlobalStyle`
         font-size: 1.4rem;
       }
     }
+
+    /* Keep dense table/action small buttons compact on mobile */
+    .ant-btn-sm {
+      @media (max-width: 768px) {
+        height: auto;
+        min-height: 24px;
+        padding: 0 8px;
+        font-size: 1.2rem;
+        line-height: 1.4;
+      }
+    }
     
     /* Mobile Safari: prevent zoom on form focus by ensuring >= 16px */
     @media (max-width: 768px) {
@@ -121,6 +134,45 @@ export const GlobalStyle = createGlobalStyle`
 
       .ant-input {
         height: 36px;
+      }
+
+      /*
+        Dense admin tables: keep every column (text, notes, selects, inputs)
+        on the same rem scale as .ant-table, not the 16px/36px form rules.
+      */
+      .ant-table,
+      .ant-table th,
+      .ant-table td {
+        font-size: 1.2rem;
+        line-height: 1.4;
+      }
+
+      .ant-table .ant-input,
+      .ant-table textarea,
+      .ant-table textarea.ant-input,
+      .ant-table .ant-input-affix-wrapper,
+      .ant-table .ant-input-affix-wrapper input,
+      .ant-table .ant-input-textarea-affix-wrapper,
+      .ant-table .ant-select-selector,
+      .ant-table .ant-select-selection-item,
+      .ant-table .ant-select-selection-search-input,
+      .ant-table .note-input,
+      .ant-table .note-input .ant-input,
+      .ant-table .note-input textarea.ant-input {
+        font-size: 1.2rem !important;
+        height: auto !important;
+        min-height: 0 !important;
+        line-height: 1.4 !important;
+      }
+
+      .ant-table .ant-btn {
+        font-size: 1.2rem;
+      }
+
+      .ant-table .ant-btn-sm {
+        height: auto;
+        min-height: 24px;
+        padding: 0 8px;
       }
     }
     

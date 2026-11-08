@@ -30,10 +30,12 @@ export const NoteCell = styled.div`
   width: 100%;
   min-height: 32px;
   padding: var(--space-1) 10px;
-  font-size: 13px;
+  font-size: inherit;
   line-height: 1.4;
   white-space: pre-wrap;
   word-break: break-word;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 
   &:not(:has(textarea)) {
     border: 1px solid transparent;
