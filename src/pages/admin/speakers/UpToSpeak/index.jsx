@@ -131,13 +131,19 @@ const UpToSpeak = () => {
   const handleSaveField = (id, value) => {
     const record = speakers.find(({ uid }) => uid === id);
     const speakingNote = value ?? '';
+    const previousNote = record?.speakingNote ?? '';
+
+    if (speakingNote === previousNote) {
+      updateRecordState(record, { showInput: false });
+      return;
+    }
 
     updateRecordState(record, {
       showInput: false,
       speakingNote,
       speakingNoteUpdatedAt: speakingNote ? utc() : '',
     });
-    saveNote(id, value);
+    saveNote(id, speakingNote);
   };
 
   const data = useMemo(() => {

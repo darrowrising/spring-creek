@@ -171,10 +171,12 @@ function UpcomingAnnouncements() {
           <Title>Coming up</Title>
           <Subtitle>Announcements and events for the next 4 weeks</Subtitle>
         </HeadingBlock>
-        <AddLink to="/announcements?create=1" onClick={() => track('add')}>
-          <PlusOutlined />
-          Add an announcement
-        </AddLink>
+        {!loading && hasData(events) && (
+          <AddLink to="/announcements?create=1" onClick={() => track('add')}>
+            <PlusOutlined />
+            Add an announcement
+          </AddLink>
+        )}
       </Header>
 
       {loading && <Loader />}

@@ -61,8 +61,11 @@ const NoteInputWrapper = styled.div`
     box-shadow: none !important;
     background: transparent !important;
     resize: none;
-    line-height: 1.5715;
-    font-size: inherit;
+    line-height: 1.4;
+    /* Match table text; override global mobile 16px/36px input rules */
+    font-size: 13px !important;
+    height: auto !important;
+    min-height: 0 !important;
     color: inherit;
   }
 

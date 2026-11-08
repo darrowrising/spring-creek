@@ -130,13 +130,19 @@ const UpToPray = () => {
   const handleSaveField = (id, value) => {
     const record = prayers.find(({ uid }) => uid === id);
     const prayingNote = value ?? '';
+    const previousNote = record?.prayingNote ?? '';
+
+    if (prayingNote === previousNote) {
+      updateRecordState(record, { showInput: false });
+      return;
+    }
 
     updateRecordState(record, {
       showInput: false,
       prayingNote,
       prayingNoteUpdatedAt: prayingNote ? utc() : '',
     });
-    saveNote(id, value);
+    saveNote(id, prayingNote);
   };
 
   const data = useMemo(() => {

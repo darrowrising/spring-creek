@@ -30,7 +30,8 @@ export const NoteCell = styled.div`
   width: 100%;
   min-height: 32px;
   padding: var(--space-1) 10px;
-  line-height: 1.5715;
+  font-size: 13px;
+  line-height: 1.4;
   white-space: pre-wrap;
   word-break: break-word;
 
