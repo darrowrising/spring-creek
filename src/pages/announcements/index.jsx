@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { darken } from 'polished';
 import { Drawer, Alert } from 'antd';
@@ -65,6 +66,7 @@ const ADD_TEXT = 'Add an Announcement or Event';
 const EDIT_TEXT = 'Edit an Announcement or Event';
 
 function AnnouncementsPage() {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [editingEvent, setEditingEvent] = useState(null);
   const [events, setEvents] = useState({});
@@ -76,6 +78,10 @@ function AnnouncementsPage() {
   const onClose = () => {
     setIsDrawerOpen(false);
     setEditingEvent(null);
+    if (searchParams.get('create')) {
+      searchParams.delete('create');
+      setSearchParams(searchParams, { replace: true });
+    }
   };
 
   const handleAdd = () => {
@@ -91,6 +97,13 @@ function AnnouncementsPage() {
       setIsDrawerOpen(true);
     }
   };
+
+  useEffect(() => {
+    if (searchParams.get('create') === '1') {
+      setEditingEvent(null);
+      setIsDrawerOpen(true);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     unsubscribe = db.collection('announcements').onSnapshot((announcementsSnap) => {

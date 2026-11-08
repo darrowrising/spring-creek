@@ -1,7 +1,36 @@
 import { db } from './firebase.utils';
 import { getStorage, setStorage, removeStorage } from './localStorage.utils';
-import { isEmpty } from './data.utils';
-import { isAfter } from './date.utils';
+import { isEmpty, sortEvents } from './data.utils';
+import { dayjs, isAfter, utc } from './date.utils';
+import { dateShort } from '../configs/dateFormats';
+
+/** True when an approved announcement/event overlaps [today, today + weeks]. */
+export const overlapsNextWeeks = (event = {}, { weeks = 4, now = dayjs() } = {}) => {
+  const { endDate, startDate, moderate } = event;
+  if (moderate !== false || !endDate) return false;
+
+  const windowStart = dayjs(now).startOf('day');
+  const windowEnd = dayjs(now).add(weeks, 'week').endOf('day');
+  const itemStart = dayjs(startDate || endDate).startOf('day');
+  const itemEnd = dayjs(endDate).endOf('day');
+
+  return !itemStart.isAfter(windowEnd, 'day') && !itemEnd.isBefore(windowStart, 'day');
+};
+
+export const getUpcomingWithinWeeks = (events = [], weeks = 4, now = dayjs()) =>
+  sortEvents(events.filter((event) => overlapsNextWeeks(event, { weeks, now })));
+
+export const formatAnnouncementDateLabel = ({ startDate, endDate } = {}) => {
+  if (!endDate) return '';
+
+  const endLabel = utc({ date: endDate, format: dateShort });
+  if (startDate) {
+    const startLabel = utc({ date: startDate, format: dateShort });
+    if (startLabel !== endLabel) return `${startLabel} – ${endLabel}`;
+  }
+
+  return endLabel;
+};
 
 export const deleteOutdatedEvents = (events) => {
   const storage = getStorage('events') || [];

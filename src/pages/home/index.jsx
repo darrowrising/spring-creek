@@ -4,6 +4,7 @@ import Link from '../../components/Link';
 import { GAEvent } from '../../components/Analytics';
 import InitiativeSample from '../temp/initiative/Sample';
 import { useUser } from '../../providers/user.provider';
+import UpcomingAnnouncements from './UpcomingAnnouncements';
 
 const HomeContainer = styled.div`
   width: 100%;
@@ -42,15 +43,16 @@ const AnnouncementsLink = styled(LinkBase)`
   background-color: var(--color-blue-3);
 `;
 
-const Col = styled.div`
-  align-items: center;
+const MeetingInfo = styled.div`
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  align-items: center;
+  gap: var(--space-2);
+  padding-top: var(--space-10);
 `;
 
 const SubHeading = styled.h3`
-  padding-top: var(--space-10);
+  margin: 0;
 `;
 
 function handleClick(event) {
@@ -77,16 +79,11 @@ function Home() {
           Announcements
         </AnnouncementsLink>
       </Row>
-      <Row>
-        <Col>
-          <SubHeading>Sacrament Meeting</SubHeading>
-          <div>{user.unit?.meetingTime}</div>
-        </Col>
-        <Col>
-          <SubHeading>Stake Website</SubHeading>
-          <Link href="https://farmingtonwest.org/">Farmington West Stake</Link>
-        </Col>
-      </Row>
+      <MeetingInfo>
+        <SubHeading>Sacrament Meeting</SubHeading>
+        <div>{user.unit?.meetingTime}</div>
+      </MeetingInfo>
+      <UpcomingAnnouncements />
       <InitiativeSample />
     </HomeContainer>
   );
