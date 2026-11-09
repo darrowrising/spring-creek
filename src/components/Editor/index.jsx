@@ -88,6 +88,26 @@ const EditorContent = styled.div`
       outline: none;
     }
   }
+
+  ul,
+  ol {
+    margin: 0.5em 0;
+    padding-left: 1.75em;
+    list-style-position: outside;
+  }
+
+  ul {
+    list-style-type: disc;
+  }
+
+  ol {
+    list-style-type: decimal;
+  }
+
+  li {
+    margin: 0.2em 0;
+  }
+
   /* Responsive font size to fix zoom issue on mobile */
   @media (max-width: 768px) {
     font-size: 16px;

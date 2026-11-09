@@ -1,7 +1,6 @@
 import { useState, useEffect, useReducer, useRef, memo, useCallback, useMemo, useDeferredValue } from 'react';
 import styled from 'styled-components';
-import { Alert, Form, Input, Select, Divider, DatePicker, TimePicker, Switch, notification } from 'antd';
-import { darken } from 'polished';
+import { Form, Input, Select, DatePicker, TimePicker, Switch, notification, Collapse, Segmented } from 'antd';
 import { func, shape, bool } from 'prop-types';
 
 import AnnouncementCard from '../../components/Announcement';
@@ -11,10 +10,21 @@ import { db } from '../../utils/firebase.utils';
 import { uuid } from '../../utils/data.utils';
 import { getStorage, setStorage } from '../../utils/localStorage.utils';
 import { utc, dayjs } from '../../utils/date.utils';
+import {
+  ANNOUNCEMENT_TYPES,
+  buildPendingEdit,
+  hasPendingEdit,
+  isPastDate,
+  resolveAnnouncementType,
+} from '../../utils/announcements.utils';
+import {
+  programDescriptionFromMessage,
+  summarizeProgramDescription,
+} from '../../utils/aiAnnouncement.utils';
 import { normalizeUrl, isValidUrl } from '../../utils/url.utils';
 import { eventGroups } from '../../configs/organizations';
 import { time as timeFormat } from '../../configs/dateFormats';
-import { colorWhite3, breakpoints } from '../../styles/variables';
+import { breakpoints } from '../../styles/variables';
 import EventCard from '../../components/EventCard';
 import ProgramMessageField from './ProgramMessageField';
 import WebsiteMessageEditor, { hasWebsiteMessage } from './WebsiteMessageEditor';
@@ -23,29 +33,45 @@ const MemoizedEventCard = memo(EventCard);
 const MemoizedAnnouncementCard = memo(AnnouncementCard);
 
 const FormContainer = styled.div`
-  background-color: var(--color-white-3);
-  padding: var(--space-4);
+  background-color: var(--color-white-1);
+  padding: var(--space-5) var(--space-4) var(--space-4);
   display: flex;
   flex-direction: column;
-  row-gap: var(--space-4);
+  row-gap: var(--space-5);
 
-  label {
-    height: 0 !important;
-    font-size: 1.2em !important;
+  .ant-form-item {
+    margin-bottom: var(--space-4);
   }
 
-  .message-label {
-    font-size: 1.2em;
+  .ant-form-item-label > label {
+    height: auto !important;
+    font-size: 0.92em !important;
+    font-weight: 600;
+    color: var(--color-black-2);
   }
 
   .ant-form-item-explain {
-    margin-block-end: var(--space-2);
+    margin-block-end: var(--space-1);
+  }
+
+  .ant-input,
+  .ant-select-selector,
+  .ant-picker {
+    border-radius: 10px !important;
   }
 `;
 
-const EditorContainer = styled.div`
+const FieldGrid = styled.div`
   display: grid;
-  column-gap: var(--space-4);
+  gap: 0 var(--space-4);
+
+  @media (min-width: ${breakpoints.tablet}) {
+    grid-template-columns: 1.4fr 1fr;
+
+    & > .span-all {
+      grid-column: 1 / -1;
+    }
+  }
 `;
 
 const TitleInput = styled(Input)`
@@ -53,7 +79,21 @@ const TitleInput = styled(Input)`
 `;
 
 const EditorWrapper = styled.div`
-  flex-grow: 2;
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--space-2);
+  margin-bottom: var(--space-4);
+`;
+
+const MessageLabel = styled.div`
+  font-size: 0.92em;
+  font-weight: 600;
+  color: var(--color-black-2);
+
+  span {
+    color: var(--color-alert);
+    margin-right: 0.25em;
+  }
 `;
 
 const StyledDatePicker = styled(DatePicker)`
@@ -64,24 +104,46 @@ const StyledTimePicker = styled(TimePicker)`
   width: 100%;
 `;
 
-const SwitchWrapper = styled.div`
-  color: var(--color-primary);
-  padding-bottom: var(--space-1);
+const OptionRow = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) 0;
+  margin-bottom: var(--space-2);
+`;
+
+const OptionCopy = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+
+  strong {
+    font-size: 0.92em;
+    color: var(--color-black-2);
+  }
+
+  span {
+    font-size: 0.82em;
+    color: var(--color-grey-1);
+  }
+`;
+
+const TypeHelp = styled.p`
+  margin: calc(var(--space-2) * -1) 0 var(--space-4);
+  font-size: 0.85em;
+  color: var(--color-grey-1);
 `;
 
 const QrCodeSection = styled.section`
-  border: 1px solid var(--color-grey-2);
-  border-radius: 6px;
-  padding: var(--space-3);
+  border: 1px solid var(--color-grey-3);
+  border-radius: 12px;
+  padding: var(--space-4);
   margin-bottom: var(--space-4);
   display: flex;
   flex-direction: column;
   row-gap: var(--space-1);
-  background-color: var(--color-white-1);
-
-  label {
-    font-size: 1em !important;
-  }
+  background-color: var(--color-white-2);
 
   .ant-form-item {
     margin-bottom: var(--space-2);
@@ -89,58 +151,124 @@ const QrCodeSection = styled.section`
 `;
 
 const QrCodeHeading = styled.h4`
-  color: var(--color-primary);
-  font-size: 1em;
-  font-weight: normal;
+  color: var(--color-black-2);
+  font-size: 0.95em;
+  font-weight: 600;
   margin: 0;
 `;
 
 const QrCodeHelp = styled.p`
-  margin: 0 0 var(--space-1);
-  font-size: 0.8em;
+  margin: 0 0 var(--space-2);
+  font-size: 0.82em;
   color: var(--color-grey-1);
 `;
 
-const PreviewContainer = styled.div`
-  background-color: ${darken(0.05, colorWhite3)};
-  padding: var(--space-4);
+const PreviewStack = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+`;
+
+const PreviewSection = styled.section`
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+`;
+
+const PreviewHeader = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--color-grey-3);
+`;
+
+const PreviewEyebrow = styled.span`
+  font-size: 0.95em;
+  font-weight: 600;
+  color: var(--color-primary);
 `;
 
 const PreviewTitle = styled.h3`
-  color: var(--color-brown-1);
-  padding-bottom: var(--space-1);
+  margin: 0;
+  color: var(--color-grey-1);
+  font-size: 0.92em;
+  font-weight: 400;
+  line-height: 1.35;
 `;
 
 const CreatorSection = styled.section`
-  padding: var(--space-2) 0;
+  padding: var(--space-4);
+  border-radius: 12px;
+  background-color: var(--color-white-2);
+  border: 1px solid var(--color-grey-3);
 
   & > p {
-    margin: var(--space-2) 0;
-    font-size: 0.8em;
+    margin: 0 0 var(--space-3);
+    font-size: 0.85em;
     color: var(--color-grey-1);
 
     & > em {
+      font-style: normal;
+      font-weight: 600;
       color: var(--color-alert);
     }
   }
 
   & > p:last-of-type {
-    margin-top: var(--space-1);
+    margin-top: var(--space-3);
     margin-bottom: 0;
   }
 `;
 
 const Name = styled.div`
   display: grid;
-  column-gap: var(--space-4);
+  column-gap: var(--space-3);
   grid-template-columns: repeat(2, 1fr);
 `;
 
 const ButtonGroup = styled.div`
   display: flex;
+  flex-wrap: wrap;
   gap: var(--space-2);
-  padding-top: var(--space-4);
-  padding-bottom: var(--space-4);
+  padding-top: var(--space-2);
+  position: sticky;
+  bottom: 0;
+  background: linear-gradient(to top, var(--color-white-1) 70%, transparent);
+  padding-bottom: var(--space-2);
+`;
+
+const AdvancedCollapse = styled(Collapse)`
+  margin: var(--space-2) 0 var(--space-4);
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+
+  .ant-collapse-item {
+    border: 1px solid var(--color-grey-3) !important;
+    border-radius: 12px !important;
+    overflow: hidden;
+  }
+
+  .ant-collapse-header {
+    padding: var(--space-3) var(--space-4) !important;
+    color: var(--color-black-2) !important;
+    font-weight: 600 !important;
+  }
+
+  .ant-collapse-content-box {
+    padding: var(--space-2) var(--space-4) var(--space-4) !important;
+  }
+`;
+
+const Notice = styled.div`
+  padding: var(--space-3) var(--space-4);
+  border-radius: 12px;
+  background: ${({ $error }) => ($error ? 'rgba(176, 65, 62, 0.08)' : 'rgba(49, 112, 142, 0.08)')};
+  color: ${({ $error }) => ($error ? 'var(--color-alert)' : 'var(--color-primary)')};
+  font-size: 0.9em;
+  line-height: 1.4;
 `;
 
 const STATUS = {
@@ -161,6 +289,7 @@ const createAnnouncement = ({
   endDate,
   startDate = '',
   time = '',
+  type = ANNOUNCEMENT_TYPES.EVENT,
   createdOn,
   createdBy,
   approvedOn = '',
@@ -168,15 +297,19 @@ const createAnnouncement = ({
   qrLink = '',
   qrTitle = '',
   uid,
+  moderate = true,
+  hasPendingEdit: pendingEditFlag = false,
+  pendingEdit = null,
 }) => ({
   title,
   group,
-  description,
+  description: description ?? '',
   message,
   time,
   startDate,
   endDate,
-  moderate: true,
+  type: resolveAnnouncementType({ type }),
+  moderate,
   createdOn: createdOn ?? utc(),
   createdBy,
   approvedOn,
@@ -184,6 +317,8 @@ const createAnnouncement = ({
   qrLink,
   qrTitle,
   uid: uid || uuid(),
+  hasPendingEdit: pendingEditFlag,
+  pendingEdit,
 });
 const createStorageEvent = ({ title, uid, createdOn, group }) => ({
   title,
@@ -204,6 +339,7 @@ const INITIAL_STATE = {
   message: '',
   title: '',
   group: '',
+  type: ANNOUNCEMENT_TYPES.EVENT,
   isAllDay: false,
   isDateRange: false,
   location: '',
@@ -226,13 +362,16 @@ const parseCreatedBy = (createdBy = '') => {
 const eventToFormState = (event) => {
   const { firstName, lastName } = parseCreatedBy(event.createdBy);
 
+  const type = resolveAnnouncementType(event);
+
   return {
     ...createInitialState(),
     title: event.title ?? '',
     description: event.description ?? '',
     group: event.group ?? '',
+    type,
     message: event.message ?? '',
-    isDateRange: Boolean(event.startDate),
+    isDateRange: type === ANNOUNCEMENT_TYPES.EVENT && Boolean(event.startDate),
     isAllDay: !event.time,
     qrLink: event.qrLink ?? '',
     qrTitle: event.qrTitle ?? '',
@@ -245,7 +384,8 @@ const eventToFormState = (event) => {
 };
 
 const getFormDateValues = (event) => {
-  const isDateRange = Boolean(event.startDate);
+  const type = resolveAnnouncementType(event);
+  const isDateRange = type === ANNOUNCEMENT_TYPES.EVENT && Boolean(event.startDate);
   let endDate;
 
   if (isDateRange && event.startDate && event.endDate) {
@@ -257,6 +397,7 @@ const getFormDateValues = (event) => {
   return {
     title: event.title,
     group: event.group,
+    type,
     description: event.description ?? '',
     endDate,
     time: event.time ? dayjs(event.time, timeFormat) : undefined,
@@ -302,21 +443,22 @@ const useResponsiveInputSize = () => {
   return size;
 };
 
-const reducer = (state, { type, ...updatedState }) => {
-  if (type === 'clear') return createInitialState();
+const reducer = (state, update = {}) => {
+  if (update.action === 'clear') return createInitialState();
 
   return {
     ...state,
-    ...updatedState,
+    ...update,
   };
 };
 
-const buildBasePreviewEvent = ({ startDate, endDate, time, group, title, qrLink, qrTitle }) => ({
+const buildBasePreviewEvent = ({ startDate, endDate, time, group, title, type, qrLink, qrTitle }) => ({
   startDate,
   endDate,
   time,
   group,
   title,
+  type,
   qrLink,
   qrTitle,
 });
@@ -358,22 +500,48 @@ WebsitePreviewCard.propTypes = {
 
 const MemoizedWebsitePreviewCard = memo(WebsitePreviewCard);
 
-function AnnouncementForm({ event = {}, onCancel, setStorageEvents = () => undefined, isModeratorEdit = false }) {
+function AnnouncementForm({
+  event = {},
+  draft = null,
+  onCancel,
+  setStorageEvents = () => undefined,
+  isModeratorEdit = false,
+}) {
   const isEditing = Boolean(event?.uid);
-  const [state, dispatch] = useReducer(reducer, isEditing ? eventToFormState(event) : createInitialState());
+  const seedEvent = isEditing ? event : draft || event;
+  const hasAiDraft = Boolean(draft) && !isEditing;
+  const [state, dispatch] = useReducer(
+    reducer,
+    seedEvent?.title || seedEvent?.endDate || seedEvent?.message || seedEvent?.group
+      ? eventToFormState(seedEvent)
+      : createInitialState()
+  );
   const [status, setStatus] = useState(STATUS.READY);
   const [errorMessage, setErrorMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSummarizingProgram, setIsSummarizingProgram] = useState(false);
   const [editorKey, setEditorKey] = useState(0);
-  const [editorSeedValue, setEditorSeedValue] = useState(() => getEditorInitialValue(event, isEditing));
-  const [previewEditorMessage, setPreviewEditorMessage] = useState(() => getEditorInitialValue(event, isEditing));
-  const editorMessageRef = useRef(getEditorInitialValue(event, isEditing));
+  const [editorSeedValue, setEditorSeedValue] = useState(() =>
+    getEditorInitialValue(seedEvent, isEditing || hasAiDraft)
+  );
+  const [previewEditorMessage, setPreviewEditorMessage] = useState(() =>
+    getEditorInitialValue(seedEvent, isEditing || hasAiDraft)
+  );
+  const editorMessageRef = useRef(getEditorInitialValue(seedEvent, isEditing || hasAiDraft));
+  const descriptionManuallyEditedRef = useRef(false);
+  const programSummaryTimerRef = useRef(null);
+  const programSummaryRequestRef = useRef(0);
   const [form] = Form.useForm();
   const qrInputSize = useResponsiveInputSize();
+  const isLiveEdit = isEditing && event?.moderate === false && !isModeratorEdit;
 
   const titleRef = useRef(null);
 
-  const { isDateRange } = state;
+  const { isDateRange, type } = state;
+  const isAnnouncementType = type === ANNOUNCEMENT_TYPES.ANNOUNCEMENT;
+  let dateFieldLabel = 'Date';
+  if (isAnnouncementType) dateFieldLabel = 'Show until';
+  else if (isDateRange) dateFieldLabel = 'Dates';
   const qrLinkValue = Form.useWatch('qrLink', form);
   const firstNameValue = Form.useWatch('firstName', form);
   const lastNameValue = Form.useWatch('lastName', form);
@@ -387,15 +555,137 @@ function AnnouncementForm({ event = {}, onCancel, setStorageEvents = () => undef
         time: state.time,
         group: state.group,
         title: state.title,
+        type: state.type,
         qrLink: state.qrLink,
         qrTitle: state.qrTitle,
       }),
-    [state.startDate, state.endDate, state.time, state.group, state.title, state.qrLink, state.qrTitle]
+    [state.startDate, state.endDate, state.time, state.group, state.title, state.type, state.qrLink, state.qrTitle]
   );
 
-  const handlePreviewEditorChange = useCallback((content) => {
-    setPreviewEditorMessage(content);
-  }, []);
+  const applyTypeChange = (nextType) => {
+    const resolvedType = resolveAnnouncementType({ type: nextType });
+    const formEndDate = form.getFieldValue('endDate');
+    let preservedEndDate = state.endDate;
+
+    if (!preservedEndDate && formEndDate) {
+      if (Array.isArray(formEndDate)) {
+        const [, end] = formEndDate;
+        preservedEndDate = end ? utc({ date: end }) : '';
+      } else {
+        preservedEndDate = utc({ date: formEndDate });
+      }
+    }
+
+    dispatch({
+      type: resolvedType,
+      isDateRange: false,
+      startDate: '',
+      endDate: preservedEndDate,
+      time: resolvedType === ANNOUNCEMENT_TYPES.ANNOUNCEMENT ? '' : state.time,
+      isAllDay: resolvedType === ANNOUNCEMENT_TYPES.ANNOUNCEMENT ? true : state.isAllDay,
+    });
+    form.setFieldsValue({
+      endDate: preservedEndDate ? dayjs(preservedEndDate) : undefined,
+      ...(resolvedType === ANNOUNCEMENT_TYPES.ANNOUNCEMENT ? { time: undefined } : {}),
+    });
+  };
+
+  const applyProgramDescription = useCallback(
+    (description, { fromUser = false } = {}) => {
+      form.setFieldValue('description', description);
+      dispatch({ description });
+      descriptionManuallyEditedRef.current = fromUser;
+    },
+    [form]
+  );
+
+  const requestProgramSummary = useCallback(
+    async ({ force = false, notify = false } = {}) => {
+      if (!force && descriptionManuallyEditedRef.current) return;
+      if (!hasWebsiteMessage(editorMessageRef.current)) return;
+
+      const messageHtml = slateToHtml(editorMessageRef.current);
+      const directDescription = programDescriptionFromMessage(messageHtml);
+
+      if (directDescription) {
+        applyProgramDescription(directDescription, { fromUser: false });
+        if (notify) {
+          notification.success({
+            title: 'Program message updated',
+            description: 'Used your website message as-is — it already fits.',
+          });
+        }
+        return;
+      }
+
+      const requestId = programSummaryRequestRef.current + 1;
+      programSummaryRequestRef.current = requestId;
+      setIsSummarizingProgram(true);
+
+      try {
+        const description = await summarizeProgramDescription(messageHtml);
+        if (requestId !== programSummaryRequestRef.current) return;
+        if (!description) {
+          throw new Error('AI returned an empty program message.');
+        }
+        applyProgramDescription(description, { fromUser: false });
+        if (notify) {
+          notification.success({
+            title: 'Program message updated',
+            description: 'AI wrote a short blurb from your website message.',
+          });
+        }
+      } catch (error) {
+        if (requestId !== programSummaryRequestRef.current) return;
+        if (notify || force) {
+          notification.error({
+            title: 'Could not update program message',
+            description: error?.message?.replace(/^Firebase: /, '') || 'Please try again.',
+          });
+        }
+      } finally {
+        if (requestId === programSummaryRequestRef.current) {
+          setIsSummarizingProgram(false);
+        }
+      }
+    },
+    [applyProgramDescription]
+  );
+
+  const handlePreviewEditorChange = useCallback(
+    (content) => {
+      setPreviewEditorMessage(content);
+      window.clearTimeout(programSummaryTimerRef.current);
+      programSummaryTimerRef.current = window.setTimeout(() => {
+        requestProgramSummary({ force: false, notify: false });
+      }, 1200);
+    },
+    [requestProgramSummary]
+  );
+
+  const handleSyncProgramMessage = useCallback(async () => {
+    if (isSummarizingProgram) return;
+
+    if (!hasWebsiteMessage(editorMessageRef.current)) {
+      notification.error({
+        title: 'Add a website message first',
+        description: 'The program blurb is copied or summarized from the website message.',
+      });
+      return;
+    }
+
+    window.clearTimeout(programSummaryTimerRef.current);
+    descriptionManuallyEditedRef.current = false;
+    await requestProgramSummary({ force: true, notify: true });
+  }, [isSummarizingProgram, requestProgramSummary]);
+
+  useEffect(
+    () => () => {
+      window.clearTimeout(programSummaryTimerRef.current);
+      programSummaryRequestRef.current += 1;
+    },
+    []
+  );
 
   const restoreSavedName = useCallback(() => {
     const name = getStorage('announcement-name');
@@ -409,10 +699,14 @@ function AnnouncementForm({ event = {}, onCancel, setStorageEvents = () => undef
   const handleReset = () => {
     const nextEditorValue = isModeratorEdit && isEditing ? getEditorInitialValue(event, true) : EMPTY_EDITOR_MESSAGE;
 
+    window.clearTimeout(programSummaryTimerRef.current);
+    programSummaryRequestRef.current += 1;
+    descriptionManuallyEditedRef.current = false;
     form.resetFields();
-    dispatch({ type: 'clear' });
+    dispatch({ action: 'clear' });
     setStatus(STATUS.READY);
     setErrorMessage('');
+    setIsSummarizingProgram(false);
     setEditorSeedValue(nextEditorValue);
     setPreviewEditorMessage(nextEditorValue);
     editorMessageRef.current = nextEditorValue;
@@ -433,7 +727,14 @@ function AnnouncementForm({ event = {}, onCancel, setStorageEvents = () => undef
   };
 
   const handleValuesChange = (changedValues) => {
-    if ('qrLink' in changedValues) {
+    if ('description' in changedValues) {
+      descriptionManuallyEditedRef.current = true;
+      dispatch({ description: changedValues.description ?? '' });
+    }
+
+    if ('type' in changedValues) {
+      applyTypeChange(changedValues.type);
+    } else if ('qrLink' in changedValues) {
       form.setFields([{ name: 'qrLink', errors: [] }]);
 
       if (!changedValues.qrLink?.trim()) {
@@ -452,7 +753,10 @@ function AnnouncementForm({ event = {}, onCancel, setStorageEvents = () => undef
           endDate: end ? utc({ date: end }) : '',
         });
       } else {
-        dispatch({ endDate: endDate ? utc({ date: endDate }) : '' });
+        dispatch({
+          startDate: '',
+          endDate: endDate ? utc({ date: endDate }) : '',
+        });
       }
     } else if ('time' in changedValues) {
       const { time } = changedValues;
@@ -497,7 +801,7 @@ function AnnouncementForm({ event = {}, onCancel, setStorageEvents = () => undef
 
     if (!hasWebsiteMessage(editorMessageRef.current)) {
       setStatus(STATUS.ERROR);
-      setErrorMessage('Please add a website message');
+      setErrorMessage('Please add a message');
       return;
     }
 
@@ -511,52 +815,105 @@ function AnnouncementForm({ event = {}, onCancel, setStorageEvents = () => undef
       setStorage('announcement-name', { firstName: submitFirstName, lastName: submitLastName });
     }
 
+    const resolvedType = resolveAnnouncementType({ type: values.type ?? state.type });
+    const useDateRange = resolvedType === ANNOUNCEMENT_TYPES.EVENT && isDateRange;
+
     const { startDate, endDate, time } = formatSubmitDates({
       endDate: values.endDate,
-      time: values.time,
-      isDateRange,
+      time: resolvedType === ANNOUNCEMENT_TYPES.EVENT ? values.time : undefined,
+      isDateRange: useDateRange,
     });
+
+    const messageHtml = slateToHtml(editorMessage);
+    const storedDescription = form.getFieldsValue(true)?.description;
+    const descriptionValue =
+      (typeof values.description === 'string' ? values.description : undefined) ??
+      (typeof storedDescription === 'string' ? storedDescription : undefined) ??
+      state.description ??
+      event?.description ??
+      '';
+
+    const createdBy = isModeratorEdit
+      ? event.createdBy
+      : buildName({ firstName: submitFirstName, lastName: submitLastName });
 
     const announcement = createAnnouncement({
       ...state,
       ...values,
-      startDate,
+      type: resolvedType,
+      description: descriptionValue,
+      startDate: resolvedType === ANNOUNCEMENT_TYPES.ANNOUNCEMENT ? '' : startDate,
       endDate,
-      time,
-      message: slateToHtml(editorMessage),
+      time: resolvedType === ANNOUNCEMENT_TYPES.ANNOUNCEMENT ? '' : time,
+      message: messageHtml,
       qrLink: qrLink ? normalizeUrl(qrLink) : '',
       qrTitle: qrLink && values.qrTitle?.trim() ? values.qrTitle.trim() : '',
-      createdBy: isModeratorEdit
-        ? event.createdBy
-        : buildName({ firstName: submitFirstName, lastName: submitLastName }),
+      createdBy,
       createdOn: isEditing ? event.createdOn : undefined,
       uid: isEditing ? event.uid : undefined,
+      moderate: isModeratorEdit ? event.moderate !== false : true,
+      hasPendingEdit: false,
+      pendingEdit: null,
     });
 
     try {
-      await db.collection('announcements').doc(announcement.uid).set(announcement);
-
-      notification.success({
-        message: isEditing ? 'Announcement Updated' : 'Announcement Submitted',
-      });
-      const storageEvents = getStorage('events') ?? [];
-
-      if (isEditing) {
-        const events = storageEvents.map((storedEvent) =>
-          storedEvent.uid === announcement.uid ? createStorageEvent(announcement) : storedEvent
-        );
-        setStorage('events', events);
-        setStorageEvents(events);
+      if (isLiveEdit) {
+        const pendingEdit = buildPendingEdit(announcement, { submittedBy: createdBy });
+        await db.collection('announcements').doc(announcement.uid).update({
+          hasPendingEdit: true,
+          pendingEdit,
+        });
+      } else if (isModeratorEdit && hasPendingEdit(event)) {
+        await db
+          .collection('announcements')
+          .doc(announcement.uid)
+          .set({
+            ...announcement,
+            moderate: false,
+            hasPendingEdit: false,
+            pendingEdit: null,
+            approvedBy: event.approvedBy || '',
+            approvedOn: event.approvedOn || '',
+          });
       } else {
-        const events = [...storageEvents, createStorageEvent(announcement)];
+        await db.collection('announcements').doc(announcement.uid).set(announcement);
+      }
+
+      if (!isModeratorEdit) {
+        const storedEvents = getStorage('events');
+        const storageEvents = Array.isArray(storedEvents) ? storedEvents : [];
+        const nextStorageEvent = createStorageEvent(announcement);
+        const exists = storageEvents.some((storedEvent) => storedEvent.uid === announcement.uid);
+        const events =
+          isEditing && exists
+            ? storageEvents.map((storedEvent) =>
+                storedEvent.uid === announcement.uid ? nextStorageEvent : storedEvent
+              )
+            : [...storageEvents.filter((storedEvent) => storedEvent.uid !== announcement.uid), nextStorageEvent];
         setStorage('events', events);
         setStorageEvents(events);
       }
 
+      let successTitle = 'Announcement Submitted';
+      if (isLiveEdit) successTitle = 'Edit submitted';
+      else if (isEditing) successTitle = 'Announcement Updated';
+
+      let successDescription;
+      if (isLiveEdit) {
+        successDescription = 'The current announcement stays live until the Bishopric approves your edit.';
+      } else if (isEditing && !isModeratorEdit) {
+        successDescription = 'Sent back to the Bishopric for approval.';
+      }
+
+      notification.success({
+        title: successTitle,
+        description: successDescription,
+      });
+
       handleCancel();
     } catch {
       notification.error({
-        message: 'Submission failed',
+        title: 'Submission failed',
         description: 'Please try again.',
       });
     } finally {
@@ -568,10 +925,14 @@ function AnnouncementForm({ event = {}, onCancel, setStorageEvents = () => undef
     if (isEditing) {
       form.setFieldsValue(getFormDateValues(event));
       setEditorKey((key) => key + 1);
+    } else if (hasAiDraft && draft) {
+      form.setFieldsValue(getFormDateValues(draft));
+      setEditorKey((key) => key + 1);
+      if (!isModeratorEdit) restoreSavedName();
     } else if (!isModeratorEdit) {
       restoreSavedName();
     }
-  }, [event, form, isEditing, isModeratorEdit, restoreSavedName]);
+  }, [draft, event, form, hasAiDraft, isEditing, isModeratorEdit, restoreSavedName]);
 
   useEffect(() => {
     if (titleRef.current) {
@@ -579,19 +940,27 @@ function AnnouncementForm({ event = {}, onCancel, setStorageEvents = () => undef
     }
   }, [titleRef]);
 
+  let noticeText = 'Submissions go to the Bishopric for approval before they appear on the site.';
+  if (hasAiDraft) {
+    noticeText =
+      'Drafted from your flyer or text — review and edit before submitting. It still goes to the Bishopric for approval.';
+  } else if (isLiveEdit) {
+    noticeText = 'Your edit goes to the Bishopric for approval. The current announcement stays live until then.';
+  }
+
   return (
     <FormContainer>
-      {status === STATUS.ERROR ? (
-        <Alert title={errorMessage} type="error" showIcon />
-      ) : (
-        <Alert
-          title="All announcements and events created or edited will be sent to the Bishopric for approval."
-          type="info"
-          showIcon
-        />
-      )}
-      <Form name="announcement-form" layout="vertical" form={form} size="large" onValuesChange={handleValuesChange}>
-        <EditorContainer>
+      {status === STATUS.ERROR ? <Notice $error>{errorMessage}</Notice> : <Notice>{noticeText}</Notice>}
+      <Form
+        name="announcement-form"
+        layout="vertical"
+        form={form}
+        size="large"
+        requiredMark
+        initialValues={isEditing || hasAiDraft ? getFormDateValues(seedEvent) : { type: ANNOUNCEMENT_TYPES.EVENT }}
+        onValuesChange={handleValuesChange}
+      >
+        <FieldGrid>
           <Form.Item
             label="Title"
             name="title"
@@ -602,10 +971,10 @@ function AnnouncementForm({ event = {}, onCancel, setStorageEvents = () => undef
               },
             ]}
           >
-            <TitleInput ref={titleRef} autoComplete="off" placeholder="title" allowClear />
+            <TitleInput ref={titleRef} autoComplete="off" placeholder="What’s this about?" allowClear />
           </Form.Item>
           <Form.Item
-            label="Who is this event for?"
+            label="Who is this for?"
             name="group"
             rules={[
               {
@@ -614,7 +983,7 @@ function AnnouncementForm({ event = {}, onCancel, setStorageEvents = () => undef
               },
             ]}
           >
-            <Select placeholder="group" allowClear>
+            <Select placeholder="Select a group">
               {eventGroups.map((group) => (
                 <Option value={group} key={group}>
                   {group}
@@ -622,93 +991,79 @@ function AnnouncementForm({ event = {}, onCancel, setStorageEvents = () => undef
               ))}
             </Select>
           </Form.Item>
-          <Divider />
-          <SwitchWrapper>
-            date range{' '}
-            <Switch
-              name="date-range"
-              checkedChildren="on"
-              unCheckedChildren="off"
-              onChange={(val) => {
-                dispatch({ isDateRange: val, startDate: '', endDate: '' });
-                form.setFieldValue('endDate', undefined);
-              }}
+
+          <Form.Item className="span-all" name="type" label="Looks like">
+            <Segmented
+              block
+              options={[
+                { label: 'Event', value: ANNOUNCEMENT_TYPES.EVENT },
+                { label: 'Announcement', value: ANNOUNCEMENT_TYPES.ANNOUNCEMENT },
+              ]}
             />
-          </SwitchWrapper>
+          </Form.Item>
+          <TypeHelp className="span-all">
+            {isAnnouncementType
+              ? 'A notice that stays up until an end date (for example, sign-ups through May).'
+              : 'Something happening on a specific day or date range.'}
+          </TypeHelp>
+
+          {!isAnnouncementType && (
+            <OptionRow className="span-all">
+              <OptionCopy>
+                <strong>Date range</strong>
+                <span>Turn on for multi-day events</span>
+              </OptionCopy>
+              <Switch
+                name="date-range"
+                checked={isDateRange}
+                onChange={(val) => {
+                  dispatch({ isDateRange: val, startDate: '', endDate: '' });
+                  form.setFieldValue('endDate', undefined);
+                }}
+              />
+            </OptionRow>
+          )}
           <Form.Item
-            label="Date"
+            className="span-all"
+            label={dateFieldLabel}
             name="endDate"
             rules={[
               {
                 required: true,
-                message: 'Please provide a date',
+                message: isAnnouncementType ? 'Please provide an end date' : 'Please provide a date',
               },
             ]}
           >
-            {isDateRange ? (
+            {!isAnnouncementType && isDateRange ? (
               <RangePicker
-                disabledDate={(date) => utc({ date }) <= utc()}
-                onChange={([startDate, endDate]) =>
-                  dispatch({ startDate: utc({ date: startDate }), endDate: utc({ date: endDate }) })
-                }
+                disabledDate={isPastDate}
+                onChange={(dates) => {
+                  if (!dates) {
+                    dispatch({ startDate: '', endDate: '' });
+                    return;
+                  }
+                  const [startDate, endDate] = dates;
+                  dispatch({ startDate: utc({ date: startDate }), endDate: utc({ date: endDate }) });
+                }}
               />
             ) : (
               <StyledDatePicker
-                disabledDate={(date) => utc({ date }) <= utc()}
-                onChange={(endDate) => dispatch({ endDate: utc({ date: endDate }) })}
+                disabledDate={isPastDate}
+                onChange={(endDate) =>
+                  dispatch({
+                    startDate: '',
+                    endDate: endDate ? utc({ date: endDate }) : '',
+                  })
+                }
               />
             )}
           </Form.Item>
-          <SwitchWrapper>
-            all day event?{' '}
-            <Switch
-              name="all-day"
-              checkedChildren="yes"
-              unCheckedChildren="no"
-              onChange={(val) => dispatch({ isAllDay: val })}
-            />
-          </SwitchWrapper>
-          <Form.Item label="Time" name="time" autoComplete="off">
-            <StyledTimePicker
-              format="hh:mm a"
-              disabled={isDateRange}
-              onChange={(val) => dispatch({ time: utc({ date: val, format: timeFormat }) })}
-            />
-          </Form.Item>
-          <QrCodeSection>
-            <QrCodeHeading>QR Code (optional)</QrCodeHeading>
-            <QrCodeHelp>Adds a scannable QR code to the website and program announcement</QrCodeHelp>
-            <Form.Item
-              label="URL"
-              name="qrLink"
-              validateTrigger={['onChange', 'onBlur']}
-              rules={[
-                {
-                  validator: (_, value) => {
-                    if (!value?.trim() || isValidUrl(value)) return Promise.resolve();
-                    return Promise.reject(new Error('Please enter a valid URL'));
-                  },
-                },
-              ]}
-            >
-              <Input size={qrInputSize} autoComplete="off" placeholder="https://example.com" allowClear />
-            </Form.Item>
-            {showQrLabel && (
-              <Form.Item label="Label (optional)" name="qrTitle" help="Leave blank to show the QR code without a label">
-                <Input
-                  size={qrInputSize}
-                  autoComplete="off"
-                  placeholder="e.g. Sign up here"
-                  allowClear
-                  maxLength={30}
-                />
-              </Form.Item>
-            )}
-          </QrCodeSection>
-          <ProgramMessageField />
-          <EditorWrapper>
-            <span style={{ color: 'red' }}>*</span>
-            <span className="message-label"> Website Message</span>
+
+          <EditorWrapper className="span-all">
+            <MessageLabel>
+              <span>*</span>
+              Message
+            </MessageLabel>
             <WebsiteMessageEditor
               key={editorKey}
               initialValue={editorSeedValue}
@@ -718,26 +1073,125 @@ function AnnouncementForm({ event = {}, onCancel, setStorageEvents = () => undef
               placeholder="Enter your announcement message..."
             />
           </EditorWrapper>
-        </EditorContainer>
-        <PreviewContainer>
-          <PreviewTitle>Sacrament Program Preview</PreviewTitle>
-          <MemoizedProgramPreviewCard form={form} baseEvent={basePreviewEvent} />
-        </PreviewContainer>
-        <PreviewContainer>
-          <PreviewTitle>Website Announcement Preview</PreviewTitle>
-          <MemoizedWebsitePreviewCard baseEvent={basePreviewEvent} editorMessage={previewEditorMessage} />
-        </PreviewContainer>
+        </FieldGrid>
+
+        <AdvancedCollapse
+          ghost
+          items={[
+            {
+              key: 'more',
+              label: 'More options',
+              forceRender: true,
+              children: (
+                <>
+                  {!isAnnouncementType && (
+                    <>
+                      <OptionRow>
+                        <OptionCopy>
+                          <strong>All-day event</strong>
+                          <span>Hide the time if it doesn’t matter</span>
+                        </OptionCopy>
+                        <Switch
+                          name="all-day"
+                          checked={state.isAllDay}
+                          onChange={(val) => {
+                            // Keep endDate registered — unmounting Time used to wipe the date field.
+                            const preservedEndDate = form.getFieldValue('endDate');
+                            const nextTime = val ? '' : state.time;
+
+                            dispatch({ isAllDay: val, time: nextTime });
+                            form.setFieldsValue({
+                              time: nextTime ? dayjs(nextTime, timeFormat) : undefined,
+                              endDate: preservedEndDate,
+                            });
+                          }}
+                        />
+                      </OptionRow>
+                      <Form.Item label="Time" name="time" autoComplete="off" hidden={state.isAllDay} preserve>
+                        <StyledTimePicker
+                          format="hh:mm a"
+                          disabled={isDateRange}
+                          onChange={(val) => dispatch({ time: val ? utc({ date: val, format: timeFormat }) : '' })}
+                        />
+                      </Form.Item>
+                    </>
+                  )}
+                  <QrCodeSection>
+                    <QrCodeHeading>QR code</QrCodeHeading>
+                    <QrCodeHelp>Optional link shown as a scannable code on the website and program</QrCodeHelp>
+                    <Form.Item
+                      label="URL"
+                      name="qrLink"
+                      validateTrigger={['onChange', 'onBlur']}
+                      rules={[
+                        {
+                          validator: (_, value) => {
+                            if (!value?.trim() || isValidUrl(value)) return Promise.resolve();
+                            return Promise.reject(new Error('Please enter a valid URL'));
+                          },
+                        },
+                      ]}
+                    >
+                      <Input size={qrInputSize} autoComplete="off" placeholder="https://example.com" allowClear />
+                    </Form.Item>
+                    {showQrLabel && (
+                      <Form.Item
+                        label="Label (optional)"
+                        name="qrTitle"
+                        help="Leave blank to show the QR code without a label"
+                      >
+                        <Input
+                          size={qrInputSize}
+                          autoComplete="off"
+                          placeholder="e.g. Sign up here"
+                          allowClear
+                          maxLength={30}
+                        />
+                      </Form.Item>
+                    )}
+                  </QrCodeSection>
+                  <ProgramMessageField
+                    onSyncFromMessage={handleSyncProgramMessage}
+                    syncLoading={isSummarizingProgram}
+                  />
+                </>
+              ),
+            },
+            {
+              key: 'previews',
+              label: 'Previews',
+              children: (
+                <PreviewStack>
+                  <PreviewSection>
+                    <PreviewHeader>
+                      <PreviewEyebrow>Sacrament program</PreviewEyebrow>
+                      <PreviewTitle>How it appears in the printed program</PreviewTitle>
+                    </PreviewHeader>
+                    <MemoizedProgramPreviewCard form={form} baseEvent={basePreviewEvent} />
+                  </PreviewSection>
+                  <PreviewSection>
+                    <PreviewHeader>
+                      <PreviewEyebrow>Website</PreviewEyebrow>
+                      <PreviewTitle>How it appears on the announcements page</PreviewTitle>
+                    </PreviewHeader>
+                    <MemoizedWebsitePreviewCard baseEvent={basePreviewEvent} editorMessage={previewEditorMessage} />
+                  </PreviewSection>
+                </PreviewStack>
+              ),
+            },
+          ]}
+        />
         {!isModeratorEdit && (
           <CreatorSection>
             <p>
-              <em>(Required)</em> Please give your first and last name.
+              <em>Required</em> — your first and last name
             </p>
             <Name>
               <Form.Item name="firstName" style={{ marginBottom: 0 }}>
                 <Input
                   autoComplete="off"
                   allowClear
-                  placeholder="first name"
+                  placeholder="First name"
                   status={status === STATUS.ERROR && !firstNameValue?.trim() ? 'error' : ''}
                 />
               </Form.Item>
@@ -745,12 +1199,12 @@ function AnnouncementForm({ event = {}, onCancel, setStorageEvents = () => undef
                 <Input
                   autoComplete="off"
                   allowClear
-                  placeholder="last name"
+                  placeholder="Last name"
                   status={status === STATUS.ERROR && !lastNameValue?.trim() ? 'error' : ''}
                 />
               </Form.Item>
             </Name>
-            <p>First and last name are used for the moderators to help them know who posted the announcement.</p>
+            <p>Moderators use this to know who submitted the announcement.</p>
           </CreatorSection>
         )}
         <ButtonGroup>
@@ -773,6 +1227,7 @@ AnnouncementForm.propTypes = {
   onCancel: func.isRequired,
   setStorageEvents: func,
   event: shape({}),
+  draft: shape({}),
   isModeratorEdit: bool,
 };
 

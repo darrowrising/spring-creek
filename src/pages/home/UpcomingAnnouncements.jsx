@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { PlusOutlined } from '@ant-design/icons';
+import { arrayOf, shape, string } from 'prop-types';
 
 import Link from '../../components/Link';
 import Loader from '../../components/Loader';
@@ -8,13 +9,22 @@ import { db, docs } from '../../utils/firebase.utils';
 import {
   formatAnnouncementDateLabel,
   getUpcomingWithinWeeks,
+  isAnnouncementType,
+  partitionByAnnouncementType,
 } from '../../utils/announcements.utils';
+import { isAfter } from '../../utils/date.utils';
 import { getOrganizationColor } from '../../utils/organizations.utils';
 import { hasData } from '../../utils/data.utils';
 import { GAEvent } from '../../components/Analytics';
 
 const Section = styled.section`
   margin-top: var(--space-10);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+`;
+
+const Block = styled.div`
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
@@ -147,7 +157,38 @@ const track = (label) => {
   });
 };
 
+function ItemRows({ items }) {
+  return (
+    <List>
+      {items.map((event) => (
+        <Item key={event.uid}>
+          <ItemLink to="/announcements" onClick={() => track(isAnnouncementType(event) ? 'notice' : 'event')}>
+            {event.group ? <Group $group={event.group}>{event.group}</Group> : null}
+            <ItemBody>
+              <ItemTitle>{event.title}</ItemTitle>
+              <ItemDate>{formatAnnouncementDateLabel(event)}</ItemDate>
+            </ItemBody>
+          </ItemLink>
+        </Item>
+      ))}
+    </List>
+  );
+}
+
+ItemRows.propTypes = {
+  items: arrayOf(
+    shape({
+      uid: string,
+      title: string,
+      group: string,
+      endDate: string,
+      type: string,
+    })
+  ).isRequired,
+};
+
 function UpcomingAnnouncements() {
+  const [announcements, setAnnouncements] = useState([]);
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -157,59 +198,85 @@ function UpcomingAnnouncements() {
       .where('moderate', '==', false)
       .onSnapshot((snap) => {
         const data = docs(snap) ?? [];
-        setEvents(getUpcomingWithinWeeks(data, 4));
+        const active = data.filter(({ endDate }) => !endDate || !isAfter(endDate));
+        const { announcements: noticeItems } = partitionByAnnouncementType(active);
+        const upcomingEvents = getUpcomingWithinWeeks(
+          data.filter((item) => !isAnnouncementType(item)),
+          4
+        );
+
+        setAnnouncements(noticeItems);
+        setEvents(upcomingEvents);
         setLoading(false);
       });
 
     return () => unsubscribe();
   }, []);
 
+  const hasNotices = hasData(announcements);
+  const hasEvents = hasData(events);
+  const hasAnything = hasNotices || hasEvents;
+
   return (
     <Section>
-      <Header>
-        <HeadingBlock>
-          <Title>Coming up</Title>
-          <Subtitle>Announcements and events for the next 4 weeks</Subtitle>
-        </HeadingBlock>
-        {!loading && hasData(events) && (
-          <AddLink to="/announcements?create=1" onClick={() => track('add')}>
-            <PlusOutlined />
-            Add an announcement
-          </AddLink>
-        )}
-      </Header>
-
       {loading && <Loader />}
 
-      {!loading && !hasData(events) && (
-        <Empty>
-          <div>Nothing scheduled for the next 4 weeks yet.</div>
-          <AddLink to="/announcements?create=1" onClick={() => track('add-empty')}>
-            <PlusOutlined />
-            Add an announcement
-          </AddLink>
-        </Empty>
+      {!loading && !hasAnything && (
+        <Block>
+          <Header>
+            <HeadingBlock>
+              <Title>Coming up</Title>
+              <Subtitle>Announcements and events for the next 4 weeks</Subtitle>
+            </HeadingBlock>
+          </Header>
+          <Empty>
+            <div>Nothing scheduled for the next 4 weeks yet.</div>
+            <AddLink to="/announcements?create=1" onClick={() => track('add-empty')}>
+              <PlusOutlined />
+              Add an announcement
+            </AddLink>
+          </Empty>
+        </Block>
       )}
 
-      {!loading && hasData(events) && (
-        <>
-          <List>
-            {events.map((event) => (
-              <Item key={event.uid}>
-                <ItemLink to="/announcements" onClick={() => track('item')}>
-                  {event.group ? <Group $group={event.group}>{event.group}</Group> : null}
-                  <ItemBody>
-                    <ItemTitle>{event.title}</ItemTitle>
-                    <ItemDate>{formatAnnouncementDateLabel(event)}</ItemDate>
-                  </ItemBody>
-                </ItemLink>
-              </Item>
-            ))}
-          </List>
-          <FooterLink to="/announcements" onClick={() => track('see-all')}>
-            See all announcements
-          </FooterLink>
-        </>
+      {!loading && hasNotices && (
+        <Block>
+          <Header>
+            <HeadingBlock>
+              <Title>Announcements</Title>
+              <Subtitle>Active notices and deadlines</Subtitle>
+            </HeadingBlock>
+            <AddLink to="/announcements?create=1" onClick={() => track('add')}>
+              <PlusOutlined />
+              Add an announcement
+            </AddLink>
+          </Header>
+          <ItemRows items={announcements} />
+        </Block>
+      )}
+
+      {!loading && hasEvents && (
+        <Block>
+          <Header>
+            <HeadingBlock>
+              <Title>Coming up</Title>
+              <Subtitle>Events for the next 4 weeks</Subtitle>
+            </HeadingBlock>
+            {!hasNotices && (
+              <AddLink to="/announcements?create=1" onClick={() => track('add')}>
+                <PlusOutlined />
+                Add an announcement
+              </AddLink>
+            )}
+          </Header>
+          <ItemRows items={events} />
+        </Block>
+      )}
+
+      {!loading && hasAnything && (
+        <FooterLink to="/announcements" onClick={() => track('see-all')}>
+          See all announcements
+        </FooterLink>
       )}
     </Section>
   );

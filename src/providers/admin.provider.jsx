@@ -1,9 +1,9 @@
-import { useState, useEffect, createContext, useContext, useMemo } from 'react';
+import { useState, useEffect, createContext, useContext, useMemo, useRef } from 'react';
 import { node } from 'prop-types';
 
 import { db, docs } from '../utils/firebase.utils';
 import { hasData } from '../utils/data.utils';
-import { deleteOutdatedEvents } from '../utils/announcements.utils';
+import { deleteOutdatedEvents, hasPendingEdit } from '../utils/announcements.utils';
 import { dayjs, isAfter } from '../utils/date.utils';
 import { createDisplayName } from '../factories/member';
 
@@ -30,28 +30,56 @@ const createGroup = (year) => {
   return 'primary';
 };
 
+const isActivePendingNew = (event) => event.moderate === true && (!event.endDate || !isAfter(event.endDate));
+
+const isActivePendingEdit = (event) => hasPendingEdit(event) && (!event.endDate || !isAfter(event.endDate));
+
+const mergeModerationQueue = (newSubmissions = [], pendingEdits = []) => {
+  const byUid = new Map();
+
+  [...newSubmissions, ...pendingEdits].forEach((event) => {
+    if (!event?.uid) return;
+    byUid.set(event.uid, event);
+  });
+
+  return [...byUid.values()];
+};
+
 function AdminProvider({ children }) {
   const [members, setMembers] = useState(INITIAL_STATE.members);
   const [newMembers, setNewMembers] = useState(INITIAL_STATE.newMembers);
   const [notifications, setNotifications] = useState(INITIAL_STATE.notifications);
   const [announcements, setAnnouncements] = useState(INITIAL_STATE.announcements);
   const [loading, setLoading] = useState(true);
+  const newSubmissionsRef = useRef([]);
+  const pendingEditsRef = useRef([]);
 
   useEffect(() => {
+    const publishModeration = () => {
+      const pending = mergeModerationQueue(newSubmissionsRef.current, pendingEditsRef.current);
+      deleteOutdatedEvents(pending);
+      setNotifications((prev) => ({
+        ...prev,
+        moderation: pending.length,
+      }));
+      setAnnouncements(pending);
+      setLoading(false);
+    };
+
     const announcementsUnsubscribe = db
       .collection('announcements')
       .where('moderate', '==', true)
       .onSnapshot((snap) => {
-        const data = docs(snap) || [];
-        deleteOutdatedEvents(data);
-        const pending = data.filter(({ moderate, endDate }) => moderate === true && (!endDate || !isAfter(endDate)));
+        newSubmissionsRef.current = (docs(snap) || []).filter(isActivePendingNew);
+        publishModeration();
+      });
 
-        setNotifications((prev) => ({
-          ...prev,
-          moderation: pending.length,
-        }));
-        setAnnouncements(pending);
-        setLoading(false);
+    const pendingEditsUnsubscribe = db
+      .collection('announcements')
+      .where('hasPendingEdit', '==', true)
+      .onSnapshot((snap) => {
+        pendingEditsRef.current = (docs(snap) || []).filter(isActivePendingEdit);
+        publishModeration();
       });
 
     const membersUnsubscribe = db.collection('members').onSnapshot((snap) => {
@@ -88,6 +116,7 @@ function AdminProvider({ children }) {
 
     return () => {
       announcementsUnsubscribe();
+      pendingEditsUnsubscribe();
       membersUnsubscribe();
     };
   }, []);
@@ -100,7 +129,7 @@ function AdminProvider({ children }) {
       announcements,
       loading,
     }),
-    [members, announcements, loading]
+    [members, newMembers, notifications, announcements, loading]
   );
 
   // eslint-disable-next-line react/jsx-no-constructed-context-values

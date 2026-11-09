@@ -1,35 +1,31 @@
-import styled, { keyframes, css } from 'styled-components';
+import styled, { css } from 'styled-components';
 import { shape, string, func } from 'prop-types';
 import { QRCode } from 'antd';
-// import { DoubleRightOutlined } from '@ant-design/icons';
-import { lighten } from 'polished';
 
 import { utc } from '../../utils/date.utils';
 import { normalizeUrl } from '../../utils/url.utils';
 import { getOrganizationColor } from '../../utils/organizations.utils';
+import { ANNOUNCEMENT_TYPES, resolveAnnouncementType } from '../../utils/announcements.utils';
 import { dateLong } from '../../configs/dateFormats';
 import { fadeIn } from '../../styles/animations';
-import { colorBlue1 } from '../../styles/variables';
 
 // #region styles
-const linkTo = keyframes`
-  0% { left: 0; }
-  25% { left: 3px; }
-  50% { left: 0; }
-  75% { left: -1px; }
-  100% { left: 0; }`;
-
 const Container = styled.div`
   display: grid;
-  grid-template-columns: minmax(min-content, 30px) 1fr;
+  grid-template-columns: ${({ $showDay }) => ($showDay ? '3.5rem 1fr' : '1fr')};
+  column-gap: var(--space-2);
   justify-content: center;
 `;
 
 const WeekDay = styled.div`
-  padding: var(--space-6) var(--space-3) 0 0;
+  width: 3.5rem;
+  padding: var(--space-6) 0 0;
   display: flex;
   flex-direction: column;
   align-items: center;
+  text-align: center;
+  box-sizing: border-box;
+  line-height: 1.15;
 `;
 
 const Card = styled.div`
@@ -72,24 +68,6 @@ const Title = styled.h3`
   border-bottom: 1px solid var(--color-grey-3);
   font-size: 1em;
   margin: 0;
-`;
-
-const Edit = styled.div`
-  /* position: absolute;
-  right: 0; */
-
-  &:hover {
-    background-color: ${lighten(0.3, colorBlue1)};
-    color: var(--color-white-1);
-
-    svg {
-      animation-duration: 0.5s;
-      animation-iteration-count: 2;
-      animation-name: ${linkTo};
-      left: 0;
-      position: relative;
-    }
-  }
 `;
 
 const Time = styled.span`
@@ -156,13 +134,22 @@ const Message = styled.div`
   a {
     color: var(--color-link);
   }
+  ul,
+  ol {
+    margin: var(--space-2) 0;
+    padding-left: 1.5em;
+    list-style-position: outside;
+  }
   ul {
-    margin-block-start: 1em;
-    margin-block-end: 1em;
-    padding-inline-start: var(--space-10);
+    list-style-type: disc;
+  }
+  ol {
+    list-style-type: decimal;
   }
   li {
     line-height: 1.5;
+    margin: 0.15em 0;
+    padding-left: 0.15em;
   }
 `;
 
@@ -187,18 +174,18 @@ const EndDate = styled.em`
 function Announcement({ event = {}, ...rest }) {
   const { group = '', title = '', message = '', endDate = '', time = '', qrLink = '', qrTitle = '' } = event;
   const hasQr = Boolean(qrLink);
-  const hasTime = Boolean(time?.trim());
+  const isAnnouncement = resolveAnnouncementType(event) === ANNOUNCEMENT_TYPES.ANNOUNCEMENT;
+  const hasTime = Boolean(time?.trim()) && !isAnnouncement;
+  const showDay = Boolean(endDate) && !isAnnouncement;
 
   return (
-    <Container>
-      <WeekDay>
-        {endDate && (
-          <>
-            <span>{utc({ date: endDate, format: 'ddd' })}</span>
-            <span>{utc({ date: endDate, format: 'D' })}</span>
-          </>
-        )}
-      </WeekDay>
+    <Container $showDay={showDay}>
+      {showDay && (
+        <WeekDay>
+          <span>{utc({ date: endDate, format: 'ddd' })}</span>
+          <span>{utc({ date: endDate, format: 'D' })}</span>
+        </WeekDay>
+      )}
       <Card {...rest}>
         {group && <Group $group={group}>{group}</Group>}
         <ContentContainer>
@@ -218,7 +205,7 @@ function Announcement({ event = {}, ...rest }) {
               <EndDate $hasQr={hasQr}>
                 {endDate && (
                   <>
-                    <span>ends on</span> {utc({ date: endDate, format: dateLong })}
+                    <span>{isAnnouncement ? 'through' : 'ends on'}</span> {utc({ date: endDate, format: dateLong })}
                   </>
                 )}
               </EndDate>

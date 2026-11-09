@@ -52,10 +52,12 @@ export const GlobalStyle = createGlobalStyle`
       }
     }
     
-    /* Responsive lists */
-    ul {
+    /* Reset bare lists in chrome; content lists opt back in locally */
+    nav ul,
+    menu ul {
       margin: 0;
       padding: 0;
+      list-style: none;
     }
     
     /* Responsive links */

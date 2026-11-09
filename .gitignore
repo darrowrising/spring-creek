@@ -32,3 +32,9 @@ dist-ssr
 # cypress
 cypress.env.json
 cypress/screenshots
+# Firebase Functions
+functions/node_modules
+functions/.env
+functions/.secret.local
+functions/.env.*
+!functions/.env.example

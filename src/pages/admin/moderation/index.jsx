@@ -11,6 +11,7 @@ import { useAdminContext } from '../../../providers/admin.provider';
 import { useUser } from '../../../providers/user.provider';
 import { utc } from '../../../utils/date.utils';
 import { db } from '../../../utils/firebase.utils';
+import { applyPendingEditUpdate, getEditableAnnouncement, hasPendingEdit } from '../../../utils/announcements.utils';
 import AnnouncementForm from '../../announcements/Form';
 import { approveSlideOut } from '../../../styles/animations';
 import { media } from '../../../styles/variables';
@@ -78,6 +79,18 @@ const PreviewTitle = styled.h4`
   padding-bottom: var(--space-1);
 `;
 
+const QueueLabel = styled.div`
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: var(--space-3);
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.75em;
+  font-weight: 600;
+  background: ${({ $edit }) => ($edit ? 'rgba(49, 112, 142, 0.12)' : 'rgba(241, 162, 19, 0.18)')};
+  color: ${({ $edit }) => ($edit ? 'var(--color-primary)' : 'var(--color-warning)')};
+`;
+
 const StyledDrawer = styled(Drawer)`
   .ant-drawer-header {
     padding: var(--space-2) var(--space-5) var(--space-2) var(--space-5);
@@ -115,11 +128,23 @@ function Moderation() {
     setExitingUids((prev) => new Set(prev).add(eventUid));
   };
 
-  const handleApprove = (eventUid) => {
-    startExit(eventUid);
+  const handleApprove = (event) => {
+    startExit(event.uid);
 
     window.setTimeout(() => {
-      db.collection('announcements').doc(eventUid).update({
+      if (hasPendingEdit(event)) {
+        const next = applyPendingEditUpdate(event);
+        db.collection('announcements')
+          .doc(event.uid)
+          .set({
+            ...next,
+            approvedBy: displayName,
+            approvedOn: utc(),
+          });
+        return;
+      }
+
+      db.collection('announcements').doc(event.uid).update({
         approvedBy: displayName,
         approvedOn: utc(),
         moderate: false,
@@ -127,17 +152,25 @@ function Moderation() {
     }, EXIT_ANIMATION_MS);
   };
 
-  const handleDelete = (eventUid) => {
-    startExit(eventUid);
+  const handleDelete = (event) => {
+    startExit(event.uid);
 
     window.setTimeout(() => {
-      db.collection('announcements').doc(eventUid).delete();
+      if (hasPendingEdit(event) && event.moderate === false) {
+        db.collection('announcements').doc(event.uid).update({
+          hasPendingEdit: false,
+          pendingEdit: null,
+        });
+        return;
+      }
+
+      db.collection('announcements').doc(event.uid).delete();
     }, EXIT_ANIMATION_MS);
   };
 
   const onClose = () => setEventToEdit(null);
 
-  const handleEdit = (event) => setEventToEdit(event);
+  const handleEdit = (event) => setEventToEdit(getEditableAnnouncement(event));
 
   if (loading) return <Loader />;
   return (
@@ -145,48 +178,51 @@ function Moderation() {
       <SectionHeading>Announcements/Events</SectionHeading>
       <Grid>
         {announcements.length ? (
-          announcements.map((event) => (
-            <Wrapper key={event.uid} $isExiting={exitingUids.has(event.uid)}>
-              <PreviewSection>
-                <PreviewTitle>Sacrament Program Preview</PreviewTitle>
-                <EventCard event={event} />
-              </PreviewSection>
-              <PreviewSection>
-                <PreviewTitle>Website Announcement Preview</PreviewTitle>
-                <Announcement event={event} />
-              </PreviewSection>
-              <ButtonGroup>
-                <Button color="green" disabled={exitingUids.has(event.uid)} onClick={() => handleApprove(event.uid)}>
-                  Approve
-                </Button>
-                <Button disabled={exitingUids.has(event.uid)} onClick={() => handleEdit(event)}>
-                  Edit
-                </Button>
-                <Popconfirm
-                  title="Are you sure?"
-                  description="This cannot be undone"
-                  okText="Yes"
-                  cancelText="No"
-                  onConfirm={() => handleDelete(event.uid)}
-                >
-                  <Button color="red" disabled={exitingUids.has(event.uid)}>
-                    Delete
+          announcements.map((event) => {
+            const previewEvent = getEditableAnnouncement(event);
+            const isEdit = hasPendingEdit(event);
+
+            return (
+              <Wrapper key={event.uid} $isExiting={exitingUids.has(event.uid)}>
+                <QueueLabel $edit={isEdit}>{isEdit ? 'Edit awaiting approval' : 'New submission'}</QueueLabel>
+                <PreviewSection>
+                  <PreviewTitle>Sacrament Program Preview</PreviewTitle>
+                  <EventCard event={previewEvent} />
+                </PreviewSection>
+                <PreviewSection>
+                  <PreviewTitle>Website Announcement Preview</PreviewTitle>
+                  <Announcement event={previewEvent} />
+                </PreviewSection>
+                <ButtonGroup>
+                  <Button color="green" disabled={exitingUids.has(event.uid)} onClick={() => handleApprove(event)}>
+                    Approve
                   </Button>
-                </Popconfirm>
-              </ButtonGroup>
-            </Wrapper>
-          ))
+                  <Button disabled={exitingUids.has(event.uid)} onClick={() => handleEdit(event)}>
+                    Edit
+                  </Button>
+                  <Popconfirm
+                    title="Are you sure?"
+                    description={
+                      isEdit ? 'This rejects the edit and keeps the live announcement.' : 'This cannot be undone'
+                    }
+                    okText="Yes"
+                    cancelText="No"
+                    onConfirm={() => handleDelete(event)}
+                  >
+                    <Button color="red" disabled={exitingUids.has(event.uid)}>
+                      {isEdit ? 'Reject edit' : 'Delete'}
+                    </Button>
+                  </Popconfirm>
+                </ButtonGroup>
+              </Wrapper>
+            );
+          })
         ) : (
           <Empty>Nothing to moderate at this time</Empty>
         )}
       </Grid>
       <StyledDrawer destroyOnHidden open={isDrawerOpen} title={EDIT_TEXT} size={700} onClose={onClose}>
-        <AnnouncementForm
-          key={eventToEdit?.uid}
-          event={eventToEdit ?? {}}
-          isModeratorEdit
-          onCancel={onClose}
-        />
+        <AnnouncementForm key={eventToEdit?.uid} event={eventToEdit ?? {}} isModeratorEdit onCancel={onClose} />
       </StyledDrawer>
     </Page>
   );

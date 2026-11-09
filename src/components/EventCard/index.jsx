@@ -2,7 +2,7 @@ import styled, { css } from 'styled-components';
 import { number, oneOfType, shape, string } from 'prop-types';
 import { QRCode } from 'antd';
 
-import { utc } from '../../utils/date.utils';
+import { dayjs, utc } from '../../utils/date.utils';
 import { normalizeUrl } from '../../utils/url.utils';
 
 // #region EventDate
@@ -58,13 +58,20 @@ const Multiple = styled.span`
 `;
 
 function DateGroup({ startDate, endDate }) {
-  return (
-    <DateGroupLayout>
-      {startDate && <EventDate date={startDate} />}
-      {startDate && endDate && <Multiple>&#8250;</Multiple>}
-      {endDate && <EventDate date={endDate} />}
-    </DateGroupLayout>
-  );
+  const hasRange = Boolean(startDate && endDate) && !dayjs(startDate).isSame(dayjs(endDate), 'day');
+  const singleDate = endDate || startDate;
+
+  if (hasRange) {
+    return (
+      <DateGroupLayout>
+        <EventDate date={startDate} />
+        <Multiple>&#8250;</Multiple>
+        <EventDate date={endDate} />
+      </DateGroupLayout>
+    );
+  }
+
+  return <DateGroupLayout>{singleDate && <EventDate date={singleDate} />}</DateGroupLayout>;
 }
 
 DateGroup.propTypes = {

@@ -3,10 +3,10 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
 import 'firebase/database';
+import 'firebase/functions';
 // import 'firebase/storage';
 
-const cypressEnv = (key) =>
-  typeof globalThis.Cypress !== 'undefined' ? globalThis.Cypress.env(key) : undefined;
+const cypressEnv = (key) => (typeof globalThis.Cypress !== 'undefined' ? globalThis.Cypress.env(key) : undefined);
 
 // configs
 const firebaseConfig = {
@@ -39,6 +39,13 @@ export const FieldValue = () => firebase.firestore.FieldValue;
 export const timeStamp = firebase.firestore.Timestamp.now();
 /* ** authorization ** */
 export const auth = firebase.auth();
+export const functions = firebase.app().functions('us-west1');
+
+if (import.meta.env.DEV && import.meta.env.VITE_USE_FUNCTIONS_EMULATOR === 'true') {
+  // 127.0.0.1 avoids some localhost CORS quirks with the Functions emulator
+  functions.useFunctionsEmulator('http://127.0.0.1:5001');
+}
+
 export const createUser = (email, password) => auth.createUserWithEmailAndPassword(email, password);
 // export const updateProfile = profile => user.updateProfile(profile);
 // export const updatePassword = newPassword => user().updatePassword(newPassword);

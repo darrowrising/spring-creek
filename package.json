@@ -18,7 +18,9 @@
     "move:events": "bun src/scripts/moveEvents.js",
     "script": "bin/run-script.sh",
     "deploy": "bun run build --mode development && firebase deploy --only hosting:test",
-    "deploy:prod": "bun run build && firebase deploy --only hosting:production"
+    "deploy:prod": "bun run build && firebase deploy --only hosting:production",
+    "deploy:functions": "firebase deploy --only functions --project springcreek-test",
+    "emulate:functions": "firebase emulators:start --only functions --project springcreek-test"
   },
   "dependencies": {
     "@ant-design/icons": "^6.1.0",
